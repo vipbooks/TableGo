@@ -1,0 +1,48 @@
+{
+  "projectDir" : "D:\\springboot-test",
+  "basePackagePath" : "com.test.springboottest",
+  "srcPath" : "/src/main/java",
+  "resourcesPath" : "/src/main/resources",
+  "excludeFields" : "CREATED_BY, CREATION_DATE, LAST_UPDATED_BY, LAST_UPDATE_DATE, DELETE_FLAG",
+  "ftlParamList" : [ {
+    "templateName" : "${tableUpperCamelCase}[java].ftl",
+    "packagePath" : "${basePackagePath}.model",
+    "excludeFields" : "${excludeFields}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Condition[java].ftl",
+    "packagePath" : "${basePackagePath}.model.condition",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Controller[java].ftl",
+    "packagePath" : "${basePackagePath}.controller",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}ServiceImpl[java].ftl",
+    "packagePath" : "${basePackagePath}.service.impl",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Service[java].ftl",
+    "packagePath" : "${basePackagePath}.service",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Mapper[java].ftl",
+    "packagePath" : "${basePackagePath}.mapper",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Mapper[xml].ftl",
+    "relativePath" : "${resourcesPath}/mapper",
+    "needFilterField" : "false",
+    "excludeFields" : "${excludeFields}"
+  } ],
+  "searchFeilds" : {
+    "T_USER" : [ "USERNAME", "USER_TYPE", "FULL_NAME" ],
+    "T_USER_EXT_INFO" : [ "BIRTHDAY", "PROVINCE_CODE", "CITY_CODE", "AREA_CODE" ],
+    "T_SYS_PARAM" : [ "PARAM_NAME", "PARAM_CODE", "PARAM_TYPE" ],
+    "T_DEPARTMENT" : [ "DEPT_NAME", "DEPT_CODE", "PARENT_ID" ],
+    "T_DICT_TYPE" : [ "TYPE_NAME", "TYPE_CODE" ],
+    "T_DICTIONARY" : [ "DICT_NAME", "DICT_CODE", "DICT_TYPE_CODE" ],
+    "T_PROVINCE" : [ "PROVINCE_NAME", "PROVINCE_CODE" ],
+    "T_CITY" : [ "CITY_NAME", "CITY_CODE", "PARENT_CODE" ],
+    "T_AREA" : [ "AREA_NAME", "AREA_CODE", "PARENT_CODE" ]
+  }
+}

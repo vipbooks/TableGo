@@ -1,0 +1,32 @@
+{
+  "projectDir" : "D:\\springboot-test",
+  "basePackagePath" : "com.test.springboottest",
+  "srcPath" : "/src/main/java",
+  "moduleName" : "message",
+  "ftlParamList" : [ {
+    "templateName" : "${tableUpperCamelCase}[java].ftl",
+    "packagePath" : "${basePackagePath}.model.${moduleName}",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Condition[java].ftl",
+    "packagePath" : "${basePackagePath}.model.condition.${moduleName}",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}ServiceImpl[java].ftl",
+    "packagePath" : "${basePackagePath}.${moduleName}.service.impl",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Service[java].ftl",
+    "packagePath" : "${basePackagePath}.${moduleName}.service",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Controller[java].ftl",
+    "packagePath" : "${basePackagePath}.${moduleName}.controller",
+    "relativePath" : "${srcPath}"
+  } ],
+  "searchFeilds" : {
+    "TMG_CHAT_USER" : [ "FROM_USER_ID", "TO_USER_ID" ],
+    "TMG_CHAT_CONTENT" : [ "CHAT_USER_ID" ],
+    "TMG_PUSH_MESSAGE" : [ "RECIPIENT_ID", "BIZ_ID", "MSG_TYPE" ]
+  }
+}

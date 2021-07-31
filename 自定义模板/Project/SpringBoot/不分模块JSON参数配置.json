@@ -1,0 +1,131 @@
+{
+  "projectDir" : "D:\\tablego-springboot",
+  "basePackagePath" : "cn.tablego.project.springboot",
+  "groupId" : "cn.tablego",
+  "artifactId" : "tablego-springboot",
+  "port" : "8080",
+  "contextPath" : "/tablego-springboot",
+  "appName" : "tablego-springboot",
+  "description" : "TableGo-SpringBoot项目",
+  "srcPath" : "/src/main/java",
+  "resourcesPath" : "/src/main/resources",
+  "testPath" : "/src/test/java",
+  "excludeFields" : "CREATED_BY, CREATION_DATE, LAST_UPDATED_BY, LAST_UPDATE_DATE, DELETE_FLAG",
+  "remarkMatchDict" : "类型, 类别, 状态, 是否, 性别",
+  "remarkMatchMulti" : "备注, 说明",
+  "ftlParamList" : [ {
+    "templateName" : "${tableUpperCamelCase}[java].ftl",
+    "ftlRelativeDir" : "${srcPath}/model",
+    "packagePath" : "${basePackagePath}.model",
+    "relativePath" : "${srcPath}",
+    "excludeFields" : "${excludeFields}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Condition[java].ftl",
+    "ftlRelativeDir" : "${srcPath}/model/condition",
+    "packagePath" : "${basePackagePath}.model.condition",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Service[java].ftl",
+    "ftlRelativeDir" : "${srcPath}/service",
+    "packagePath" : "${basePackagePath}.service",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Controller[java].ftl",
+    "ftlRelativeDir" : "${srcPath}/controller",
+    "packagePath" : "${basePackagePath}.controller",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Mapper[java].ftl",
+    "ftlRelativeDir" : "${srcPath}/mapper",
+    "packagePath" : "${basePackagePath}.mapper",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Mapper[xml].ftl",
+    "needFilterField" : "false",
+    "ftlRelativeDir" : "${resourcesPath}/mapper",
+    "relativePath" : "${resourcesPath}/mapper",
+    "excludeFields" : "${excludeFields}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}ServiceTest[java].ftl",
+    "ftlRelativeDir" : "${testPath}",
+    "packagePath" : "${basePackagePath}",
+    "relativePath" : "${testPath}"
+  }, {
+    "templateName" : "${appNameUpperCamelCase}Application[java].ftl",
+    "ftlRelativeDir" : "${srcPath}",
+    "packagePath" : "${basePackagePath}",
+    "relativePath" : "${srcPath}",
+    "buildSingleFile" : "true"
+  }, {
+    "templateNames" : "BaseBean[java].ftl, BaseCondition[java].ftl, BaseController[java].ftl, ExceptionHandlerAdvice[java].ftl, ExceptionUtil[java].ftl, OverrideBeanMethods[java].ftl, Paging[java].ftl, BasePagingCondition[java].ftl, Result[java].ftl",
+    "ftlRelativeDir" : "${srcPath}/common",
+    "packagePath" : "${basePackagePath}.common",
+    "relativePath" : "${srcPath}",
+    "buildSingleFile" : "true"
+  }, {
+    "templateNames" : "MybatisPlusConfiguration[java].ftl, CorsConfig[java].ftl",
+    "ftlRelativeDir" : "${srcPath}/configuration",
+    "packagePath" : "${basePackagePath}.configuration",
+    "relativePath" : "${srcPath}",
+    "buildSingleFile" : "true"
+  }, {
+    "templateNames" : "application[yml].ftl, logback-spring[xml].ftl",
+    "ftlRelativeDir" : "${resourcesPath}",
+    "relativePath" : "${resourcesPath}",
+    "buildSingleFile" : "true"
+  }, {
+    "templateName" : "pom[xml].ftl",
+    "buildSingleFile" : "true"
+  } ],
+  "fileList" : [ {
+    "fromPath" : "/readme.txt, /crebas.sql"
+  }, {
+    "toPath" : "${resourcesPath}/static"
+  }, {
+    "toPath" : "${resourcesPath}/templates"
+  } ],
+  "likeFeilds" : {
+    "T_USER" : [ "FULL_NAME" ],
+    "T_SYS_PARAM" : [ "PARAM_NAME" ],
+    "T_DEPARTMENT" : [ "DEPT_NAME" ],
+    "T_DICT_TYPE" : [ "TYPE_NAME" ],
+    "T_PROVINCE" : [ "PROVINCE_NAME" ]
+  },
+  "searchFeilds" : {
+    "T_USER" : [ "USERNAME", "USER_TYPE", "FULL_NAME" ],
+    "T_USER_EXT_INFO" : [ "BIRTHDAY", "PROVINCE_CODE", "CITY_CODE", "AREA_CODE" ],
+    "T_SYS_PARAM" : [ "PARAM_NAME", "PARAM_CODE", "PARAM_TYPE" ],
+    "T_DEPARTMENT" : [ "DEPT_NAME", "DEPT_CODE", "PARENT_ID" ],
+    "T_DICT_TYPE" : [ "TYPE_NAME", "TYPE_CODE" ],
+    "T_DICTIONARY" : [ "DICT_NAME", "DICT_CODE", "DICT_TYPE_CODE" ],
+    "T_PROVINCE" : [ "PROVINCE_NAME", "PROVINCE_CODE" ],
+    "T_CITY" : [ "CITY_NAME", "CITY_CODE", "PARENT_CODE" ],
+    "T_AREA" : [ "AREA_NAME", "AREA_CODE", "PARENT_CODE" ]
+  },
+  "joinTables" : [ "T_DICTIONARY", "T_DEPARTMENT", "T_CITY", "T_AREA" ],
+  "componentList" : [ {
+    "name" : "单元测试组件",
+    "enable" : "true",
+    "templateNames" : "${tableUpperCamelCase}ServiceTest[java].ftl"
+  }, {
+    "name" : "跨域请求配置组件",
+    "enable" : "true",
+    "templateNames" : "CorsConfig[java].ftl"
+  } ],
+  "version" : {
+    "java" : "1.8",
+    "springBootStarterParent" : "2.4.6",
+    "mysqlConnectorJava" : "5.1.49",
+    "mybatisPlusBootStarter" : "3.4.1",
+    "swaggerSpringBootStarter" : "1.9.1.RELEASE",
+    "hibernateValidator" : "6.1.2.Final",
+    "commonsLang3" : "3.11",
+    "knife4j" : "3.0.2",
+    "snakeyaml" : "1.27",
+    "lombok" : "1.18.20",
+    "hutoolAll" : "5.6.6",
+    "mavenCompilerPlugin" : "3.8.1",
+    "mavenSourcePlugin" : "3.2.1",
+    "mavenSurefirePlugin" : "2.22.2"
+  }
+}

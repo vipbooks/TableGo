@@ -1,0 +1,44 @@
+{
+  "projectDir" : "E:\\TableGo\\fileSavePath",
+  "srcPath" : "/src/views",
+  "mdSize" : 8,
+  "advancedIndex" : 2,
+  "moduleList" : [ {
+    "basePath" : "iam",
+    "moduleName" : "user",
+    "tableNames" : "t_user"
+  }, {
+    "basePath" : "iam",
+    "moduleName" : "organ",
+    "tableNames" : "t_organ"
+  } ],
+  "globalFieldType" : {
+    "DELETE_FLAG" : "String",
+    "GENDER" : "GenderEnum"
+  },
+  "ftlParamList" : [ {
+    "templateName" : "${tableUpperCamelCase}List[vue].ftl",
+    "relativePath" : "${srcPath}/${basePath}/${moduleName}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Add[vue].ftl",
+    "relativePath" : "${srcPath}/${basePath}/${moduleName}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Edit[vue].ftl",
+    "relativePath" : "${srcPath}/${basePath}/${moduleName}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Detail[vue].ftl",
+    "relativePath" : "${srcPath}/${basePath}/${moduleName}"
+  } ],
+  "searchFeilds" : {
+    "T_USER" : [ "LOGIN_NAME", "NAME", "GENDER", "STATUS", "TYPE" ],
+    "T_ORGAN" : [ "NAME", "FULL_NAME", "NAME_PATH", "TYPE" ]
+  },
+  "listFeilds" : {
+    "T_USER" : [ "LOGIN_NAME", "NAME", "GENDER", "STATUS", "TYPE", "EMAIL", "PHONE_NUMBER" ],
+    "T_ORGAN" : [ "NAME", "FULL_NAME", "NAME_PATH", "TYPE" ]
+  },
+  "formFeilds" : {
+    "T_USER" : [ "LOGIN_NAME", "NAME", "GENDER", "STATUS", "TYPE", "EMAIL", "PHONE_NUMBER" ],
+    "T_ORGAN" : [ "NAME", "FULL_NAME", "NAME_PATH", "TYPE" ]
+  }
+}

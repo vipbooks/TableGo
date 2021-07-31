@@ -1,0 +1,44 @@
+{
+  "projectDir" : "H:\\ssm-maven",
+  "moduleName" : "sysmgt",
+  "srcPath" : "/src/main/java",
+  "resourcesPath" : "/src/main/resources",
+  "webappPath" : "/src/main/webapp",
+  "excludeFields" : "CREATED_BY, CREATION_DATE, LAST_UPDATED_BY, LAST_UPDATE_DATE, DELETE_FLAG",
+  "ftlParamList" : [ {
+    "templateName" : "${tableUpperCamelCase}Entity[java].ftl",
+    "projectSubDir" : "/ssm-common",
+    "packagePath" : "entity.${moduleName}",
+    "relativePath" : "${srcPath}",
+    "excludeFields" : "${excludeFields}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}VO[java].ftl",
+    "projectSubDir" : "/ssm-common",
+    "packagePath" : "vo.${moduleName}",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Controller[java].ftl",
+    "projectSubDir" : "/ssm-admin",
+    "packagePath" : "${moduleName}.controller",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Service[java].ftl",
+    "projectSubDir" : "/ssm-admin",
+    "packagePath" : "${moduleName}.service",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateName" : "${tableLowerCamelCase}Mapper[xml].ftl",
+    "projectSubDir" : "/ssm-admin",
+    "relativePath" : "${resourcesPath}/mybatis/${moduleName}",
+    "needFilterField" : "false",
+    "excludeFields" : "${excludeFields}"
+  }, {
+    "templateName" : "${tableLowerCamelCase}[jsp].ftl",
+    "projectSubDir" : "/ssm-admin",
+    "relativePath" : "${webappPath}/WEB-INF/jsp/${moduleName}"
+  }, {
+    "templateName" : "${tableLowerCamelCase}[js].ftl",
+    "projectSubDir" : "/ssm-static",
+    "relativePath" : "${webappPath}/js/${moduleName}"
+  } ]
+}
