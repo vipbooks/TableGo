@@ -1,0 +1,30 @@
+{
+  "projectDir" : "D:\\springboot-test",
+  "basePackagePath" : "com.test.springboottest",
+  "srcPath" : "/src/main/java",
+  "moduleName" : "search",
+  "ftlParamList" : [ {
+    "templateName" : "${tableUpperCamelCase}[java].ftl",
+    "packagePath" : "${basePackagePath}.model.${moduleName}",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Condition[java].ftl",
+    "packagePath" : "${basePackagePath}.model.condition.${moduleName}",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}ServiceImpl[java].ftl",
+    "packagePath" : "${basePackagePath}.${moduleName}.service.impl",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Service[java].ftl",
+    "packagePath" : "${basePackagePath}.${moduleName}.service",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Controller[java].ftl",
+    "packagePath" : "${basePackagePath}.${moduleName}.controller",
+    "relativePath" : "${srcPath}"
+  } ],
+  "searchFeilds" : {
+    "IB_CHAT_CONTENT" : [ "CHAT_USER_ID", "CHAT_CONTENT", "CREATE_TIME", "DELETE_FLAG" ]
+  }
+}
