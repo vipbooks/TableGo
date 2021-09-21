@@ -1,8 +1,8 @@
 <#-- 初始化表的查询字段 -->
-<#assign searchFeilds = FtlUtils.getJsonFieldList(jsonParam.searchFeilds, tableInfo.tableName) />
-<#-- 判断是否是需要多表关联查询的表 -->
-<#if FtlUtils.tableExisted(jsonParam.joinTables, tableInfo.tableName)>
-    <#assign isJoinTable = true />
+<#assign searchFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFeilds) />
+<#-- 判断是否是需要生成SQL的表 -->
+<#if FtlUtils.tableExisted(jsonParam.noSqlTables, tableInfo.tableName)>
+    <#assign isNoSqlTable = true />
 </#if>
 package ${jsonParam.packagePath}
 
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
-<#if !isJoinTable??>
+<#if isNoSqlTable?? && isNoSqlTable>
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 </#if>
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -42,15 +42,7 @@ public class ${tableInfo.upperCamelCase}Service extends ServiceImpl<${tableInfo.
     public IPage<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}Page(${tableInfo.upperCamelCase}Condition condition) {
         IPage<${tableInfo.upperCamelCase}> page = condition.buildPage();
 <#assign fieldInfo = FtlUtils.getFieldByFieldTypeAtList(tableInfo, searchFeilds, "Date") />
-<#if isJoinTable?? && isJoinTable>
-    <#if fieldInfo?has_content>
-
-        if (condition.get${fieldInfo.upperCamelCase}End() != null) {
-            condition.set${fieldInfo.upperCamelCase}End(DateUtil.endOfDay(condition.get${fieldInfo.upperCamelCase}End()));
-        }
-    </#if>
-        return this.baseMapper.find${tableInfo.upperCamelCase}Page(page, condition);
-<#else>
+<#if isNoSqlTable?? && isNoSqlTable>
         LambdaQueryWrapper<${tableInfo.upperCamelCase}> queryWrapper = condition.buildLambdaQueryWrapper(${tableInfo.upperCamelCase}.class);
     <#if fieldInfo?has_content>
 
@@ -66,6 +58,14 @@ public class ${tableInfo.upperCamelCase}Service extends ServiceImpl<${tableInfo.
     </#if>
 
         return this.page(page, queryWrapper);
+<#else>
+    <#if fieldInfo?has_content>
+
+        if (condition.get${fieldInfo.upperCamelCase}End() != null) {
+            condition.set${fieldInfo.upperCamelCase}End(DateUtil.endOfDay(condition.get${fieldInfo.upperCamelCase}End()));
+        }
+    </#if>
+        return this.baseMapper.find${tableInfo.upperCamelCase}Page(page, condition);
 </#if>
     }
 

@@ -1,6 +1,6 @@
 <#-- 用于生成Service接口实现的自定义模板 -->
 <#-- 初始化表的查询字段 -->
-<#assign searchFeilds = FtlUtils.getJsonFieldList(jsonParam.searchFeilds, tableInfo.tableName) />
+<#assign searchFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFeilds) />
 package ${jsonParam.packagePath}
 
 import java.util.List;

@@ -72,10 +72,7 @@ public class ${tableInfo.upperCamelCase} extends BaseBean {
     /**
      * 设置${fieldInfo.remark!fieldInfo.proName}
      * 
-     * @param ${fieldInfo.proName}
-<#if StringUtils.isNotBlank(fieldInfo.simpleRemark)>
-     *          ${fieldInfo.simpleRemark}
-</#if>
+     * @param ${fieldInfo.proName}<#if StringUtils.isNotBlank(fieldInfo.simpleRemark)> ${fieldInfo.simpleRemark}</#if>
      */
     </#if>
     public void set${fieldInfo.upperCamelCase}(${fieldInfo.javaType} ${fieldInfo.proName}) {

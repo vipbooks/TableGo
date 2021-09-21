@@ -54,9 +54,6 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     @ApiImplicitParam(name = "${tableInfo.pkLowerCamelName}", value = "主键ID", required = true)
     @GetMapping(value = "/get/{${tableInfo.pkLowerCamelName}}")
     public Result<${tableInfo.upperCamelCase}> get(@PathVariable ${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}) {
-        if (<#if tableInfo.pkJavaType == "String">StringUtils.isBlank(${tableInfo.pkLowerCamelName})<#else>${tableInfo.pkLowerCamelName} == null</#if>) {
-            return Result.failed("请选择需要查询的数据！");
-        }
         ${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase} = ${tableInfo.lowerCamelCase}Service.get${tableInfo.upperCamelCase}ById(${tableInfo.pkLowerCamelName});
         return Result.ok(${tableInfo.lowerCamelCase});
     }
@@ -88,9 +85,6 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     @ApiImplicitParam(name = "${tableInfo.pkLowerCamelName}", value = "主键ID", required = true)
     @DeleteMapping(value = "/delete/{id}")
     public Result<Boolean> delete(@PathVariable ${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}) {
-        if (<#if tableInfo.pkJavaType == "String">StringUtils.isBlank(${tableInfo.pkLowerCamelName})<#else>${tableInfo.pkLowerCamelName} == null</#if>) {
-            return Result.failed("请选择需要删除的数据！");
-        }
         Boolean bool = ${tableInfo.lowerCamelCase}Service.delete${tableInfo.upperCamelCase}ById(${tableInfo.pkLowerCamelName});
         return Result.okOrFailed(bool);
     }

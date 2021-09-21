@@ -22,7 +22,7 @@ public class CorsConfig {
     private CorsConfiguration buildConfig() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         // 配置允许访问的源，如: http://localhost，*表示允许全部的域名
-        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedOriginPattern("*");
         // 配置允许的自定义请求头，用于预检请求
         corsConfiguration.addAllowedHeader("*");
         // 配置跨域请求支持的方式，如：GET、POST，且一次性返回全部支持的方式

@@ -43,7 +43,7 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     }
 
     @ApiOperation(value = "根据主键ID查询${tableInfo.simpleRemark}")
-    @ApiImplicitParam(name = "${tableInfo.pkLowerCamelName}", value = "主键ID", required = true, dataType = "string", paramType = "query")
+    @ApiImplicitParam(name = "${tableInfo.pkLowerCamelName}", value = "主键ID", required = true, dataType = "${tableInfo.pkJavaType?uncap_first}", paramType = "query")
     @PostMapping("/get${tableInfo.upperCamelCase}ById")
     public ${tableInfo.upperCamelCase} get${tableInfo.upperCamelCase}ById(${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}) {
         if (<#if tableInfo.pkJavaType == "String">StringUtils.isBlank(${tableInfo.pkLowerCamelName})<#else>${tableInfo.pkLowerCamelName} == null</#if>) {

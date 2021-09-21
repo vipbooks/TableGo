@@ -1,10 +1,8 @@
-<#-- 用于生成 Ant Design for Vue 列表管理页面的自定义模板 -->
+<#-- 用于生成 Ant Design Vue 列表管理页面的自定义模板 -->
 <#-- 初始化表的查询字段 -->
-<#assign searchFeilds = FtlUtils.getJsonFieldList(jsonParam.searchFeilds, tableInfo.tableName) />
-<#if jsonParam.listFeilds?has_content && (jsonParam.listFeilds["${tableInfo.upperTableName}"]?has_content || jsonParam.listFeilds["${tableInfo.originalTableName}"]?has_content)>
-    <#-- 初始化列表显示的字段 -->
-    <#assign listFeilds = jsonParam.listFeilds["${tableInfo.upperTableName}"] /><#if !listFeilds?has_content><#assign listFeilds = jsonParam.listFeilds["${tableInfo.originalTableName}"] /></#if>
-</#if>
+<#assign searchFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFeilds) />
+<#-- 初始化列表显示的字段 -->
+<#assign listFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.listFeilds) />
 <#if tableInfo.simpleRemark?has_content><!-- ${tableInfo.simpleRemark}列表管理页面 --></#if>
 <template>
   <a-card :bordered="false">

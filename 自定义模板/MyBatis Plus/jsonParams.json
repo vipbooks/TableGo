@@ -3,12 +3,12 @@
   "basePackagePath" : "com.test.springboottest",
   "srcPath" : "/src/main/java",
   "resourcesPath" : "/src/main/resources",
-  "excludeFields" : "CREATED_BY, CREATION_DATE, LAST_UPDATED_BY, LAST_UPDATE_DATE, DELETE_FLAG",
+  "logFields" : "CREATED_BY, CREATION_DATE, LAST_UPDATED_BY, LAST_UPDATE_DATE, DELETE_FLAG",
   "ftlParamList" : [ {
     "templateName" : "${tableUpperCamelCase}[java].ftl",
     "packagePath" : "${basePackagePath}.model",
     "relativePath" : "${srcPath}",
-    "excludeFields" : "${excludeFields}"
+    "excludeFields" : "${logFields}"
   }, {
     "templateName" : "${tableUpperCamelCase}Condition[java].ftl",
     "packagePath" : "${basePackagePath}.model.condition",
@@ -32,8 +32,7 @@
   }, {
     "templateName" : "${tableUpperCamelCase}Mapper[xml].ftl",
     "relativePath" : "${resourcesPath}/mapper",
-    "needFilterField" : "false",
-    "excludeFields" : "${excludeFields}"
+    "needFilterField" : "false"
   } ],
   "likeFeilds" : {
     "T_USER" : [ "FULL_NAME" ],
@@ -53,5 +52,5 @@
     "T_CITY" : [ "CITY_NAME", "CITY_CODE", "PARENT_CODE" ],
     "T_AREA" : [ "AREA_NAME", "AREA_CODE", "PARENT_CODE" ]
   },
-  "joinTables" : [ "T_DICTIONARY", "T_CITY", "T_AREA" ]
+  "noSqlTables" : [ "T_SYS_PARAM" ]
 }
