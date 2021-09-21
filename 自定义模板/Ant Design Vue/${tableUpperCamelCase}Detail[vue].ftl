@@ -1,6 +1,6 @@
-<#-- 用于生成 Ant Design for Vue 详情页面的自定义模板 -->
+<#-- 用于生成 Ant Design Vue 详情页面的自定义模板 -->
 <#-- 初始化Form表单字段 -->
-<#assign formFeilds = FtlUtils.getJsonFieldList(jsonParam.formFeilds, tableInfo.tableName) />
+<#assign formFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.formFeilds) />
 <#if tableInfo.simpleRemark?has_content><!-- ${tableInfo.simpleRemark}详情页面 --></#if>
 <template>
   <a-card :bordered="false">

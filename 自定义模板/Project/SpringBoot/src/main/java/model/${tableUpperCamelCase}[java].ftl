@@ -1,5 +1,5 @@
 <#-- 初始化表的模糊查询字段 -->
-<#assign likeFeilds = FtlUtils.getJsonFieldList(jsonParam.likeFeilds, tableInfo.tableName) />
+<#assign likeFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.likeFeilds) />
 package ${jsonParam.packagePath}
 
 <#if FtlUtils.fieldTypeExisted(tableInfo, "Date")>
@@ -34,18 +34,20 @@ import javax.validation.constraints.NotNull;
         </#if>
     </#list>
 </#if>
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+<#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+</#if>
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-<#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.excludeFields)>
-import ${jsonParam.basePackagePath}.common.BaseBean;
+<#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.logFields)>
+import ${jsonParam.basePackagePath}.common.model.BaseBean;
 <#else>
-import ${jsonParam.basePackagePath}.common.OverrideBeanMethods;
+import ${jsonParam.basePackagePath}.common.model.OverrideBeanMethods;
 </#if>
 
 /**
@@ -57,9 +59,11 @@ import ${jsonParam.basePackagePath}.common.OverrideBeanMethods;
 @Setter
 @Getter
 @Accessors(chain = true)
+<#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
 @ApiModel(description = "${tableInfo.simpleRemark!tableInfo.tableName}")
+</#if>
 @TableName("${tableInfo.tableName}")
-public class ${tableInfo.upperCamelCase} extends <#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.excludeFields)>BaseBean<#else>OverrideBeanMethods</#if> {
+public class ${tableInfo.upperCamelCase} extends <#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.logFields)>BaseBean<#else>OverrideBeanMethods</#if> {
     /** 版本号 */
     private static final long serialVersionUID = ${tableInfo.serialVersionUID!'1'}L;
 
@@ -74,7 +78,11 @@ public class ${tableInfo.upperCamelCase} extends <#if FtlUtils.fieldAllExisted(t
     </#if>
     <#list tableInfo.fieldInfos as fieldInfo>
 
+        <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
+    /** ${fieldInfo.remark} */
+        <#else>
     @ApiModelProperty(value = "${fieldInfo.remark}", position = ${fieldInfo_index + 1})
+        </#if>
     @JsonProperty(index = ${fieldInfo_index + 1})
     <#if !fieldInfo.primaryKey && fieldInfo.isNotNull>
         <#if fieldInfo.javaType == "String">

@@ -14,10 +14,9 @@ import ${jsonParam.basePackagePath}.model.condition.<#if jsonParam.moduleName??>
  */
 public interface ${tableInfo.upperCamelCase}Service {
     /**
-     * 根据条件分页查询${tableInfo.simpleRemark}
+     * 根据条件分页查询${tableInfo.simpleRemark}列表
      * 
-     * @param condition
-     *            查询条件
+     * @param condition 查询条件
      * @return 分页数据
      */
     Page<${tableInfo.upperCamelCase}> list${tableInfo.upperCamelCase}Page(${tableInfo.upperCamelCase}Condition condition);
@@ -25,8 +24,7 @@ public interface ${tableInfo.upperCamelCase}Service {
     /**
      * 根据主键ID查询${tableInfo.simpleRemark}
      * 
-     * @param ${tableInfo.pkLowerCamelName}
-     *            主键ID
+     * @param ${tableInfo.pkLowerCamelName} 主键ID
      * @return ${tableInfo.simpleRemark}
      */
     ${tableInfo.upperCamelCase} get${tableInfo.upperCamelCase}ById(String ${tableInfo.pkLowerCamelName});
@@ -34,8 +32,7 @@ public interface ${tableInfo.upperCamelCase}Service {
     /**
      * 保存${tableInfo.simpleRemark}
      * 
-     * @param ${tableInfo.lowerCamelCase}
-     *            ${tableInfo.simpleRemark}信息
+     * @param ${tableInfo.lowerCamelCase} ${tableInfo.simpleRemark}信息
      * @return 是否成功
      */
     Boolean save${tableInfo.upperCamelCase}(${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase});
@@ -43,8 +40,7 @@ public interface ${tableInfo.upperCamelCase}Service {
     /**
      * 批量保存${tableInfo.simpleRemark}
      * 
-     * @param ${tableInfo.lowerCamelCase}List
-     *            ${tableInfo.simpleRemark}集合
+     * @param ${tableInfo.lowerCamelCase}List ${tableInfo.simpleRemark}列表
      * @return 是否成功
      */
     Boolean batchSave${tableInfo.upperCamelCase}(List<${tableInfo.upperCamelCase}> ${tableInfo.lowerCamelCase}List);
@@ -52,8 +48,7 @@ public interface ${tableInfo.upperCamelCase}Service {
     /**
      * 根据主键ID删除${tableInfo.simpleRemark}
      * 
-     * @param ${tableInfo.pkLowerCamelName}
-     *            主键ID
+     * @param ${tableInfo.pkLowerCamelName} 主键ID
      * @return 是否成功
      */
     Boolean delete${tableInfo.upperCamelCase}ById(${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName});
@@ -61,8 +56,7 @@ public interface ${tableInfo.upperCamelCase}Service {
     /**
      * 根据主键ID列表批量删除${tableInfo.simpleRemark}
      * 
-     * @param idList
-     *            主键ID列表
+     * @param idList 主键ID列表
      * @return 是否成功
      */
     Boolean delete${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList);

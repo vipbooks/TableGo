@@ -1,5 +1,5 @@
 <#-- 初始化表的查询字段 -->
-<#assign searchFeilds = FtlUtils.getJsonFieldList(jsonParam.searchFeilds, tableInfo.tableName) />
+<#assign searchFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFeilds) />
 package ${jsonParam.packagePath}
 
 <#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFeilds, "Date")>
@@ -13,14 +13,16 @@ import java.math.BigDecimal;
 <#if FtlUtils.fieldTypeExisted(tableInfo, "BigInteger")>
 import java.math.BigInteger;
 </#if>
-<#if searchFeilds?has_content>
-import io.swagger.annotations.ApiModelProperty;
-</#if>
+<#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
 import io.swagger.annotations.ApiModel;
+    <#if searchFeilds?has_content>
+import io.swagger.annotations.ApiModelProperty;
+    </#if>
+</#if>
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import ${jsonParam.basePackagePath}.common.BaseCondition;
+import ${jsonParam.basePackagePath}.common.model.BaseCondition;
 
 /**
  * ${tableInfo.simpleRemark!tableInfo.tableName}查询条件
@@ -31,7 +33,9 @@ import ${jsonParam.basePackagePath}.common.BaseCondition;
 @Setter
 @Getter
 @Accessors(chain = true)
+<#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
 @ApiModel(description = "${tableInfo.simpleRemark!tableInfo.tableName}查询条件")
+</#if>
 public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
     /** 版本号 */
     private static final long serialVersionUID = ${tableInfo.serialVersionUID!'1'}L;
@@ -46,15 +50,27 @@ public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
             <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
 
     <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>
-    @ApiModelProperty(value = "${fieldInfo.remark}(开始)")
+        <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
+    /** ${fieldInfo.remark!fieldInfo.colName}(开始) */
+        <#else>
+    @ApiModelProperty(value = "${fieldInfo.remark!fieldInfo.colName}(开始)")
+        </#if>
     @JsonFormat(timezone = "GMT+8", pattern = DatePattern.NORM_DATE_PATTERN)
     private ${fieldInfo.javaType} ${fieldInfo.proName}Begin;
 
-    @ApiModelProperty(value = "${fieldInfo.remark}(结束)")
+        <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
+    /** ${fieldInfo.remark!fieldInfo.colName}(结束) */
+        <#else>
+    @ApiModelProperty(value = "${fieldInfo.remark!fieldInfo.colName}(结束)")
+        </#if>
     @JsonFormat(timezone = "GMT+8", pattern = DatePattern.NORM_DATE_PATTERN)
     private ${fieldInfo.javaType} ${fieldInfo.proName}End;
     <#else>
+        <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
+    /** ${fieldInfo.remark} */
+        <#else>
     @ApiModelProperty(value = "${fieldInfo.remark}")
+        </#if>
     private ${fieldInfo.javaType} ${fieldInfo.proName};
     </#if>
             </#if>

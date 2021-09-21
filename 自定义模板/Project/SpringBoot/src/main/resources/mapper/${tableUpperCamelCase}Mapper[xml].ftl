@@ -1,15 +1,15 @@
 <#-- 初始化表的查询字段 -->
-<#assign searchFeilds = FtlUtils.getJsonFieldList(jsonParam.searchFeilds, tableInfo.tableName) />
-<#-- 判断是否是需要多表关联查询的表 -->
-<#if FtlUtils.tableExisted(jsonParam.joinTables, tableInfo.tableName)>
-    <#assign isJoinTable = true />
+<#assign searchFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFeilds) />
+<#-- 判断是否是需要生成SQL的表 -->
+<#if !FtlUtils.tableExisted(jsonParam.noSqlTables, tableInfo.tableName)>
+    <#assign isNoSqlTable = false />
 </#if>
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- <#if StringUtils.isNotBlank(tableInfo.simpleRemark)>${tableInfo.simpleRemark}(${tableInfo.tableName})<#else>${tableInfo.tableName}</#if> -->
 <mapper namespace="${jsonParam.basePackagePath}.mapper.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Mapper">
-<#if isJoinTable?? && isJoinTable>
+<#if isNoSqlTable?? && !isNoSqlTable>
     <!-- 字段映射 -->
     <resultMap id="${tableInfo.lowerCamelCase}Map" type="${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}"/>
 
@@ -22,10 +22,10 @@
         <#list pagingFieldList as fieldInfo><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName}<#if fieldInfo_has_next>, </#if></#list><#if pagingFieldList_has_next>, </#if>
         </#list>
     </sql>
-    <#if FtlUtils.fieldExistedAny(tableInfo, jsonParam.excludeFields)>
+    <#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.logFields)>
     <!-- 表主要字段 -->
     <sql id="mainColumns">
-        <#assign pagingFieldInfoList = FtlUtils.tableFieldIgnore(tableInfo.fieldInfos, jsonParam.excludeFields, paramConfig.customColumnThreshold)>
+        <#assign pagingFieldInfoList = FtlUtils.tableFieldIgnore(tableInfo.fieldInfos, jsonParam.logFields, paramConfig.customColumnThreshold)>
         <#list pagingFieldInfoList as pagingFieldList>
         <#list pagingFieldList as fieldInfo><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName}<#if fieldInfo_has_next>, </#if></#list><#if pagingFieldList_has_next>, </#if>
         </#list>

@@ -6,15 +6,19 @@
   "moduleList" : [ {
     "basePath" : "iam",
     "moduleName" : "user",
-    "tableNames" : "t_user"
+    "tableNames" : "User"
   }, {
     "basePath" : "iam",
-    "moduleName" : "organ",
-    "tableNames" : "t_organ"
+    "moduleName" : "dept",
+    "tableNames" : "Department"
+  }, {
+    "basePath" : "sysmgt",
+    "moduleName" : "sysmgt",
+    "tableNames" : "SysParam"
   } ],
   "globalFieldType" : {
-    "DELETE_FLAG" : "String",
-    "GENDER" : "GenderEnum"
+    "deleteFlag" : "String",
+    "sex" : "SexEnum"
   },
   "ftlParamList" : [ {
     "templateName" : "${tableUpperCamelCase}List[vue].ftl",
@@ -30,15 +34,18 @@
     "relativePath" : "${srcPath}/${basePath}/${moduleName}"
   } ],
   "searchFeilds" : {
-    "T_USER" : [ "LOGIN_NAME", "NAME", "GENDER", "STATUS", "TYPE" ],
-    "T_ORGAN" : [ "NAME", "FULL_NAME", "NAME_PATH", "TYPE" ]
+    "User" : [ "username", "userType", "fullName", "idCard", "email", "openId" ],
+    "Department" : [ "deptName", "deptCode", "sortNo" ],
+    "SysParam" : [ "paramName", "paramCode", "paramType" ]
   },
   "listFeilds" : {
-    "T_USER" : [ "LOGIN_NAME", "NAME", "GENDER", "STATUS", "TYPE", "EMAIL", "PHONE_NUMBER" ],
-    "T_ORGAN" : [ "NAME", "FULL_NAME", "NAME_PATH", "TYPE" ]
+    "User" : [ "username", "userType", "fullName", "idCard", "email", "openId" ],
+    "Department" : [ "deptName", "deptCode", "sortNo" ],
+    "SysParam" : [ "paramName", "paramCode", "paramType" ]
   },
   "formFeilds" : {
-    "T_USER" : [ "LOGIN_NAME", "NAME", "GENDER", "STATUS", "TYPE", "EMAIL", "PHONE_NUMBER" ],
-    "T_ORGAN" : [ "NAME", "FULL_NAME", "NAME_PATH", "TYPE" ]
+    "User" : [ "username", "userType", "fullName", "idCard", "email", "openId" ],
+    "Department" : [ "deptName", "deptCode", "sortNo" ],
+    "SysParam" : [ "paramName", "paramCode", "paramType" ]
   }
 }

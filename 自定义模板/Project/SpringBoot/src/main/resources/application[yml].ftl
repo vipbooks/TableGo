@@ -21,10 +21,10 @@ spring:
     default-property-inclusion: non_null
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/test?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useUnicode=true&useSSL=false&nullNamePatternMatchesAll=true&allowPublicKeyRetrieval=true
-    username: root
-    password: root
+    driver-class-name: ${jsonParam.projectConfig.dbDriverClassName}
+    url: ${jsonParam.projectConfig.dbUrl}
+    username: ${jsonParam.projectConfig.dbUsername}
+    password: ${jsonParam.projectConfig.dbPassword}
     hikari:
       minimum-idle: 1
       maximum-pool-size: 10
@@ -32,6 +32,17 @@ spring:
       max-lifetime: 1800000
       connection-timeout: 30000
       connection-test-query: SELECT 1
+<#if jsonParam.enableRedis>
+  redis:
+    host: ${jsonParam.projectConfig.redisHost}
+    port: ${jsonParam.projectConfig.redisPort}
+    database: ${jsonParam.projectConfig.redisDatabase}
+</#if>
+<#if jsonParam.enableMongoDB>
+  data:
+    mongodb:
+      uri: ${jsonParam.projectConfig.mongodbUri}
+</#if>
 mybatis-plus:
   mapper-locations: classpath*:mapper/**/*Mapper.xml
   global-config:
@@ -39,9 +50,13 @@ mybatis-plus:
       id-type: assign_id
       logic-delete-value: 0
       logic-not-delete-value: 1
+      where-strategy: not_empty
+      insert-strategy: not_empty
+      update-strategy: not_empty
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false
+<#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
 swagger:
   title: ${"$"}{spring.application.name}
   description: "@project.description@API文档"
@@ -52,3 +67,4 @@ swagger:
     email: tablego@qq.com
     url: http://www.tablego.cn
   base-package: ${jsonParam.basePackagePath}.controller
+</#if>

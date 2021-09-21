@@ -1,9 +1,9 @@
 <#-- 用于生成Service接口实现的自定义模板 -->
 <#-- 初始化表的查询字段 -->
-<#assign searchFeilds = FtlUtils.getJsonFieldList(jsonParam.searchFeilds, tableInfo.tableName) />
-<#-- 判断是否是需要多表关联查询的表 -->
-<#if FtlUtils.tableExisted(jsonParam.joinTables, tableInfo.tableName)>
-    <#assign isJoinTable = true />
+<#assign searchFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFeilds) />
+<#-- 判断是否是需要生成SQL的表 -->
+<#if FtlUtils.tableExisted(jsonParam.noSqlTables, tableInfo.tableName)>
+    <#assign isNoSqlTable = true />
 </#if>
 package ${jsonParam.packagePath}
 
@@ -17,7 +17,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 <#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFeilds, "Date")>
 import cn.hutool.core.date.DateUtil;
 </#if>
-<#if !isJoinTable??>
+<#if isNoSqlTable?? && isNoSqlTable>
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 </#if>
 import ${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase};
@@ -40,15 +40,7 @@ public class ${tableInfo.upperCamelCase}ServiceImpl extends ServiceImpl<${tableI
     public IPage<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}ByCondition(${tableInfo.upperCamelCase}Condition condition) {
         IPage<${tableInfo.upperCamelCase}> page = condition.buildPage();
 <#assign fieldInfo = FtlUtils.getFieldByFieldTypeAtList(tableInfo, searchFeilds, "Date") />
-<#if isJoinTable?? && isJoinTable>
-    <#if fieldInfo?has_content>
-
-        if (condition.get${fieldInfo.upperCamelCase}End() != null) {
-            condition.set${fieldInfo.upperCamelCase}End(DateUtil.endOfDay(condition.get${fieldInfo.upperCamelCase}End()));
-        }
-    </#if>
-        return baseMapper.list${tableInfo.upperCamelCase}Page(page, condition);
-<#else>
+<#if isNoSqlTable?? && isNoSqlTable>
         QueryWrapper<${tableInfo.upperCamelCase}> queryWrapper = condition.buildQueryWrapper(${tableInfo.upperCamelCase}.class);
     <#if fieldInfo?has_content>
 
@@ -59,7 +51,19 @@ public class ${tableInfo.upperCamelCase}ServiceImpl extends ServiceImpl<${tableI
             queryWrapper.lambda().lt(${tableInfo.upperCamelCase}::get${fieldInfo.upperCamelCase}, DateUtil.endOfDay(condition.get${fieldInfo.upperCamelCase}End()));
         }
     </#if>
+    <#if FtlUtils.fieldExisted(tableInfo, "CREATION_DATE")>
+        queryWrapper.orderByDesc(${tableInfo.upperCamelCase}::getCreationDate);
+    </#if>
+
         return this.page(page, queryWrapper);
+<#else>
+    <#if fieldInfo?has_content>
+
+        if (condition.get${fieldInfo.upperCamelCase}End() != null) {
+            condition.set${fieldInfo.upperCamelCase}End(DateUtil.endOfDay(condition.get${fieldInfo.upperCamelCase}End()));
+        }
+    </#if>
+        return this.baseMapper.list${tableInfo.upperCamelCase}Page(page, condition);
 </#if>
     }
 

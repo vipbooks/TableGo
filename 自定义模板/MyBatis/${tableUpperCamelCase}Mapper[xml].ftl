@@ -1,6 +1,6 @@
 <#-- 用于生成Mapper.xml配置的自定义模板 -->
 <#-- 初始化表的查询字段 -->
-<#assign searchFeilds = FtlUtils.getJsonFieldList(jsonParam.searchFeilds, tableInfo.tableName) />
+<#assign searchFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFeilds) />
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
@@ -18,10 +18,10 @@
         <#list pagingFieldList as fieldInfo><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName}<#if fieldInfo_has_next>, </#if></#list><#if pagingFieldList_has_next>, </#if>
         </#list>
     </sql>
-    <#if FtlUtils.fieldExistedAny(tableInfo, jsonParam.excludeFields)>
+    <#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.logFields)>
     <!-- 表主要字段 -->
     <sql id="mainColumns">
-        <#assign pagingFieldInfoList = FtlUtils.tableFieldIgnore(tableInfo.fieldInfos, jsonParam.excludeFields, paramConfig.customColumnThreshold)>
+        <#assign pagingFieldInfoList = FtlUtils.tableFieldIgnore(tableInfo.fieldInfos, jsonParam.logFields, paramConfig.customColumnThreshold)>
         <#list pagingFieldInfoList as pagingFieldList>
         <#list pagingFieldList as fieldInfo><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName}<#if fieldInfo_has_next>, </#if></#list><#if pagingFieldList_has_next>, </#if>
         </#list>

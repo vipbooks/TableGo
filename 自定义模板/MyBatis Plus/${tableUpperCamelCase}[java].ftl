@@ -1,6 +1,6 @@
 <#-- 用于生成MyBatisPlus数据模型的自定义模板 -->
 <#-- 初始化表的模糊查询字段 -->
-<#assign likeFeilds = FtlUtils.getJsonFieldList(jsonParam.likeFeilds, tableInfo.tableName) />
+<#assign likeFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.likeFeilds) />
 package ${jsonParam.packagePath}
 
 <#if FtlUtils.fieldTypeExisted(tableInfo, "Date")>
@@ -85,10 +85,7 @@ public class ${tableInfo.upperCamelCase} extends BaseBean {
     /**
      * 设置${fieldInfo.remark!fieldInfo.proName}
      * 
-     * @param ${fieldInfo.proName}
-<#if StringUtils.isNotBlank(fieldInfo.simpleRemark)>
-     *          ${fieldInfo.simpleRemark}
-</#if>
+     * @param ${fieldInfo.proName}<#if StringUtils.isNotBlank(fieldInfo.simpleRemark)> ${fieldInfo.simpleRemark}</#if>
      */
     </#if>
     public void set${fieldInfo.upperCamelCase}(${fieldInfo.javaType} ${fieldInfo.proName}) {
