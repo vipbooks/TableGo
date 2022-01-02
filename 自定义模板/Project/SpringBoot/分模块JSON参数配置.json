@@ -92,7 +92,7 @@
     "relativePath" : "${srcPath}",
     "buildSingleFile" : "true"
   }, {
-    "templateNames" : "application[yml].ftl, logback-spring[xml].ftl",
+    "templateNames" : "application[yml].ftl, application-dev[yml].ftl, application-test[yml].ftl, application-prod[yml].ftl, logback-spring[xml].ftl, smart-doc[json].ftl",
     "ftlRelativeDir" : "${resourcesPath}",
     "relativePath" : "${resourcesPath}",
     "buildSingleFile" : "true"
@@ -164,19 +164,20 @@
   },
   "version" : {
     "java" : "1.8",
-    "springBootStarterParent" : "2.4.8",
+    "springBootStarterParent" : "2.5.8",
     "mysqlConnectorJava" : "5.1.49",
-    "mybatisPlusBootStarter" : "3.4.3.1",
+    "mybatisPlusBootStarter" : "3.4.3.4",
     "swaggerSpringBootStarter" : "1.9.1.RELEASE",
-    "hibernateValidator" : "6.1.2.Final",
+    "hibernateValidator" : "6.2.0.Final",
     "commonsLang3" : "3.11",
-    "knife4j" : "3.0.2",
+    "knife4j" : "3.0.3",
     "snakeyaml" : "1.27",
-    "lombok" : "1.18.20",
-    "hutoolAll" : "5.7.4",
+    "lombok" : "1.18.22",
+    "hutoolAll" : "5.7.18",
+    "redisson" : "3.15.6",
     "mavenCompilerPlugin" : "3.8.1",
     "mavenSourcePlugin" : "3.2.1",
     "mavenSurefirePlugin" : "2.22.2",
-    "redisson" : "3.15.6"
+    "smartDocMavenPlugin" : "2.2.2"
   }
 }

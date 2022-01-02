@@ -3,15 +3,11 @@ package ${jsonParam.packagePath}
 import java.util.List;
 import javax.validation.Valid;
 
-<#if FtlUtils.fieldSpecifyType(tableInfo, tableInfo.pkLowerCamelName, "String")>
-import cn.hutool.core.util.StrUtil;
-</#if>
 <#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 </#if>
-import cn.hutool.core.collection.CollUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -63,6 +59,7 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
         IPage<${tableInfo.upperCamelCase}> page = ${tableInfo.lowerCamelCase}Service.find${tableInfo.upperCamelCase}Page(condition);
         return Paging.buildPaging(page);
     }
+<#if tableInfo.pkLowerCamelName??>
 
     <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /**
@@ -80,6 +77,7 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
         ${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase} = ${tableInfo.lowerCamelCase}Service.get${tableInfo.upperCamelCase}ById(${tableInfo.pkLowerCamelName});
         return Result.ok(${tableInfo.lowerCamelCase});
     }
+</#if>
 
     <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /**
@@ -114,16 +112,10 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     </#if>
     @PutMapping(value = "/update${tableInfo.upperCamelCase}")
     public Result<Boolean> update${tableInfo.upperCamelCase}(@RequestBody ${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
-        ${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName} = ${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}();
-        <#if tableInfo.pkJavaType == "String">
-        Assert.isNotBlank(${tableInfo.pkLowerCamelName}, "请选择需要修改的数据！");
-        <#else>
-        Assert.isNotNull(${tableInfo.pkLowerCamelName}, "请选择需要修改的数据！");
-        </#if>
-
         Boolean bool = ${tableInfo.lowerCamelCase}Service.update${tableInfo.upperCamelCase}(${tableInfo.lowerCamelCase});
         return Result.okOrFailed(bool);
     }
+<#if tableInfo.pkLowerCamelName??>
 
     <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /**
@@ -159,4 +151,5 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
         Boolean bool = ${tableInfo.lowerCamelCase}Service.delete${tableInfo.upperCamelCase}ByIds(idList);
         return Result.okOrFailed(bool);
     }
+</#if>
 }

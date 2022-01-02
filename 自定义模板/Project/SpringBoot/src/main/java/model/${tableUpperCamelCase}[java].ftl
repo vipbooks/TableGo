@@ -44,7 +44,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-<#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.logFields)>
+<#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.commonFields)>
 import ${jsonParam.basePackagePath}.common.model.BaseBean;
 <#else>
 import ${jsonParam.basePackagePath}.common.model.OverrideBeanMethods;
@@ -63,7 +63,7 @@ import ${jsonParam.basePackagePath}.common.model.OverrideBeanMethods;
 @ApiModel(description = "${tableInfo.simpleRemark!tableInfo.tableName}")
 </#if>
 @TableName("${tableInfo.tableName}")
-public class ${tableInfo.upperCamelCase} extends <#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.logFields)>BaseBean<#else>OverrideBeanMethods</#if> {
+public class ${tableInfo.upperCamelCase} extends <#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.commonFields)>BaseBean<#else>OverrideBeanMethods</#if> {
     /** 版本号 */
     private static final long serialVersionUID = ${tableInfo.serialVersionUID!'1'}L;
 

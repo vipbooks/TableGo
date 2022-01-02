@@ -1,3 +1,5 @@
+<#-- 初始化需要生成检查字段值是否已存在的接口的字段 -->
+<#assign checkValueExistedFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.checkValueExistedFeilds) />
 package ${jsonParam.packagePath}
 
 <#-- 判断是否是需要生成SQL的表 -->
@@ -6,6 +8,8 @@ import org.apache.ibatis.annotations.Param;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import ${jsonParam.basePackagePath}.model.condition.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Condition;
     <#assign isNoSqlTable = false />
+<#elseif checkValueExistedFeilds?has_content>
+import org.apache.ibatis.annotations.Param;
 </#if>
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import ${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase};
@@ -26,6 +30,22 @@ public interface ${tableInfo.upperCamelCase}Mapper extends BaseMapper<${tableInf
      * @return 分页数据
      */
     IPage<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}Page(IPage<${tableInfo.upperCamelCase}> page, @Param("condition") ${tableInfo.upperCamelCase}Condition condition);
+</#if>
+<#if checkValueExistedFeilds?has_content>
+    <#list tableInfo.fieldInfos as fieldInfo>
+        <#list checkValueExistedFeilds as fieldName>
+            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+
+    /**
+     * 检查${fieldInfo.simpleRemark!fieldInfo.colName}是否存在
+     *
+     * @param ${fieldInfo.proName} ${fieldInfo.simpleRemark!fieldInfo.colName}
+     * @return 是否存在
+     */
+    String check${fieldInfo.upperCamelCase}Existed(@Param("${fieldInfo.proName}") ${fieldInfo.javaType} ${fieldInfo.proName});
+            </#if>
+        </#list>
+    </#list>
 </#if>
 
 }

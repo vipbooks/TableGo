@@ -17,15 +17,30 @@ import ${jsonParam.basePackagePath}.model.condition.<#if jsonParam.moduleName??>
 import ${jsonParam.basePackagePath}.service.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Service;
 
 <#if tableInfo.pkIsNumericType>
-    <#assign id = RandomStringUtils.randomNumeric(tableInfo.pkColumnSize) />
+    <#if tableInfo.pkColumnSize &gt; 6>
+        <#assign id = RandomStringUtils.randomNumeric(6) />
+    <#elseif tableInfo.pkColumnSize &gt; 1>
+        <#assign id = RandomStringUtils.randomNumeric(tableInfo.pkColumnSize - 1) />
+    <#else>
+        <#assign id = RandomStringUtils.randomNumeric(1) />
+    </#if>
+    <#if tableInfo.pkJavaType == "Long">
+        <#assign id = id + "L" />
+    </#if>
 <#elseif tableInfo.pkJavaType == "String">
-    <#assign id = StringUtils.join("\"", RandomStringUtils.randomNumeric(tableInfo.pkColumnSize), "\"") />
+    <#if tableInfo.pkColumnSize &gt; 6>
+        <#assign id = StringUtils.join("\"", RandomStringUtils.randomNumeric(6), "\"") />
+    <#elseif tableInfo.pkColumnSize &gt; 1>
+        <#assign id = StringUtils.join("\"", RandomStringUtils.randomNumeric(tableInfo.pkColumnSize - 1), "\"") />
+    <#else>
+        <#assign id = StringUtils.join("\"", RandomStringUtils.randomNumeric(1), "\"") />
+    </#if>
 </#if>
 /**
  * ${tableInfo.simpleRemark}Service接口测试
  *
-* @author ${paramConfig.author}
-* @version 1.0.0 ${today}
+ * @author ${paramConfig.author}
+ * @version 1.0.0 ${today}
  */
 @SpringBootTest
 public class ${tableInfo.upperCamelCase}ServiceTest {
@@ -45,6 +60,7 @@ public class ${tableInfo.upperCamelCase}ServiceTest {
         Instant end = Instant.now();
         Console.log("代码执行消耗时间: {} 毫秒", Duration.between(begin, end).toMillis());
     }
+<#if tableInfo.pkLowerCamelName??>
 
     /** 测试根据${tableInfo.simpleRemark}ID查询${tableInfo.simpleRemark} */
     @Test
@@ -57,6 +73,7 @@ public class ${tableInfo.upperCamelCase}ServiceTest {
         Instant end = Instant.now();
         Console.log("代码执行消耗时间: {} 毫秒", Duration.between(begin, end).toMillis());
     }
+</#if>
 
     /** 测试新增${tableInfo.simpleRemark} */
     @Test
@@ -75,6 +92,7 @@ public class ${tableInfo.upperCamelCase}ServiceTest {
         Instant end = Instant.now();
         Console.log("代码执行消耗时间: {} 毫秒", Duration.between(begin, end).toMillis());
     }
+<#if tableInfo.pkLowerCamelName??>
 
     /** 测试修改${tableInfo.simpleRemark} */
     @Test
@@ -130,4 +148,5 @@ public class ${tableInfo.upperCamelCase}ServiceTest {
         Instant end = Instant.now();
         Console.log("代码执行消耗时间: {} 毫秒", Duration.between(begin, end).toMillis());
     }
+</#if>
 }
