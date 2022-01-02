@@ -22,9 +22,6 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: ${jsonParam.projectConfig.dbDriverClassName}
-    url: ${jsonParam.projectConfig.dbUrl}
-    username: ${jsonParam.projectConfig.dbUsername}
-    password: ${jsonParam.projectConfig.dbPassword}
     hikari:
       minimum-idle: 1
       maximum-pool-size: 10
@@ -32,17 +29,6 @@ spring:
       max-lifetime: 1800000
       connection-timeout: 30000
       connection-test-query: SELECT 1
-<#if jsonParam.enableRedis>
-  redis:
-    host: ${jsonParam.projectConfig.redisHost}
-    port: ${jsonParam.projectConfig.redisPort}
-    database: ${jsonParam.projectConfig.redisDatabase}
-</#if>
-<#if jsonParam.enableMongoDB>
-  data:
-    mongodb:
-      uri: ${jsonParam.projectConfig.mongodbUri}
-</#if>
 mybatis-plus:
   mapper-locations: classpath*:mapper/**/*Mapper.xml
   global-config:
@@ -61,7 +47,6 @@ swagger:
   title: ${"$"}{spring.application.name}
   description: "@project.description@API文档"
   version: 1.0.0
-  enabled: true
   contact:
     name: bianj
     email: tablego@qq.com

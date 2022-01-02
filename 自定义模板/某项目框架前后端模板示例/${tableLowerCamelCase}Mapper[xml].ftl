@@ -1,5 +1,5 @@
 <#-- 用于生成MyBatis的Mapper.xml配置文件 -->
-<#assign searchFeilds = FtlUtils.getJsonFieldList(jsonParam.searchFeilds, tableInfo.tableName) />
+<#assign searchFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFeilds) />
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 

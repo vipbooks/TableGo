@@ -1,0 +1,11 @@
+{
+  "projectDir" : "E:\\TableGo\\fileSavePath",
+  "apiPath" : "/src/api",
+  "contextPath" : "/iam",
+  "moduleName" : "user",
+  "ftlParamList" : [ {
+    "templateName" : "${moduleName}[js](VueAPI).ftl",
+    "relativePath" : "${apiPath}${contextPath}",
+    "buildSingleFile" : "true"
+  } ]
+}

@@ -65,5 +65,6 @@
             <appender-ref ref="consoleAsync"/>
             <appender-ref ref="fileAsync"/>
         </root>
+        <logger name="${jsonParam.basePackagePath}" level="WARN"/>
     </springProfile>
 </configuration>
