@@ -2,12 +2,14 @@
 
 #### 介绍
 
+![](https://gitee.com/vipbooks/TableGo-Files/raw/master/tablego.png)
+
 　　TableGo是基于数据库的代码自动生成工具，低代码编程技术的实现，可以零代码自动生成SpringBoot项目工程、生成JavaBean、生成前后端分离的CRUD代码、生成MyBaits的Mapper映射配置文件、生成数据库设计文档（Word、Excel）、生成Swagger2离线API文档、生成前后端代码、能查出数据库数据生成各种代码和文档等，更重要的是可以根据每个项目的不同开发框架编写自定义模板与项目框架适配生成各模块增删查改的前后端代码，让开发人员的开发效率提高60%以上，并且可以通过模板定义开发规范统一开发风格和标准，提高代码的规范性和可维护性。<br/>
 　　只要设计好数据库并且添加好备注，就能通过自定义模板生成任意编程语言的任何程序代码，并且能够生成各种代码备注。实现只要把数据数据库设计好，整个项目就完成了很大一部分代码的编写，大大节省了项目的开发成本。支持MySQL、Oracle、SQL Server、PostgreSQL、MariaDB、DB2 六种数据库，支持Window、Linux、Mac OS等多种操作系统。<br/>
 　　TableGo原生不支持的数据库可以通过配置自定义扩展数据库获得支持，可通过配置database.ini配置文件让TableGo支持更多关系型数据库，在新的database.ini配置文件已经包含对武汉达梦、人大金仓V8、神舟通用、南大通用等四种数据库的扩展支持配置。<br/>
 　　使用自定义模板功能可以根据数据库表结构信息生成你想要的任何代码，例如：Java、C#、C++、Golang、Rust、Python、Objective-C、Swift、Kotlin、VB、VC、SQL、HTML、JSP、JS、PHP、Vue、React、Word、Excel等等，没有做不到只有想不到……<br/>
-　　生成数据模型功能升级，现在可以直接生成八种不同编程语言的数据模型：<br/>
-　　生成JavaBean数据模型、生成C#数据模型、生成C++数据模型(C++结构体)、生成Golang数据模型、生成Rust数据模型、生成Python数据模型、生成Objective-C数据模型、生成Swift数据模型、生成iOS数据模型。<br/><br/>
+　　TableGo还可以通过服务器接连终端功能使用SSH2连接Linux服务器，实现命令执行、上传下载文件、按指定顺序自动执行各种命令和操作，实现如自动化部署项目工程到dev、test、sit环境等功能。<br/>
+　　可以生成Java、C#、C++、Golang、Rust、Python、Objective-C、Swift、iOS等各种不同平台编程语言的数据模型或结构体，对应的自定义模板示例已提供。<br/><br/>
 　　TableGo官网：[http://www.tablego.cn](http://www.tablego.cn)<br/>
 　　在CSDN博客可下载Jar包版本的TableGo，可在Linux和Mac OS上运行：[https://blog.csdn.net/vipbooks](https://blog.csdn.net/vipbooks)
 
@@ -42,3 +44,7 @@ MySQL关键字做表名导致生成代码或文档报错的解决方法，以ord
 
 #### 关于升级新版本TableGo的问题
 　　一般情况下用新版本直接覆盖老版本是没有问题的，但有时候配置信息改动比较大就会有问题，所以在更新新版本的时候最好先把老版本拷贝到另一个地方临时备份一下，然后再把新版本拷贝进来，dbConfig.xml和paramConfig.xml两个配置文件可以复用，把老的database.ini和paramConfig.ini配置文件删除，再打开新版本的TableGo自动生成database.ini和paramConfig.ini这两个配置文件，因为有的版本配置信息改动比较大，用老版本的配置会有问题。如果老版本有配置如果拷到新版本中来，这时可以同时打开新老版本，在界面上把老版本的配置信息拷贝到新版本的界面上来，完成后再点右上角的关闭按钮正常关闭就会自动保存了界面上的配置信息了。
+
+#### TableGo功能一览
+
+![](https://gitee.com/vipbooks/TableGo-Files/raw/master/function_list.png)
