@@ -1,0 +1,35 @@
+{
+  "isOpenTerminal" : true,
+  "isOutLogToTerminal" : false,
+  "batchConfig" : [ {
+    "commands" : [ {
+      "command" : "cd /home/test/tablego-springboot"
+    }, {
+      "command" : "sh AppService.sh restart tablego-admin 6611",
+      "sleepSeconds" : 3,
+      "enable" : true
+    }, {
+      "command" : "tail -f tablego-admin.log",
+      "waitSigquitSeconds" : 2,
+      "enable" : true
+    }, {
+      "command" : "sh AppService.sh restart tablego-basic 6622",
+      "sleepSeconds" : 3,
+      "enable" : true
+    }, {
+      "command" : "tail -f tablego-basic.log",
+      "waitSigquitSeconds" : 2,
+      "enable" : true
+    }, {
+      "command" : "sh AppService.sh restart tablego-iam 6633",
+      "sleepSeconds" : 3,
+      "enable" : true
+    }, {
+      "command" : "tail -f tablego-iam.log",
+      "waitSigquitSeconds" : 2,
+      "enable" : true
+    }, {
+      "command" : "ls"
+    } ]
+  } ]
+}
