@@ -2,7 +2,7 @@
 
 #### 介绍
 
-![](https://github.com/vipbooks/TableGo/raw/master/images/tablego.png)
+![](https://raw.githubusercontent.com/vipbooks/TableGo/main/images/tablego.png)
 
 　　TableGo是基于数据库的代码自动生成工具，低代码编程技术的实现，可以零代码自动生成SpringBoot项目工程、生成JavaBean、生成前后端分离的CRUD代码、生成MyBaits的Mapper映射配置文件、生成数据库设计文档（Word、Excel）、生成Swagger2离线API文档、生成前后端代码、能查出数据库数据生成各种代码和文档等，更重要的是可以根据每个项目的不同开发框架编写自定义模板与项目框架适配生成各模块增删查改的前后端代码，让开发人员的开发效率提高60%以上，并且可以通过模板定义开发规范统一开发风格和标准，提高代码的规范性和可维护性。<br/>
 　　只要设计好数据库并且添加好备注，就能通过自定义模板生成任意编程语言的任何程序代码，并且能够生成各种代码备注。实现只要把数据数据库设计好，整个项目就完成了很大一部分代码的编写，大大节省了项目的开发成本。支持MySQL、Oracle、SQL Server、PostgreSQL、MariaDB、DB2 六种数据库，支持Window、Linux、Mac OS等多种操作系统。<br/>
@@ -47,4 +47,4 @@ MySQL关键字做表名导致生成代码或文档报错的解决方法，以ord
 
 #### TableGo功能一览
 
-![](https://github.com/vipbooks/TableGo/raw/master/images/function_list.png)
+![](https://raw.githubusercontent.com/vipbooks/TableGo/main/images/function_list.png)
