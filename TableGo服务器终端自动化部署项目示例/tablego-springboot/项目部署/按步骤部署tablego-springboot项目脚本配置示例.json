@@ -1,0 +1,105 @@
+{
+  "isOpenTerminal" : true,
+  "isOutLogToTerminal" : true,
+  "projectPath" : "G:\\tablego-springboot",
+  "scriptPath" : "G:\\tablego-springboot\\项目部署",
+  "serverProjectPath" : "/home/test/tablego-springboot",
+  "stepBatchConfig" : {
+    "step1" : {
+      "enable" : true,
+      "batchConfig" : [ {
+        "runtimeExec" : [ {
+          "command" : "${scriptPath}\\svn-update-project.bat ${projectPath}",
+          "enable" : false
+        }, {
+          "command" : "${scriptPath}\\maven-lifecycle.bat clean ${projectPath}",
+          "enable" : true
+        } ]
+      } ]
+    },
+    "step2" : {
+      "enable" : true,
+      "batchConfig" : [ {
+        "runtimeExec" : [ {
+          "command" : "${scriptPath}\\maven-lifecycle.bat \"clean package\" ${projectPath}\\tablego-admin",
+          "enable" : true
+        } ]
+      }, {
+        "fileUploads" : [ {
+          "fromPath" : [ "${projectPath}\\tablego-admin\\target\\tablego-admin.jar" ],
+          "toPath" : "${serverProjectPath}",
+          "enable" : true
+        } ]
+      }, {
+        "commands" : [ {
+          "command" : "cd ${serverProjectPath}",
+          "enable" : true
+        }, {
+          "command" : "sh AppService.sh restart tablego-admin 6611",
+          "sleepSeconds" : 3
+        }, {
+          "command" : "tail -f tablego-admin.log",
+          "waitSigquitSeconds" : 2
+        }, {
+          "command" : "ls"
+        } ]
+      } ]
+    },
+    "step3" : {
+      "enable" : true,
+      "batchConfig" : [ {
+        "runtimeExec" : [ {
+          "command" : "${scriptPath}\\maven-lifecycle.bat \"clean package\" ${projectPath}\\tablego-basic",
+          "enable" : true
+        } ]
+      }, {
+        "fileUploads" : [ {
+          "fromPath" : [ "${projectPath}\\tablego-basic\\target\\tablego-basic.jar" ],
+          "toPath" : "${serverProjectPath}",
+          "enable" : true
+        } ]
+      }, {
+        "commands" : [ {
+          "command" : "cd ${serverProjectPath}",
+          "enable" : true
+        }, {
+          "command" : "sh AppService.sh restart tablego-basic 6622",
+          "sleepSeconds" : 3
+        }, {
+          "command" : "tail -f tablego-basic.log",
+          "waitSigquitSeconds" : 2
+        }, {
+          "command" : "ls"
+        } ]
+      } ]
+    },
+    "step4" : {
+      "enable" : true,
+      "batchConfig" : [ {
+        "runtimeExec" : [ {
+          "command" : "${scriptPath}\\maven-lifecycle.bat \"clean package\" ${projectPath}\\tablego-iam",
+          "enable" : true
+        } ]
+      }, {
+        "fileUploads" : [ {
+          "fromPath" : [ "${projectPath}\\tablego-iam\\target\\tablego-iam.jar" ],
+          "toPath" : "${serverProjectPath}",
+          "enable" : true
+        } ]
+      }, {
+        "commands" : [ {
+          "command" : "cd ${serverProjectPath}",
+          "enable" : true
+        }, {
+          "command" : "sh AppService.sh restart tablego-iam 6633",
+          "sleepSeconds" : 3
+        }, {
+          "command" : "tail -f tablego-iam.log",
+          "waitSigquitSeconds" : 2
+        }, {
+          "command" : "ls"
+        } ]
+      } ]
+    }
+  }
+}

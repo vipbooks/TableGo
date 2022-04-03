@@ -1,0 +1,31 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+spring:
+  profiles:
+    active: dev
+  application:
+    name: tablego-basic
+  main:
+    allow-bean-definition-overriding: true
+  mvc:
+    format:
+      date: yyyy-MM-dd
+      time: HH:mm:ss
+      date-time: yyyy-MM-dd HH:mm:ss
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    locale: zh
+    time-zone: GMT+8
+    default-property-inclusion: non_null
+swagger:
+  title: ${spring.application.name}
+  description: "@project.description@API文档"
+  version: 1.0.0
+  enabled: true
+  contact:
+    name: bianj
+    email: tablego@qq.com
+    url: http://www.tablego.cn
+  base-package: cn.tablego.project.springboot.controller
