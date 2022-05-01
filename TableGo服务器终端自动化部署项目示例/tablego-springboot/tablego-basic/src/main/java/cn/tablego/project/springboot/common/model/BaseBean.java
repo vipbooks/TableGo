@@ -14,7 +14,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 实体公共字段基础类，用于实体JavaBean继承
  * 
  * @author bianj
- * @version 1.0.0 2021-09-23
+ * @version 1.0.0 2021-09-26
  */
 public abstract class BaseBean extends OverrideBeanMethods {
     /** 版本号 */

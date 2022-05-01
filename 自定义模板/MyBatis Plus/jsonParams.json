@@ -1,9 +1,9 @@
 {
-  "projectDir" : "D:\\springboot-test",
-  "basePackagePath" : "com.test.springboottest",
+  "projectDir" : "D:\\tablego-mybatisplus",
+  "basePackagePath" : "cn.tablego.mybatisplus",
   "srcPath" : "/src/main/java",
   "resourcesPath" : "/src/main/resources",
-  "logFields" : "CREATED_BY, CREATION_DATE, LAST_UPDATED_BY, LAST_UPDATE_DATE, DELETE_FLAG",
+  "commonFields" : "CREATED_BY, CREATION_DATE, LAST_UPDATED_BY, LAST_UPDATE_DATE, DELETE_FLAG",
   "ftlParamList" : [ {
     "templateName" : "${tableUpperCamelCase}[java].ftl",
     "packagePath" : "${basePackagePath}.model",
@@ -34,14 +34,14 @@
     "relativePath" : "${resourcesPath}/mapper",
     "needFilterField" : "false"
   } ],
-  "likeFeilds" : {
+  "likeFields" : {
     "T_USER" : [ "FULL_NAME" ],
     "T_SYS_PARAM" : [ "PARAM_NAME" ],
     "T_DEPARTMENT" : [ "DEPT_NAME" ],
     "T_DICT_TYPE" : [ "TYPE_NAME" ],
     "T_PROVINCE" : [ "PROVINCE_NAME" ]
   },
-  "searchFeilds" : {
+  "searchFields" : {
     "T_USER" : [ "USERNAME", "USER_TYPE", "FULL_NAME" ],
     "T_USER_EXT_INFO" : [ "BIRTHDAY", "PROVINCE_CODE", "CITY_CODE", "AREA_CODE" ],
     "T_SYS_PARAM" : [ "PARAM_NAME", "PARAM_CODE", "PARAM_TYPE" ],
@@ -50,7 +50,19 @@
     "T_DICTIONARY" : [ "DICT_NAME", "DICT_CODE", "DICT_TYPE_CODE" ],
     "T_PROVINCE" : [ "PROVINCE_NAME", "PROVINCE_CODE" ],
     "T_CITY" : [ "CITY_NAME", "CITY_CODE", "PARENT_CODE" ],
-    "T_AREA" : [ "AREA_NAME", "AREA_CODE", "PARENT_CODE" ]
+    "T_AREA" : [ "AREA_NAME", "AREA_CODE", "PARENT_CODE" ],
+    "T_ROLE" : [ "ROLE_NAME", "ROLE_CODE" ]
+  },
+  "checkValueExistedFields" : {
+    "T_USER" : [ "USERNAME" ],
+    "T_SYS_PARAM" : [ "PARAM_CODE" ],
+    "T_DEPARTMENT" : [ "DEPT_CODE" ],
+    "T_DICT_TYPE" : [ "TYPE_CODE" ],
+    "T_DICTIONARY" : [ "DICT_CODE" ],
+    "T_PROVINCE" : [ "PROVINCE_CODE" ],
+    "T_CITY" : [ "CITY_CODE" ],
+    "T_AREA" : [ "AREA_CODE" ],
+    "T_ROLE" : [ "ROLE_CODE" ]
   },
   "noSqlTables" : [ "T_SYS_PARAM" ]
 }

@@ -1,0 +1,15 @@
+{
+  "isOpenTerminal" : true,
+  "isOutLogToTerminal" : true,
+  "projectPath" : "G:\\tablego-springboot",
+  "scriptPath" : "G:\\tablego-springboot\\项目部署",
+  "batchConfig" : [ {
+    "runtimeExec" : [ {
+      "command" : "${scriptPath}\\svn-update-project.bat",
+      "enable" : false
+    }, {
+      "command" : "${scriptPath}\\maven-lifecycle.bat \"clean package\" ${projectPath}",
+      "enable" : true
+    } ]
+  } ]
+}

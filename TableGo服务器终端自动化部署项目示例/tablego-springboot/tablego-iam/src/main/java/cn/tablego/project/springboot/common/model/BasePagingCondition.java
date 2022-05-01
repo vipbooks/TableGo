@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 分页查询请求参数，用于继承
  *
  * @author bianj
- * @version 1.0.0 2021-09-23
+ * @version 1.0.0 2021-09-26
  */
 public abstract class BasePagingCondition extends OverrideBeanMethods {
     /** 版本号 */

@@ -1,7 +1,7 @@
 <#-- 初始化表的查询字段 -->
-<#assign searchFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFeilds) />
+<#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields) />
 <#-- 初始化需要生成检查字段值是否已存在的接口的字段 -->
-<#assign checkValueExistedFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.checkValueExistedFeilds) />
+<#assign checkValueExistedFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.checkValueExistedFields) />
 <#-- 判断是否是需要生成SQL的表 -->
 <#if FtlUtils.tableExisted(jsonParam.noSqlTables, tableInfo.tableName)>
     <#assign isNoSqlTable = true />
@@ -18,10 +18,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 </#if>
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-<#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFeilds, "Date")>
+<#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFields, "Date")>
 import cn.hutool.core.date.DateUtil;
 </#if>
-<#if checkValueExistedFeilds?has_content>
+<#if checkValueExistedFields?has_content>
 import cn.hutool.core.util.BooleanUtil;
 </#if>
 import ${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase};
@@ -46,7 +46,7 @@ public class ${tableInfo.upperCamelCase}Service extends ServiceImpl<${tableInfo.
      */
     public IPage<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}Page(${tableInfo.upperCamelCase}Condition condition) {
         IPage<${tableInfo.upperCamelCase}> page = condition.buildPage();
-<#assign fieldInfo = FtlUtils.getFieldByFieldTypeAtList(tableInfo, searchFeilds, "Date") />
+<#assign fieldInfo = FtlUtils.getFieldByFieldTypeAtList(tableInfo, searchFields, "Date") />
 <#if isNoSqlTable?? && isNoSqlTable>
         LambdaQueryWrapper<${tableInfo.upperCamelCase}> queryWrapper = condition.buildLambdaQueryWrapper(${tableInfo.upperCamelCase}.class);
     <#if fieldInfo?has_content>
@@ -83,9 +83,9 @@ public class ${tableInfo.upperCamelCase}Service extends ServiceImpl<${tableInfo.
         return this.getById(${tableInfo.pkLowerCamelName});
     }
 </#if>
-<#if checkValueExistedFeilds?has_content>
+<#if checkValueExistedFields?has_content>
     <#list tableInfo.fieldInfos as fieldInfo>
-        <#list checkValueExistedFeilds as fieldName>
+        <#list checkValueExistedFields as fieldName>
             <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
 
     /**

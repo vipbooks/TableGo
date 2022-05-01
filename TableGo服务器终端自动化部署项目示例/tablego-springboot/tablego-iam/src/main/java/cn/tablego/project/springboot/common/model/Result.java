@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 响应参数
  * 
  * @author bianj
- * @version 1.0.0 2021-09-23
+ * @version 1.0.0 2021-09-26
  */
 @ApiModel(description = "响应参数")
 public class Result<T> extends OverrideBeanMethods {

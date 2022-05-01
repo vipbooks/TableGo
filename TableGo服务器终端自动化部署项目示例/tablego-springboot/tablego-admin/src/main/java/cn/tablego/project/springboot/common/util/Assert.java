@@ -15,7 +15,7 @@ import cn.tablego.project.springboot.common.exception.BizException;
  * 断言，用于业务判断，不符合业务要求将抛出业务异常
  *
  * @author bianj
- * @version 1.0.0 2021-09-23
+ * @version 1.0.0 2021-09-26
  */
 public class Assert {
     /**

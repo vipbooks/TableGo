@@ -19,7 +19,7 @@
     "needFilterField" : "false",
     "excludeFields" : "${excludeFields}"
   }],
-  "likeFeilds" : {
+  "likeFields" : {
     "T_USER" : [ "FULL_NAME" ],
     "T_SYS_PARAM" : [ "PARAM_NAME" ],
     "T_DEPARTMENT" : [ "DEPT_NAME" ],

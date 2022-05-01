@@ -1,17 +1,17 @@
 <#-- 用于生成 Ant Design Vue 列表管理页面的自定义模板 -->
 <#-- 初始化表的查询字段 -->
-<#assign searchFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFeilds) />
+<#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields) />
 <#-- 初始化列表显示的字段 -->
-<#assign listFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.listFeilds) />
+<#assign listFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.listFields) />
 <#if tableInfo.simpleRemark?has_content><!-- ${tableInfo.simpleRemark}列表管理页面 --></#if>
 <template>
   <a-card :bordered="false">
-<#if searchFeilds?has_content>
+<#if searchFields?has_content>
     <div class="table-page-search-wrapper">
       <a-form layout="inline">
         <a-row :gutter="48">
     <#assign loopCount = 0>
-    <#list searchFeilds as fieldName>
+    <#list searchFields as fieldName>
         <#list tableInfo.fieldInfos as fieldInfo>
             <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
                 <#if loopCount == jsonParam.advancedIndex!2>
@@ -63,7 +63,7 @@
           </template>
     </#if>
 
-          <a-col :md="!advanced && ${24 - (jsonParam.advancedIndex!2%(24/jsonParam.mdSize!8)) * jsonParam.mdSize!8} || ${24 - (searchFeilds?size%(24/jsonParam.mdSize!8)) * jsonParam.mdSize!8}" :sm="24">
+          <a-col :md="!advanced && ${24 - (jsonParam.advancedIndex!2%(24/jsonParam.mdSize!8)) * jsonParam.mdSize!8} || ${24 - (searchFields?size%(24/jsonParam.mdSize!8)) * jsonParam.mdSize!8}" :sm="24">
             <span class="table-page-search-submitButtons" style="float: right; overflow: hidden;">
               <a-button type="primary" @click="onSearch">查询</a-button>
               <a-button style="margin-left: 8px" @click="clearQueryParam">重置</a-button>
@@ -117,8 +117,8 @@ export default {
       queryParam: {},
       // 表头
       columns: [
-<#if listFeilds?has_content>
-    <#list searchFeilds as fieldName>
+<#if listFields?has_content>
+    <#list searchFields as fieldName>
         <#list tableInfo.fieldInfos as fieldInfo>
             <#if StringUtils.equalsIgnoreCase(fieldInfo.colName, fieldName)>
         {

@@ -75,7 +75,7 @@ public abstract class BaseBean extends OverrideBeanMethods {
 
     /**
      * 获取记录创建人，保存用户ID值
-     * 
+     *
      * @return 记录创建人
      */
     public String getCreatedBy() {
@@ -84,9 +84,8 @@ public abstract class BaseBean extends OverrideBeanMethods {
 
     /**
      * 设置记录创建人，保存用户ID值
-     * 
-     * @param createdBy
-     *            记录创建人，保存用户ID值
+     *
+     * @param createdBy 记录创建人，保存用户ID值
      */
     public BaseBean setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
@@ -95,7 +94,7 @@ public abstract class BaseBean extends OverrideBeanMethods {
 
     /**
      * 获取记录创建日期
-     * 
+     *
      * @return 记录创建日期
      */
     public Date getCreationDate() {
@@ -104,9 +103,8 @@ public abstract class BaseBean extends OverrideBeanMethods {
 
     /**
      * 设置记录创建日期
-     * 
-     * @param creationDate
-     *            记录创建日期
+     *
+     * @param creationDate 记录创建日期
      */
     public BaseBean setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
@@ -115,7 +113,7 @@ public abstract class BaseBean extends OverrideBeanMethods {
 
     /**
      * 获取记录最后修改人，保存用户ID值
-     * 
+     *
      * @return 记录最后修改人
      */
     public String getLastUpdatedBy() {
@@ -124,9 +122,8 @@ public abstract class BaseBean extends OverrideBeanMethods {
 
     /**
      * 设置记录最后修改人，保存用户ID值
-     * 
-     * @param lastUpdatedBy
-     *            记录最后修改人，保存用户ID值
+     *
+     * @param lastUpdatedBy 记录最后修改人，保存用户ID值
      */
     public BaseBean setLastUpdatedBy(String lastUpdatedBy) {
         this.lastUpdatedBy = lastUpdatedBy;
@@ -135,7 +132,7 @@ public abstract class BaseBean extends OverrideBeanMethods {
 
     /**
      * 获取记录最后修改日期
-     * 
+     *
      * @return 记录最后修改日期
      */
     public Date getLastUpdateDate() {
@@ -144,30 +141,28 @@ public abstract class BaseBean extends OverrideBeanMethods {
 
     /**
      * 设置记录最后修改日期
-     * 
-     * @param lastUpdateDate
-     *            记录最后修改日期
+     *
+     * @param lastUpdateDate 记录最后修改日期
      */
     public BaseBean setLastUpdateDate(Date lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
         return this;
     }
 
-   /**
-    * 获取删除标记，字典数据，例如：0：已删除、1：未删除
-    *
-    * @return 删除标记
-    */
+    /**
+     * 获取删除标记，字典数据，例如：0：已删除、1：未删除
+     *
+     * @return 删除标记
+     */
     public Integer getDeleteFlag() {
         return this.deleteFlag;
     }
 
-   /**
-    * 设置删除标记，字典数据，例如：0：已删除、1：未删除
-    *
-    * @param deleteFlag
-    *            删除标记
-    */
+    /**
+     * 设置删除标记，字典数据，例如：0：已删除、1：未删除
+     *
+     * @param deleteFlag 删除标记
+     */
     public BaseBean setDeleteFlag(Integer deleteFlag) {
         this.deleteFlag = deleteFlag;
         return this;

@@ -14,6 +14,11 @@ import java.math.BigDecimal;
 <#if FtlUtils.fieldTypeExisted(tableInfo, "BigInteger")>
 import java.math.BigInteger;
 </#if>
+<#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.commonFields)>
+import ${jsonParam.basePackagePath}.common.model.BaseBean;
+<#else>
+import ${jsonParam.basePackagePath}.common.model.OverrideBeanMethods;
+</#if>
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -28,7 +33,7 @@ import ${jsonParam.basePackagePath}.common.BaseBean;
  */
 @ApiModel(description = "${tableInfo.simpleRemark!tableInfo.tableName}")
 @TableName("${tableInfo.tableName}")
-public class ${tableInfo.upperCamelCase} extends BaseBean {
+public class ${tableInfo.upperCamelCase} extends <#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.commonFields)>BaseBean<#else>OverrideBeanMethods</#if> {
     /** 版本号 */
     private static final long serialVersionUID = ${tableInfo.serialVersionUID!'1'}L;
 <#if tableInfo.fieldInfos?has_content>

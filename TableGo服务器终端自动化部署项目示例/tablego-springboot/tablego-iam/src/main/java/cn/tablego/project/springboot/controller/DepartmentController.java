@@ -1,7 +1,5 @@
 package cn.tablego.project.springboot.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +18,7 @@ import cn.tablego.project.springboot.model.Department;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 部门服务
@@ -27,14 +26,16 @@ import io.swagger.annotations.ApiOperation;
  * @author bianj
  * @version 1.0.0 2021-07-18
  */
+@Slf4j
 @Api(tags = "部门服务")
 @RestController
 @RequestMapping("/department")
 public class DepartmentController extends BaseController {
 
-    @ApiOperation(value = "根据条件分页查询部门列表")
+    @ApiOperation(value = "分页查询部门列表")
     @PostMapping("/findDepartmentPage")
     public Paging<Department> findDepartmentPage() {
+        log.info("分页查询部门列表");
         return new Paging<>();
     }
 
@@ -42,6 +43,7 @@ public class DepartmentController extends BaseController {
     @ApiImplicitParam(name = "id", value = "主键ID", required = true)
     @GetMapping(value = "/getDepartmentById/{id}")
     public Result<Department> getDepartmentById(@PathVariable String id) {
+        log.info("根据主键ID查询部门: {}", id);
         Department department = Department.newInstance().setId(id);
         return Result.ok(department);
     }
@@ -50,6 +52,7 @@ public class DepartmentController extends BaseController {
     @ApiImplicitParam(name = "department", value = "部门", required = true, dataType = "Department", paramType = "body")
     @PostMapping("/addDepartment")
     public Result<Department> addDepartment(@RequestBody @Valid Department department) {
+        log.info("新增部门: {}", department);
         return Result.ok(department);
     }
 
@@ -57,6 +60,7 @@ public class DepartmentController extends BaseController {
     @ApiImplicitParam(name = "department", value = "部门", required = true, dataType = "Department", paramType = "body")
     @PutMapping(value = "/updateDepartment")
     public Result<Boolean> updateDepartment(@RequestBody Department department) {
+        log.info("修改部门: {}", department);
         return Result.ok();
     }
 
@@ -64,13 +68,7 @@ public class DepartmentController extends BaseController {
     @ApiImplicitParam(name = "id", value = "主键ID", required = true)
     @DeleteMapping(value = "/deleteDepartmentById/{id}")
     public Result<Boolean> deleteDepartmentById(@PathVariable String id) {
-        return Result.ok();
-    }
-
-    @ApiOperation(value = "根据主键ID列表批量删除部门")
-    @ApiImplicitParam(name = "idList", value = "主键ID列表", required = true, allowMultiple = true, paramType = "body")
-    @DeleteMapping("/deleteDepartmentByIds")
-    public Result<Boolean> deleteDepartmentByIds(@RequestBody List<String> idList) {
+        log.info("根据主键ID删除部门: {}", id);
         return Result.ok();
     }
 }

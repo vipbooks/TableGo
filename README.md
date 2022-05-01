@@ -7,7 +7,7 @@
 　　TableGo是基于数据库的代码自动生成工具，低代码编程技术的实现，可以零代码自动生成SpringBoot项目工程、生成JavaBean、生成前后端分离的CRUD代码、生成MyBaits的Mapper映射配置文件、生成数据库设计文档（Word、Excel）、生成Swagger2离线API文档、生成前后端代码、能查出数据库数据生成各种代码和文档等，更重要的是可以根据每个项目的不同开发框架编写自定义模板与项目框架适配生成各模块增删查改的前后端代码，让开发人员的开发效率提高60%以上，并且可以通过模板定义开发规范统一开发风格和标准，提高代码的规范性和可维护性。<br/>
 　　只要设计好数据库并且添加好备注，就能通过自定义模板生成任意编程语言的任何程序代码，并且能够生成各种代码备注。实现只要把数据数据库设计好，整个项目就完成了很大一部分代码的编写，大大节省了项目的开发成本。支持MySQL、Oracle、SQL Server、PostgreSQL、MariaDB、DB2 六种数据库，支持Window、Linux、Mac OS等多种操作系统。<br/>
 　　TableGo原生不支持的数据库可以通过配置自定义扩展数据库获得支持，可通过配置database.ini配置文件让TableGo支持更多关系型数据库，在新的database.ini配置文件已经包含对武汉达梦、人大金仓V8、神舟通用、南大通用等四种数据库的扩展支持配置。<br/>
-　　TableGo还可以通过服务器接连终端功能使用SSH2连接Linux服务器，实现命令执行、上传下载文件、按指定顺序自动执行各种命令和操作，实现如自动化部署项目工程到dev、test、sit环境等功能。<br/>
+　　TableGo还可以通过服务器接连终端功能使用SSH2连接Linux服务器，实现命令执行、上传下载文件、按指定顺序自动执行各种命令和操作，实现一键自动化部署项目工程到DEV、TEST、SIT、UAT环境。<br/>
 　　使用自定义模板功能可以根据数据库表结构信息生成你想要的任何代码，例如：Java、C#、C++、Golang、Rust、Python、Objective-C、Swift、Kotlin、VB、VC、SQL、HTML、JSP、JS、PHP、Vue、React、Word、Excel等等，没有做不到只有想不到……<br/>
 　　可以生成Java、C#、C++、Golang、Rust、Python、Objective-C、Swift、iOS等各种不同平台编程语言的数据模型或结构体，对应的自定义模板示例已提供。<br/><br/>
 　　TableGo官网：[http://www.tablego.cn](http://www.tablego.cn)<br/>

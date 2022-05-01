@@ -1,7 +1,5 @@
 package cn.tablego.project.springboot.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,21 +18,24 @@ import cn.tablego.project.springboot.model.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 用户服务
  * 
  * @author bianj
- * @version 1.0.0 2021-09-23
+ * @version 1.0.0 2021-09-26
  */
+@Slf4j
 @Api(tags = "用户服务")
 @RestController
 @RequestMapping("/user")
 public class UserController extends BaseController {
 
-    @ApiOperation(value = "根据条件分页查询用户列表")
+    @ApiOperation(value = "分页查询用户列表")
     @PostMapping("/findUserPage")
     public Paging<User> findUserPage() {
+        log.info("分页查询用户列表");
         return new Paging<>();
     }
 
@@ -42,6 +43,7 @@ public class UserController extends BaseController {
     @ApiImplicitParam(name = "id", value = "主键ID", required = true)
     @GetMapping(value = "/getUserById/{id}")
     public Result<User> getUserById(@PathVariable String id) {
+        log.info("根据主键ID查询用户: {}", id);
         User user = User.newInstance().setId(id);
         return Result.ok(user);
     }
@@ -50,6 +52,7 @@ public class UserController extends BaseController {
     @ApiImplicitParam(name = "user", value = "用户", required = true, dataType = "User", paramType = "body")
     @PostMapping("/addUser")
     public Result<User> addUser(@RequestBody @Valid User user) {
+        log.info("新增用户: {}", user);
         return Result.ok(user);
     }
 
@@ -57,6 +60,7 @@ public class UserController extends BaseController {
     @ApiImplicitParam(name = "user", value = "用户", required = true, dataType = "User", paramType = "body")
     @PutMapping(value = "/updateUser")
     public Result<Boolean> updateUser(@RequestBody User user) {
+        log.info("修改用户: {}", user);
         return Result.ok();
     }
 
@@ -64,13 +68,7 @@ public class UserController extends BaseController {
     @ApiImplicitParam(name = "id", value = "主键ID", required = true)
     @DeleteMapping(value = "/deleteUserById/{id}")
     public Result<Boolean> deleteUserById(@PathVariable String id) {
-        return Result.ok();
-    }
-
-    @ApiOperation(value = "根据主键ID列表批量删除用户")
-    @ApiImplicitParam(name = "idList", value = "主键ID列表", required = true, allowMultiple = true, paramType = "body")
-    @DeleteMapping("/deleteUserByIds")
-    public Result<Boolean> deleteUserByIds(@RequestBody List<String> idList) {
+        log.info("根据主键ID删除用户: {}", id);
         return Result.ok();
     }
 }

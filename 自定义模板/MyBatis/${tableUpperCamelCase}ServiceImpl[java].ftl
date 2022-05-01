@@ -30,15 +30,17 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements ${tableInfo.upper
     private ${tableInfo.upperCamelCase}Mapper ${tableInfo.upperCamelCase}Mapper;
 
     @Override
-    public IPage<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}ByCondition(${tableInfo.upperCamelCase}Condition condition) {
+    public IPage<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}Page(${tableInfo.upperCamelCase}Condition condition) {
         IPage<${tableInfo.upperCamelCase}> page = condition.buildPage();
-        return ${tableInfo.upperCamelCase}Mapper.find${tableInfo.upperCamelCase}ByCondition(page, condition);
+        return ${tableInfo.upperCamelCase}Mapper.find${tableInfo.upperCamelCase}Page(page, condition);
     }
+<#if tableInfo.pkLowerCamelName??>
 
     @Override
     public ${tableInfo.upperCamelCase} get${tableInfo.upperCamelCase}ById(${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}) {
         return ${tableInfo.upperCamelCase}Mapper.get${tableInfo.upperCamelCase}ById(${tableInfo.pkLowerCamelName});
     }
+</#if>
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -51,6 +53,7 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements ${tableInfo.upper
     public Boolean update${tableInfo.upperCamelCase}(${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
         return ${tableInfo.upperCamelCase}Mapper.update${tableInfo.upperCamelCase}(${tableInfo.lowerCamelCase});
     }
+<#if tableInfo.pkLowerCamelName??>
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -63,4 +66,5 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements ${tableInfo.upper
     public Boolean delete${tableInfo.upperCamelCase}ByIds(List<String> idList) {
         return ${tableInfo.upperCamelCase}Mapper.delete${tableInfo.upperCamelCase}ByIds(idList);
     }
+</#if>
 }

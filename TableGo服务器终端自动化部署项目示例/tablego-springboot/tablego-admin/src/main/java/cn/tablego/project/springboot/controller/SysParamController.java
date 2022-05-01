@@ -1,7 +1,5 @@
 package cn.tablego.project.springboot.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +18,7 @@ import cn.tablego.project.springboot.model.SysParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 系统参数服务
@@ -27,14 +26,16 @@ import io.swagger.annotations.ApiOperation;
  * @author bianj
  * @version 1.0.0 2021-07-18
  */
+@Slf4j
 @Api(tags = "系统参数服务")
 @RestController
 @RequestMapping("/sysParam")
 public class SysParamController extends BaseController {
 
-    @ApiOperation(value = "根据条件分页查询系统参数列表")
+    @ApiOperation(value = "分页查询系统参数列表")
     @PostMapping("/findSysParamPage")
     public Paging<SysParam> findSysParamPage() {
+        log.info("分页查询系统参数列表");
         return new Paging<>();
     }
 
@@ -42,6 +43,7 @@ public class SysParamController extends BaseController {
     @ApiImplicitParam(name = "id", value = "主键ID", required = true)
     @GetMapping(value = "/getSysParamById/{id}")
     public Result<SysParam> getSysParamById(@PathVariable String id) {
+        log.info("根据主键ID查询系统参数: {}", id);
         SysParam sysParam = SysParam.newInstance().setId(id);
         return Result.ok(sysParam);
     }
@@ -50,6 +52,7 @@ public class SysParamController extends BaseController {
     @ApiImplicitParam(name = "sysParam", value = "系统参数", required = true, dataType = "SysParam", paramType = "body")
     @PostMapping("/addSysParam")
     public Result<SysParam> addSysParam(@RequestBody @Valid SysParam sysParam) {
+        log.info("新增系统参数: {}", sysParam);
         return Result.ok(sysParam);
     }
 
@@ -57,6 +60,7 @@ public class SysParamController extends BaseController {
     @ApiImplicitParam(name = "sysParam", value = "系统参数", required = true, dataType = "SysParam", paramType = "body")
     @PutMapping(value = "/updateSysParam")
     public Result<Boolean> updateSysParam(@RequestBody SysParam sysParam) {
+        log.info("修改系统参数: {}", sysParam);
         return Result.ok();
     }
 
@@ -64,13 +68,7 @@ public class SysParamController extends BaseController {
     @ApiImplicitParam(name = "id", value = "主键ID", required = true)
     @DeleteMapping(value = "/deleteSysParamById/{id}")
     public Result<Boolean> deleteSysParamById(@PathVariable String id) {
-        return Result.ok();
-    }
-
-    @ApiOperation(value = "根据主键ID列表批量删除系统参数")
-    @ApiImplicitParam(name = "idList", value = "主键ID列表", required = true, allowMultiple = true, paramType = "body")
-    @DeleteMapping("/deleteSysParamByIds")
-    public Result<Boolean> deleteSysParamByIds(@RequestBody List<String> idList) {
+        log.info("根据主键ID删除系统参数: {}", id);
         return Result.ok();
     }
 }

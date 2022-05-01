@@ -12,7 +12,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 分页响应参数
  * 
  * @author bianj
- * @version 1.0.0 2021-09-23
+ * @version 1.0.0 2021-09-26
  */
 @ApiModel(description = "分页响应参数")
 public class Paging<T extends Serializable> extends OverrideBeanMethods {

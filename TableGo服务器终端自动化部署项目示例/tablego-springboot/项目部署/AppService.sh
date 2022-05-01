@@ -1,11 +1,16 @@
 #!/bin/bash
 
+#Welcome to use the TableGo tools
 #把Window中编辑产生的 \r 替换成空白：sed -i 's/\r$//' AppService.sh
+#给文件夹添加最高权限：chmod -R 777 项目目录
 #添加可执行权限：sudo chmod +x AppService.sh
-#根据名称批量终止进程：kill -9 `ps -ef | grep ${name} | grep -v grep | awk '{print $2}'`
-#配置应用参数
+#使用nohup启动项目：nohup java -jar ${appName}.jar --spring.profiles.active=test > ${appName}.log 2>&1 &
+#使用setsid启动项目：setsid java -jar ${appName}.jar --spring.profiles.active=test > ${appName}.log 2>&1 &
+#根据名称批量终止进程：kill -9 `ps -ef | grep ${appName} | grep -v grep | awk '{print $2}'`
+#配置服务应用参数
 appName=serviceName
 appJarName=${appName}.jar
+profile=dev
 appPort=8080
 
 #使用说明，用来提示输入参数
@@ -31,7 +36,7 @@ start(){
     if [ $? -eq "0" ]; then
         echo "${appJarName} is already running. Pid: ${pid}."
     else
-        nohup java -Xms256m -Xmx1024m -jar ${appJarName} --server.port=${appPort} > ${appName}.log 2>&1 &
+        nohup java -jar ${appJarName} -Xms256m -Xmx1024m --spring.profiles.active=${profile} --server.port=${appPort} > ${appName}.log 2>&1 &
         echo "${appJarName} startup. AppPort: ${appPort}."
     fi
 }
@@ -74,14 +79,19 @@ initArgs(){
 
     if test ! -z "$2"
     then
-      appPort=$2
+      profile=$2
+    fi
+
+    if test ! -z "$3"
+    then
+      appPort=$3
     fi
 }
 
 #根据输入参数，选择执行对应方法，不输入则执行使用说明，$1表示第一个参数
 case "$1" in
   "start")
-    initArgs $2 $3
+    initArgs $2 $3 $4
     start
     ;;
   "stop")
@@ -93,7 +103,7 @@ case "$1" in
     status
     ;;
   "restart")
-    initArgs $2 $3
+    initArgs $2 $3 $4
     restart
     ;;
    *)
