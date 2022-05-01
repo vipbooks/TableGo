@@ -1,11 +1,11 @@
 <#-- 用于生成 Ant Design Vue 详情页面的自定义模板 -->
 <#-- 初始化Form表单字段 -->
-<#assign formFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.formFeilds) />
+<#assign formFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.formFields) />
 <#if tableInfo.simpleRemark?has_content><!-- ${tableInfo.simpleRemark}详情页面 --></#if>
 <template>
   <a-card :bordered="false">
     <detail-list>
-    <#list formFeilds as fieldName>
+    <#list formFields as fieldName>
         <#list tableInfo.fieldInfos as fieldInfo>
             <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
       <detail-item-list term="${fieldInfo.simpleRemark}">{{ data.${fieldInfo.proName} }}</detail-item-list>

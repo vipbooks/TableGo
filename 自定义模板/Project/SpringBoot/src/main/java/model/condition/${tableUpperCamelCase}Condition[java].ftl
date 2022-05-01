@@ -1,13 +1,13 @@
 <#-- 初始化表的查询字段 -->
-<#assign searchFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFeilds) />
+<#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields) />
 package ${jsonParam.packagePath}
 
-<#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFeilds, "Date")>
+<#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFields, "Date")>
 import java.util.Date;
 import cn.hutool.core.date.DatePattern;
 import com.fasterxml.jackson.annotation.JsonFormat;
 </#if>
-<#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFeilds, "BigDecimal")>
+<#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFields, "BigDecimal")>
 import java.math.BigDecimal;
 </#if>
 <#if FtlUtils.fieldTypeExisted(tableInfo, "BigInteger")>
@@ -15,7 +15,7 @@ import java.math.BigInteger;
 </#if>
 <#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
 import io.swagger.annotations.ApiModel;
-    <#if searchFeilds?has_content>
+    <#if searchFields?has_content>
 import io.swagger.annotations.ApiModelProperty;
     </#if>
 </#if>
@@ -44,9 +44,9 @@ public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
     public static ${tableInfo.upperCamelCase}Condition newInstance() {
         return new ${tableInfo.upperCamelCase}Condition();
     }
-<#if searchFeilds?has_content>
+<#if searchFields?has_content>
     <#list tableInfo.fieldInfos as fieldInfo>
-        <#list searchFeilds as fieldName>
+        <#list searchFields as fieldName>
             <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
 
     <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>

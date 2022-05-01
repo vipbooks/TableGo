@@ -23,10 +23,11 @@ public interface ${tableInfo.upperCamelCase}Mapper {
      * @param page
      *            分页参数
      * @param condition
-     *            查询参数
+     *            查询条件
      * @return 分页数据
      */
-    IPage<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}ByCondition(IPage<${tableInfo.upperCamelCase}> page, @Param("condition") ${tableInfo.upperCamelCase}Condition condition);
+    IPage<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}Page(IPage<${tableInfo.upperCamelCase}> page, @Param("condition") ${tableInfo.upperCamelCase}Condition condition);
+<#if tableInfo.pkLowerCamelName??>
 
     /**
      * 根据主键ID查询${tableInfo.simpleRemark}信息
@@ -35,6 +36,7 @@ public interface ${tableInfo.upperCamelCase}Mapper {
      * @return ${tableInfo.simpleRemark}信息
      */
     ${tableInfo.upperCamelCase} get${tableInfo.upperCamelCase}ById(@Param("${tableInfo.pkLowerCamelName}") ${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName});
+</#if>
 
     /**
      * 新增${tableInfo.simpleRemark}信息
@@ -51,6 +53,7 @@ public interface ${tableInfo.upperCamelCase}Mapper {
      * @return 是否成功
      */
     Boolean update${tableInfo.upperCamelCase}(${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase});
+<#if tableInfo.pkLowerCamelName??>
 
     /**
      * 根据主键ID删除${tableInfo.simpleRemark}
@@ -67,4 +70,5 @@ public interface ${tableInfo.upperCamelCase}Mapper {
      * @return 是否成功
      */
     Boolean delete${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList);
+</#if>
 }

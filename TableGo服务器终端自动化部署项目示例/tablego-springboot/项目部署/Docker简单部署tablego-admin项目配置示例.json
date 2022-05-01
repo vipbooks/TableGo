@@ -1,0 +1,62 @@
+{
+  "isOpenTerminal" : true,
+  "isOutLogToTerminal" : true,
+  "projectPath" : "G:\\tablego-springboot",
+  "scriptPath" : "G:\\tablego-springboot\\项目部署",
+  "serverProjectPath" : "/opt/tablego-springboot",
+  "profiles" : {
+    "dev" : {
+      "profile" : "dev",
+      "port" : "8080"
+    },
+    "test" : {
+      "profile" : "test",
+      "port" : "8081"
+    },
+    "prod" : {
+      "profile" : "prod",
+      "port" : "8082"
+    }
+  },
+  "batchConfig" : [ {
+    "runtimeExec" : [ {
+      "command" : "${scriptPath}\\svn-update-project.bat",
+      "enable" : false
+    }, {
+      "command" : "${scriptPath}\\maven-lifecycle.bat \"clean package\" ${projectPath}\\tablego-admin",
+      "enable" : true
+    } ]
+  }, {
+    "fileUploads" : [ {
+      "fromPath" : [ "${projectPath}\\tablego-admin\\target\\tablego-admin.jar", "${projectPath}\\tablego-admin\\Dockerfile" ],
+      "toPath" : "${serverProjectPath}/tablego-admin",
+      "enable" : true
+    } ]
+  }, {
+    "commands" : [ {
+      "command" : "cd ${serverProjectPath}/tablego-admin"
+    }, {
+      "command" : "docker rm -f tablego-admin",
+      "containsStr" : "tablego-admin",
+      "enable" : true
+    }, {
+      "command" : "docker build -t tablego-admin .",
+      "containsStr" : "Successfully tagged",
+      "enable" : true
+    }, {
+      "command" : "docker run -dp ${port}:8080 --name=tablego-admin tablego-admin --spring.profiles.active=${profile}",
+      "sleepSeconds" : 3,
+      "enable" : true
+    }, {
+      "command" : "docker logs -f tablego-admin",
+      "containsStrSigquit" : "Started AdminApplication",
+      "enable" : true
+    }, {
+      "command" : "docker image prune -f",
+      "containsStr" : "Total reclaimed space",
+      "enable" : true
+    }, {
+      "command" : "docker ps"
+    } ]
+  } ]
+}

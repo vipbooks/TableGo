@@ -201,30 +201,26 @@
                 <artifactId>smart-doc-maven-plugin</artifactId>
                 <version>${"$"}{smart-doc-maven-plugin.version}</version>
                 <configuration>
-                    <!--指定生成文档的使用的配置文件,配置文件放在自己的项目中-->
+                    <!-- 指定生成文档的使用的配置文件，配置文件放在自己的项目中 -->
                     <configFile>./src/main/resources/smart-doc.json</configFile>
-                    <!--指定项目名称-->
+                    <!-- 指定项目名称 -->
                     <projectName>${"$"}{project.name}</projectName>
-                    <!--smart-doc实现自动分析依赖树加载第三方依赖的源码，如果一些框架依赖库加载不到导致报错，这时请使用excludes排除掉-->
+                    <!-- smart-doc实现自动分析依赖树加载第三方依赖的源码，如果一些框架依赖库加载不到导致报错，这时请使用excludes排除掉 -->
                     <excludes>
-                        <!--格式为：groupId:artifactId;参考如下-->
+                        <!--格式为：groupId:artifactId 参考如下，也可以支持正则式如：com.alibaba:.*-->
                         <exclude>com.alibaba:fastjson</exclude>
                     </excludes>
-                    <!--自1.0.8版本开始，插件提供includes支持,配置了includes后插件会按照用户配置加载而不是自动加载，因此使用时需要注意-->
-                    <!--smart-doc能自动分析依赖树加载所有依赖源码，原则上会影响文档构建效率，因此你可以使用includes来让插件加载你配置的组件-->
+                    <!-- includes配置用于配置加载外部依赖源码，配置后插件会按照配置项加载外部源代码而不是自动加载所有，因此使用时需要注意 -->
+                    <!-- smart-doc能自动分析依赖树加载所有依赖源码，原则上会影响文档构建效率，因此你可以使用includes来让插件加载你配置的组件 -->
                     <includes>
-                        <!--格式为：groupId:artifactId;参考如下-->
+                        <!-- 格式为：groupId:artifactId 参考如下，也可以支持正则式如：com.alibaba:.* -->
                         <include>com.alibaba:fastjson</include>
                     </includes>
                 </configuration>
                 <executions>
                     <execution>
-                        <!--如果不需要在执行编译时启动smart-doc，则将phase注释掉-->
+                        <!-- 如果不需要在执行编译时启动smart-doc，则将phase注释掉 -->
                         <phase>compile</phase>
-                        <goals>
-                            <!--smart-doc提供了html、openapi、markdown等goal，可按需配置-->
-                            <goal>html</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>

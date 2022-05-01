@@ -29,3 +29,6 @@ swagger:
     email: tablego@qq.com
     url: http://www.tablego.cn
   base-package: cn.tablego.project.springboot.controller
+  authorization:
+    type: None
+

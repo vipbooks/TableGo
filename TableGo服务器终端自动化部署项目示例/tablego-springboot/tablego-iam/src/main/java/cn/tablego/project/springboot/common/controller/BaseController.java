@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * 用于其他Controller继承的基础Controller
  *
  * @author bianj
- * @version 1.0.0 2021-09-23
+ * @version 1.0.0 2021-09-26
  */
 public abstract class BaseController {
     @Autowired

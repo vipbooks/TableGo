@@ -1,6 +1,8 @@
 <#-- 用于生成Mapper.xml配置的自定义模板 -->
 <#-- 初始化表的查询字段 -->
-<#assign searchFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFeilds) />
+<#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields)![] />
+<#-- 初始化需要生成检查字段值是否已存在的接口的字段 -->
+<#assign checkValueExistedFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.checkValueExistedFields)![] />
 <#-- 判断是否是需要生成SQL的表 -->
 <#if !FtlUtils.tableExisted(jsonParam.noSqlTables, tableInfo.tableName)>
     <#assign isNoSqlTable = false />
@@ -23,10 +25,10 @@
         <#list pagingFieldList as fieldInfo><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName}<#if fieldInfo_has_next>, </#if></#list><#if pagingFieldList_has_next>, </#if>
         </#list>
     </sql>
-    <#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.logFields)>
+    <#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.commonFields)>
     <!-- 表主要字段 -->
     <sql id="mainColumns">
-        <#assign pagingFieldInfoList = FtlUtils.tableFieldIgnore(tableInfo.fieldInfos, jsonParam.logFields, paramConfig.customColumnThreshold)>
+        <#assign pagingFieldInfoList = FtlUtils.tableFieldIgnore(tableInfo.fieldInfos, jsonParam.commonFields, paramConfig.customColumnThreshold)>
         <#list pagingFieldInfoList as pagingFieldList>
         <#list pagingFieldList as fieldInfo><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName}<#if fieldInfo_has_next>, </#if></#list><#if pagingFieldList_has_next>, </#if>
         </#list>
@@ -36,14 +38,14 @@
     <!-- ${String.format(paramConfig.mergeFileMarkEnd, 1)} -->
     </#if>
 
-    <!-- 根据参数分页查询${tableInfo.simpleRemark} -->
-    <select id="list${tableInfo.upperCamelCase}Page" resultMap="${tableInfo.lowerCamelCase}Map">
+    <!-- 根据条件分页查询${tableInfo.simpleRemark} -->
+    <select id="find${tableInfo.upperCamelCase}Page" resultMap="${tableInfo.lowerCamelCase}Map">
         SELECT
             <include refid="allColumns" />
         FROM ${tableInfo.tableName} <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias} </#if>WHERE <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>DELETE_FLAG = 1<#else>1 = 1</#if>
-    <#if searchFeilds?has_content>
+    <#if searchFields?has_content>
         <#list tableInfo.fieldInfos as fieldInfo>
-            <#list searchFeilds as fieldName>
+            <#list searchFields as fieldName>
                 <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
                     <#if fieldInfo.javaType == "Date">
         <if test="condition.${fieldInfo.proName}Begin != null">
@@ -65,6 +67,28 @@
         ORDER BY <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>CREATION_DATE DESC
     </#if>
     </select>
+</#if>
+<#if checkValueExistedFields?has_content>
+    <#list tableInfo.fieldInfos as fieldInfo>
+        <#list checkValueExistedFields as fieldName>
+            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+
+    <!-- 检查${fieldInfo.simpleRemark!fieldInfo.colName}是否存在 -->
+    <select id="check${fieldInfo.upperCamelCase}Existed" resultType="string">
+                <#if tableInfo.pkLowerCamelName??>
+        SELECT 1 FROM ${tableInfo.tableName} WHERE<#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")> DELETE_FLAG = '1'</#if>
+            <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")>AND </#if>${fieldInfo.colName} = ${"#"}{${fieldInfo.proName}}
+            <if test="${tableInfo.pkLowerCamelName} != null<#if tableInfo.pkJavaType == "String"> and ${tableInfo.pkLowerCamelName} != ''</#if>">
+                AND ${tableInfo.pkColName} != ${"#"}{${tableInfo.pkLowerCamelName}}
+            </if>
+        LIMIT 1
+                <#else>
+        SELECT 1 FROM ${tableInfo.tableName} WHERE<#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")> DELETE_FLAG = '1' AND</#if> ${fieldInfo.colName} = ${"#"}{${fieldInfo.proName}} LIMIT 1
+                </#if>
+    </select>
+            </#if>
+        </#list>
+    </#list>
 </#if>
 
 </mapper>

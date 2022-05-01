@@ -1,12 +1,12 @@
 <#-- 用于生成 Ant Design Vue 编辑页面的自定义模板 -->
 <#-- 初始化Form表单字段 -->
-<#assign formFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.formFeilds) />
+<#assign formFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.formFields) />
 <#if tableInfo.simpleRemark?has_content><!-- ${tableInfo.simpleRemark}编辑页面 --></#if>
 <template>
   <a-card>
     <a-form :form="form">
       <a-row :gutter="48">
-    <#list formFeilds as fieldName>
+    <#list formFields as fieldName>
         <#list tableInfo.fieldInfos as fieldInfo>
             <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
                 <#if fieldInfo.isDictType || fieldInfo.javaType?contains("Enum")>
@@ -120,7 +120,7 @@ export default {
             // TODO: 处理数据
 
             this.form.setFieldsValue(pick(res.data, [
-                <#list formFeilds as fieldName><#list tableInfo.fieldInfos as fieldInfo><#if StringUtils.equalsIgnoreCase(fieldInfo.colName, fieldName)>'${fieldInfo.proName}'<#if fieldName_has_next>, </#if></#if></#list></#list>
+                <#list formFields as fieldName><#list tableInfo.fieldInfos as fieldInfo><#if StringUtils.equalsIgnoreCase(fieldInfo.colName, fieldName)>'${fieldInfo.proName}'<#if fieldName_has_next>, </#if></#if></#list></#list>
             ]))
           }
         })

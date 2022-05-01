@@ -981,7 +981,7 @@ public class RedisService {
      * @param values  一个或多个元素值
      * @return 被添加到集合中新元素的数量，不包括被忽略的元素
      */
-    public Long sAdd(String key, long timeout, TimeUnit unit, Object... values) {
+    public Long sAddEx(String key, long timeout, TimeUnit unit, Object... values) {
         if (StrUtil.isBlank(key) || unit == null) {
             return null;
         }
@@ -1003,7 +1003,7 @@ public class RedisService {
      * @param values  一个或多个元素值
      * @return 被添加到集合中新元素的数量，不包括被忽略的元素
      */
-    public Long sAdd(String key, long timeout, Object... values) {
+    public Long sAddExSe(String key, long timeout, Object... values) {
         if (StrUtil.isBlank(key)) {
             return null;
         }

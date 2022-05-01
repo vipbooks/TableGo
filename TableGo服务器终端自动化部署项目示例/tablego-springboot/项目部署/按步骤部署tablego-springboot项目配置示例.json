@@ -1,0 +1,140 @@
+{
+  "isOpenTerminal" : true,
+  "isOutLogToTerminal" : true,
+  "projectPath" : "G:\\tablego-springboot",
+  "scriptPath" : "G:\\tablego-springboot\\项目部署",
+  "serverProjectPath" : "/opt/tablego-springboot",
+  "profiles" : {
+    "dev" : {
+      "profile" : "dev"
+    },
+    "test" : {
+      "profile" : "test"
+    },
+    "prod" : {
+      "profile" : "prod"
+    }
+  },
+  "stepBatchConfig" : {
+    "step1" : {
+      "enable" : true,
+      "batchConfig" : [ {
+        "fileUploads" : [ {
+          "fromPath" : [ "${scriptPath}\\AppService.sh" ],
+          "toPath" : "${serverProjectPath}",
+          "enable" : true
+        } ]
+      }, {
+        "commands" : [ {
+          "command" : "cd ${serverProjectPath}"
+        }, {
+          "command" : "sed -i 's/\\r$//' AppService.sh",
+          "enable" : true
+        }, {
+          "command" : "sudo chmod +x AppService.sh",
+          "enable" : false
+        } ]
+      } ]
+    },
+    "step2" : {
+      "enable" : true,
+      "batchConfig" : [ {
+        "runtimeExec" : [ {
+          "command" : "${scriptPath}\\svn-update-project.bat ${projectPath}",
+          "enable" : false
+        }, {
+          "command" : "${scriptPath}\\maven-lifecycle.bat clean ${projectPath}",
+          "enable" : true
+        } ]
+      } ]
+    },
+    "step3" : {
+      "enable" : true,
+      "batchConfig" : [ {
+        "runtimeExec" : [ {
+          "command" : "${scriptPath}\\maven-lifecycle.bat package ${projectPath}\\tablego-admin",
+          "enable" : true
+        } ]
+      }, {
+        "fileUploads" : [ {
+          "fromPath" : [ "${projectPath}\\tablego-admin\\target\\tablego-admin.jar" ],
+          "toPath" : "${serverProjectPath}",
+          "enable" : true
+        } ]
+      }, {
+        "commands" : [ {
+          "command" : "cd ${serverProjectPath}"
+        }, {
+          "command" : "sh AppService.sh restart tablego-admin ${profile} 6611"
+        }, {
+          "command" : "touch tablego-admin.log && tail -f tablego-admin.log",
+          "containsStrSigquit" : "Started AdminApplication"
+        }, {
+          "command" : "ls"
+        } ]
+      } ]
+    },
+    "step4" : {
+      "enable" : true,
+      "batchConfig" : [ {
+        "runtimeExec" : [ {
+          "command" : "${scriptPath}\\maven-lifecycle.bat package ${projectPath}\\tablego-basic",
+          "enable" : true
+        } ]
+      }, {
+        "fileUploads" : [ {
+          "fromPath" : [ "${projectPath}\\tablego-basic\\target\\tablego-basic.jar" ],
+          "toPath" : "${serverProjectPath}",
+          "enable" : true
+        } ]
+      }, {
+        "commands" : [ {
+          "command" : "cd ${serverProjectPath}"
+        }, {
+          "command" : "sh AppService.sh restart tablego-basic ${profile} 6622"
+        }, {
+          "command" : "touch tablego-basic.log && tail -f tablego-basic.log",
+          "containsStrSigquit" : "Started BasicApplication"
+        }, {
+          "command" : "ls"
+        } ]
+      } ]
+    },
+    "step5" : {
+      "enable" : true,
+      "batchConfig" : [ {
+        "runtimeExec" : [ {
+          "command" : "${scriptPath}\\maven-lifecycle.bat package ${projectPath}\\tablego-iam",
+          "enable" : true
+        } ]
+      }, {
+        "fileUploads" : [ {
+          "fromPath" : [ "${projectPath}\\tablego-iam\\target\\tablego-iam.jar" ],
+          "toPath" : "${serverProjectPath}",
+          "enable" : true
+        } ]
+      }, {
+        "commands" : [ {
+          "command" : "cd ${serverProjectPath}"
+        }, {
+          "command" : "sh AppService.sh restart tablego-iam ${profile} 6633"
+        }, {
+          "command" : "touch tablego-iam.log && tail -f tablego-iam.log",
+          "containsStrSigquit" : "Started IamApplication"
+        }, {
+          "command" : "ls"
+        } ]
+      } ]
+    },
+    "step6" : {
+      "enable" : false,
+      "batchConfig" : [ {
+        "fileDownloads" : [ {
+          "fromPath" : "${serverProjectPath}",
+          "toPath" : "${projectPath}",
+          "files" : [ "AppService.sh" ]
+        } ]
+      } ]
+    }
+  }
+}

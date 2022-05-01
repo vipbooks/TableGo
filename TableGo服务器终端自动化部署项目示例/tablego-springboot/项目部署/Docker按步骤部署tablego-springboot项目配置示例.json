@@ -1,0 +1,154 @@
+{
+  "isOpenTerminal" : true,
+  "isOutLogToTerminal" : true,
+  "projectPath" : "G:\\tablego-springboot",
+  "scriptPath" : "G:\\tablego-springboot\\项目部署",
+  "serverProjectPath" : "/opt/tablego-springboot",
+  "profiles" : {
+    "dev" : {
+      "profile" : "dev"
+    },
+    "test" : {
+      "profile" : "test"
+    },
+    "prod" : {
+      "profile" : "prod"
+    }
+  },
+  "stepBatchConfig" : {
+    "step1" : {
+      "enable" : true,
+      "batchConfig" : [ {
+        "runtimeExec" : [ {
+          "command" : "${scriptPath}\\svn-update-project.bat ${projectPath}",
+          "enable" : false
+        }, {
+          "command" : "${scriptPath}\\maven-lifecycle.bat clean ${projectPath}",
+          "enable" : true
+        } ]
+      } ]
+    },
+    "step2" : {
+      "enable" : true,
+      "batchConfig" : [ {
+        "runtimeExec" : [ {
+          "command" : "${scriptPath}\\maven-lifecycle.bat package ${projectPath}\\tablego-admin",
+          "enable" : true
+        } ]
+      }, {
+        "fileUploads" : [ {
+          "fromPath" : [ "${projectPath}\\tablego-admin\\target\\tablego-admin.jar", "${projectPath}\\tablego-admin\\Dockerfile" ],
+          "toPath" : "${serverProjectPath}/tablego-admin",
+          "enable" : true
+        } ]
+      }, {
+        "commands" : [ {
+          "command" : "cd ${serverProjectPath}/tablego-admin"
+        }, {
+          "command" : "docker rm -f tablego-admin",
+          "containsStr" : "tablego-admin",
+          "enable" : true
+        }, {
+          "command" : "docker build -t tablego-admin .",
+          "containsStr" : "Successfully tagged",
+          "enable" : true
+        }, {
+          "command" : "docker run -dp 6611:8080 --name=tablego-admin tablego-admin --spring.profiles.active=${profile}",
+          "sleepSeconds" : 3,
+          "enable" : true
+        }, {
+          "command" : "docker logs -f tablego-admin",
+          "containsStrSigquit" : "Started AdminApplication",
+          "enable" : true
+        }, {
+          "command" : "ls"
+        } ]
+      } ]
+    },
+    "step3" : {
+      "enable" : true,
+      "batchConfig" : [ {
+        "runtimeExec" : [ {
+          "command" : "${scriptPath}\\maven-lifecycle.bat package ${projectPath}\\tablego-basic",
+          "enable" : true
+        } ]
+      }, {
+        "fileUploads" : [ {
+          "fromPath" : [ "${projectPath}\\tablego-basic\\target\\tablego-basic.jar", "${projectPath}\\tablego-basic\\Dockerfile" ],
+          "toPath" : "${serverProjectPath}/tablego-basic",
+          "enable" : true
+        } ]
+      }, {
+        "commands" : [ {
+          "command" : "cd ${serverProjectPath}/tablego-basic"
+        }, {
+          "command" : "docker rm -f tablego-basic",
+          "containsStr" : "tablego-basic",
+          "enable" : true
+        }, {
+          "command" : "docker build -t tablego-basic .",
+          "containsStr" : "Successfully tagged",
+          "enable" : true
+        }, {
+          "command" : "docker run -dp 6622:8080 --name=tablego-basic tablego-basic --spring.profiles.active=${profile}",
+          "sleepSeconds" : 3,
+          "enable" : true
+        }, {
+          "command" : "docker logs -f tablego-basic",
+          "containsStrSigquit" : "Started BasicApplication",
+          "enable" : true
+        }, {
+          "command" : "ls"
+        } ]
+      } ]
+    },
+    "step4" : {
+      "enable" : true,
+      "batchConfig" : [ {
+        "runtimeExec" : [ {
+          "command" : "${scriptPath}\\maven-lifecycle.bat \"clean package\" ${projectPath}\\tablego-iam",
+          "enable" : true
+        } ]
+      }, {
+        "fileUploads" : [ {
+          "fromPath" : [ "${projectPath}\\tablego-iam\\target\\tablego-iam.jar", "${projectPath}\\tablego-iam\\Dockerfile" ],
+          "toPath" : "${serverProjectPath}/tablego-iam",
+          "enable" : true
+        } ]
+      }, {
+        "commands" : [ {
+          "command" : "cd ${serverProjectPath}/tablego-iam"
+        }, {
+          "command" : "docker rm -f tablego-iam",
+          "containsStr" : "tablego-iam",
+          "enable" : true
+        }, {
+          "command" : "docker build -t tablego-iam .",
+          "containsStr" : "Successfully tagged",
+          "enable" : true
+        }, {
+          "command" : "docker run -dp 6633:8080 --name=tablego-iam tablego-iam --spring.profiles.active=${profile}",
+          "sleepSeconds" : 3,
+          "enable" : true
+        }, {
+          "command" : "docker logs -f tablego-iam",
+          "containsStrSigquit" : "Started IamApplication",
+          "enable" : true
+        }, {
+          "command" : "ls"
+        } ]
+      } ]
+    },
+    "step5" : {
+      "enable" : true,
+      "batchConfig" : [ {
+        "commands" : [ {
+          "command" : "docker image prune -f",
+          "containsStr" : "Total reclaimed space"
+        }, {
+          "command" : "docker ps"
+        } ]
+      } ]
+    }
+  }
+}

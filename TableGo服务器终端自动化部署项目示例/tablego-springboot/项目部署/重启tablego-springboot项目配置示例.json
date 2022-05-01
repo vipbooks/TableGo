@@ -1,32 +1,40 @@
 {
   "isOpenTerminal" : true,
   "isOutLogToTerminal" : false,
+  "profiles" : {
+    "dev" : {
+      "profile" : "dev"
+    },
+    "test" : {
+      "profile" : "test"
+    },
+    "prod" : {
+      "profile" : "prod"
+    }
+  },
   "batchConfig" : [ {
     "commands" : [ {
-      "command" : "cd /home/test/tablego-springboot"
+      "command" : "cd /opt/tablego-springboot"
     }, {
-      "command" : "sh AppService.sh restart tablego-admin 6611",
-      "sleepSeconds" : 3,
+      "command" : "sh AppService.sh restart tablego-admin ${profile} 6611",
       "enable" : true
     }, {
-      "command" : "tail -f tablego-admin.log",
-      "waitSigquitSeconds" : 2,
+      "command" : "touch tablego-admin.log && tail -f tablego-admin.log",
+      "containsStrSigquit" : "Started AdminApplication",
       "enable" : true
     }, {
-      "command" : "sh AppService.sh restart tablego-basic 6622",
-      "sleepSeconds" : 3,
+      "command" : "sh AppService.sh restart tablego-basic ${profile} 6622",
       "enable" : true
     }, {
-      "command" : "tail -f tablego-basic.log",
-      "waitSigquitSeconds" : 2,
+      "command" : "touch tablego-basic.log && tail -f tablego-basic.log",
+      "containsStrSigquit" : "Started BasicApplication",
       "enable" : true
     }, {
-      "command" : "sh AppService.sh restart tablego-iam 6633",
-      "sleepSeconds" : 3,
+      "command" : "sh AppService.sh restart tablego-iam ${profile} 6633",
       "enable" : true
     }, {
-      "command" : "tail -f tablego-iam.log",
-      "waitSigquitSeconds" : 2,
+      "command" : "touch tablego-iam.log && tail -f tablego-iam.log",
+      "containsStrSigquit" : "Started IamApplication",
       "enable" : true
     }, {
       "command" : "ls"

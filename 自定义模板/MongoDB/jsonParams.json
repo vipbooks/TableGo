@@ -24,7 +24,7 @@
     "packagePath" : "${basePackagePath}.${moduleName}.controller",
     "relativePath" : "${srcPath}"
   } ],
-  "searchFeilds" : {
+  "searchFields" : {
     "TMG_CHAT_USER" : [ "FROM_USER_ID", "TO_USER_ID" ],
     "TMG_CHAT_CONTENT" : [ "CHAT_USER_ID" ],
     "TMG_PUSH_MESSAGE" : [ "RECIPIENT_ID", "BIZ_ID", "MSG_TYPE" ]

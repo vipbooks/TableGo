@@ -15,7 +15,7 @@ import cn.tablego.project.springboot.common.model.Result;
  * 统一异常处理类
  * 
  * @author bianj
- * @version 1.0.0 2021-09-23
+ * @version 1.0.0 2021-09-26
  */
 @RestControllerAdvice
 public class ExceptionHandlerAdvice {

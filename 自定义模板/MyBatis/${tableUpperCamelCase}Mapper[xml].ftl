@@ -1,6 +1,6 @@
 <#-- 用于生成Mapper.xml配置的自定义模板 -->
 <#-- 初始化表的查询字段 -->
-<#assign searchFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFeilds) />
+<#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields)![] />
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
@@ -18,10 +18,10 @@
         <#list pagingFieldList as fieldInfo><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName}<#if fieldInfo_has_next>, </#if></#list><#if pagingFieldList_has_next>, </#if>
         </#list>
     </sql>
-    <#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.logFields)>
+    <#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.commonFields)>
     <!-- 表主要字段 -->
     <sql id="mainColumns">
-        <#assign pagingFieldInfoList = FtlUtils.tableFieldIgnore(tableInfo.fieldInfos, jsonParam.logFields, paramConfig.customColumnThreshold)>
+        <#assign pagingFieldInfoList = FtlUtils.tableFieldIgnore(tableInfo.fieldInfos, jsonParam.commonFields, paramConfig.customColumnThreshold)>
         <#list pagingFieldInfoList as pagingFieldList>
         <#list pagingFieldList as fieldInfo><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName}<#if fieldInfo_has_next>, </#if></#list><#if pagingFieldList_has_next>, </#if>
         </#list>
@@ -32,13 +32,13 @@
     </#if>
 
     <!-- 根据条件分页查询${tableInfo.simpleRemark}列表 -->
-    <select id="find${tableInfo.upperCamelCase}ByCondition" resultMap="${tableInfo.lowerCamelCase}Map">
+    <select id="find${tableInfo.upperCamelCase}Page" resultMap="${tableInfo.lowerCamelCase}Map">
         SELECT
             <include refid="allColumns" />
         FROM ${tableInfo.tableName} <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias} </#if>WHERE 1 = 1
-    <#if searchFeilds?has_content>
+    <#if searchFields?has_content>
         <#list tableInfo.fieldInfos as fieldInfo>
-            <#list searchFeilds as fieldName>
+            <#list searchFields as fieldName>
                 <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
                     <#if fieldInfo.javaType == "Date">
         <if test="condition.${fieldInfo.proName}Begin != null">
@@ -57,6 +57,7 @@
         </#list>
     </#if>
     </select>
+<#if tableInfo.pkLowerCamelName??>
 
     <!-- 根据主键ID查询${tableInfo.simpleRemark}信息 -->
     <select id="get${tableInfo.upperCamelCase}ById" resultMap="${tableInfo.lowerCamelCase}Map">
@@ -64,6 +65,7 @@
             <include refid="allColumns" />
         FROM ${tableInfo.tableName} <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias} </#if>WHERE <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${tableInfo.pkColName} = ${"#"}{${tableInfo.pkLowerCamelName}}
     </select>
+</#if>
 
     <!-- 新增${tableInfo.simpleRemark}信息 -->
     <insert id="add${tableInfo.upperCamelCase}" useGeneratedKeys="true" keyColumn="${tableInfo.pkColName}" keyProperty="${tableInfo.pkLowerCamelName}">
@@ -96,6 +98,7 @@
         </set>
         WHERE ${tableInfo.pkColName} = ${"#"}{${tableInfo.pkLowerCamelName}}
     </update>
+<#if tableInfo.pkLowerCamelName??>
 
     <!-- 根据主键ID删除${tableInfo.simpleRemark} -->
     <delete id="delete${tableInfo.upperCamelCase}ById">
@@ -109,4 +112,5 @@
             ${"#"}{${tableInfo.pkLowerCamelName}}
         </foreach>
     </delete>
+</#if>
 </mapper>

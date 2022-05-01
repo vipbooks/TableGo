@@ -33,17 +33,17 @@
     "templateName" : "${tableUpperCamelCase}Detail[vue].ftl",
     "relativePath" : "${srcPath}/${basePath}/${moduleName}"
   } ],
-  "searchFeilds" : {
+  "searchFields" : {
     "User" : [ "username", "userType", "fullName", "idCard", "email", "openId" ],
     "Department" : [ "deptName", "deptCode", "sortNo" ],
     "SysParam" : [ "paramName", "paramCode", "paramType" ]
   },
-  "listFeilds" : {
+  "listFields" : {
     "User" : [ "username", "userType", "fullName", "idCard", "email", "openId" ],
     "Department" : [ "deptName", "deptCode", "sortNo" ],
     "SysParam" : [ "paramName", "paramCode", "paramType" ]
   },
-  "formFeilds" : {
+  "formFields" : {
     "User" : [ "username", "userType", "fullName", "idCard", "email", "openId" ],
     "Department" : [ "deptName", "deptCode", "sortNo" ],
     "SysParam" : [ "paramName", "paramCode", "paramType" ]

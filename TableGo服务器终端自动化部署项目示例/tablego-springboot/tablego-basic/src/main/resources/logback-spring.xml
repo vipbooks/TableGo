@@ -61,7 +61,7 @@
 
     <!-- 生产环境: 输出到控制台和文件 -->
     <springProfile name="prod">
-        <root level="WARN">
+        <root level="INFO">
             <appender-ref ref="consoleAsync"/>
             <appender-ref ref="fileAsync"/>
         </root>

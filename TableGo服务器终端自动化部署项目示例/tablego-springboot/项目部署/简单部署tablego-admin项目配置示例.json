@@ -1,0 +1,64 @@
+{
+  "isOpenTerminal" : true,
+  "isOutLogToTerminal" : true,
+  "projectPath" : "G:\\tablego-springboot",
+  "scriptPath" : "G:\\tablego-springboot\\项目部署",
+  "serverProjectPath" : "/opt/tablego-springboot",
+  "profiles" : {
+    "dev" : {
+      "profile" : "dev",
+      "port" : "8080"
+    },
+    "test" : {
+      "profile" : "test",
+      "port" : "8081"
+    },
+    "prod" : {
+      "profile" : "prod",
+      "port" : "8082"
+    }
+  },
+  "batchConfig" : [ {
+    "runtimeExec" : [ {
+      "command" : "${scriptPath}\\svn-update-project.bat",
+      "enable" : false
+    }, {
+      "command" : "${scriptPath}\\maven-lifecycle.bat \"clean package\" ${projectPath}\\tablego-admin",
+      "enable" : true
+    } ]
+  }, {
+    "fileUploads" : [ {
+      "fromPath" : [ "${scriptPath}\\AppService.sh" ],
+      "toPath" : "${serverProjectPath}",
+      "enable" : true
+    }, {
+      "fromPath" : [ "${projectPath}\\tablego-admin\\target\\tablego-admin.jar" ],
+      "toPath" : "${serverProjectPath}",
+      "enable" : true
+    } ]
+  }, {
+    "commands" : [ {
+      "command" : "cd ${serverProjectPath}"
+    }, {
+      "command" : "sed -i 's/\\r$//' AppService.sh",
+      "enable" : true
+    }, {
+      "command" : "sudo chmod +x AppService.sh",
+      "enable" : false
+    }, {
+      "command" : "sh AppService.sh restart tablego-admin ${profile} ${port}"
+    }, {
+      "command" : "touch tablego-admin.log && tail -f tablego-admin.log",
+      "containsStrSigquit" : "Started AdminApplication"
+    }, {
+      "command" : "ls"
+    } ]
+  }, {
+    "fileDownloads" : [ {
+      "fromPath" : "${serverProjectPath}",
+      "toPath" : "${projectPath}",
+      "files" : [ "AppService.sh" ],
+      "enable" : false
+    } ]
+  } ]
+}

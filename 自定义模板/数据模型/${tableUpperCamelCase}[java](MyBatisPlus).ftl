@@ -1,6 +1,6 @@
 <#-- 用于生成MyBatisPlus数据模型的自定义模板 -->
 <#-- 初始化表的模糊查询字段 -->
-<#assign likeFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.likeFeilds) />
+<#assign likeFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.likeFields) />
 package ${jsonParam.packagePath}
 
 <#if FtlUtils.fieldTypeExisted(tableInfo, "Date")>
@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 <#if FtlUtils.fieldTypeExisted(tableInfo, "BigInteger")>
 import java.math.BigInteger;
 </#if>
-<#if FtlUtils.fieldAtListExisted(tableInfo, likeFeilds)>
+<#if FtlUtils.fieldAtListExisted(tableInfo, likeFields)>
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.SqlCondition;
 </#if>
@@ -55,7 +55,7 @@ public class ${tableInfo.upperCamelCase} extends BaseBean {
     <#elseif fieldInfo.javaType == "Long">
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     </#if>
-    <#if FtlUtils.fieldExisted(likeFeilds, fieldInfo.colName)>
+    <#if FtlUtils.fieldExisted(likeFields, fieldInfo.colName)>
     @TableField(condition = SqlCondition.LIKE)
     </#if>
     private ${fieldInfo.javaType} ${fieldInfo.proName};

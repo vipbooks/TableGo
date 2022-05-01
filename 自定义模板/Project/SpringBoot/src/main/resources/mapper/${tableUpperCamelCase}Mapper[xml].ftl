@@ -1,7 +1,7 @@
 <#-- 初始化表的查询字段 -->
-<#assign searchFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFeilds) />
+<#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields) />
 <#-- 初始化需要生成检查字段值是否已存在的接口的字段 -->
-<#assign checkValueExistedFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.checkValueExistedFeilds) />
+<#assign checkValueExistedFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.checkValueExistedFields) />
 <#-- 判断是否是需要生成SQL的表 -->
 <#if !FtlUtils.tableExisted(jsonParam.noSqlTables, tableInfo.tableName)>
     <#assign isNoSqlTable = false />
@@ -42,9 +42,9 @@
         SELECT
             <include refid="allColumns" />
         FROM ${tableInfo.tableName} <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias} </#if>WHERE <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>DELETE_FLAG = '1'<#else>1 = 1</#if>
-    <#if searchFeilds?has_content>
+    <#if searchFields?has_content>
         <#list tableInfo.fieldInfos as fieldInfo>
-            <#list searchFeilds as fieldName>
+            <#list searchFields as fieldName>
                 <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
                     <#if fieldInfo.javaType == "Date">
         <if test="condition.${fieldInfo.proName}Begin != null">
@@ -67,9 +67,9 @@
     </#if>
     </select>
 </#if>
-<#if checkValueExistedFeilds?has_content>
+<#if checkValueExistedFields?has_content>
     <#list tableInfo.fieldInfos as fieldInfo>
-        <#list checkValueExistedFeilds as fieldName>
+        <#list checkValueExistedFields as fieldName>
             <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
 
     <!-- 检查${fieldInfo.simpleRemark!fieldInfo.colName}是否存在 -->

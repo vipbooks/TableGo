@@ -1,5 +1,5 @@
 <#-- 初始化表的模糊查询字段 -->
-<#assign likeFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.likeFeilds) />
+<#assign likeFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.likeFields) />
 package ${jsonParam.packagePath}
 
 <#if FtlUtils.fieldTypeExisted(tableInfo, "Date")>
@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 <#if FtlUtils.fieldTypeExisted(tableInfo, "BigInteger")>
 import java.math.BigInteger;
 </#if>
-<#if FtlUtils.fieldAtListExisted(tableInfo, likeFeilds)>
+<#if FtlUtils.fieldAtListExisted(tableInfo, likeFields)>
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.SqlCondition;
 </#if>
@@ -38,17 +38,17 @@ import javax.validation.constraints.NotNull;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 </#if>
+<#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.commonFields)>
+import ${jsonParam.basePackagePath}.common.model.BaseBean;
+<#else>
+import ${jsonParam.basePackagePath}.common.model.OverrideBeanMethods;
+</#if>
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-<#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.commonFields)>
-import ${jsonParam.basePackagePath}.common.model.BaseBean;
-<#else>
-import ${jsonParam.basePackagePath}.common.model.OverrideBeanMethods;
-</#if>
 
 /**
  * <#if StringUtils.isNotBlank(tableInfo.remark)>${tableInfo.remark}(${tableInfo.tableName})<#else>${tableInfo.tableName}</#if>
@@ -99,7 +99,7 @@ public class ${tableInfo.upperCamelCase} extends <#if FtlUtils.fieldAllExisted(t
     <#elseif fieldInfo.javaType == "Long">
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     </#if>
-    <#if FtlUtils.fieldExisted(likeFeilds, fieldInfo.colName)>
+    <#if FtlUtils.fieldExisted(likeFields, fieldInfo.colName)>
     @TableField(condition = SqlCondition.LIKE)
     </#if>
     private ${fieldInfo.javaType} ${fieldInfo.proName};

@@ -1,9 +1,9 @@
 {
-  "projectDir" : "D:\\springboot-test",
-  "basePackagePath" : "com.test.springboottest",
+  "projectDir" : "D:\\tablego-mybatis",
+  "basePackagePath" : "cn.tablego.mybatis",
   "srcPath" : "/src/main/java",
   "resourcesPath" : "/src/main/resources",
-  "logFields" : "CREATED_BY, CREATION_DATE, LAST_UPDATED_BY, LAST_UPDATE_DATE, DELETE_FLAG",
+  "commonFields" : "CREATED_BY, CREATION_DATE, LAST_UPDATED_BY, LAST_UPDATE_DATE, DELETE_FLAG",
   "ftlParamList" : [ {
     "templateName" : "${tableUpperCamelCase}[java].ftl",
     "packagePath" : "${basePackagePath}.model",
@@ -34,7 +34,7 @@
     "relativePath" : "${resourcesPath}/mapper",
     "needFilterField" : "false"
   } ],
-  "searchFeilds" : {
+  "searchFields" : {
     "T_USER" : [ "USERNAME", "USER_TYPE", "FULL_NAME" ],
     "T_USER_EXT_INFO" : [ "BIRTHDAY", "PROVINCE_CODE", "CITY_CODE", "AREA_CODE" ],
     "T_SYS_PARAM" : [ "PARAM_NAME", "PARAM_CODE", "PARAM_TYPE" ],
@@ -43,6 +43,7 @@
     "T_DICTIONARY" : [ "DICT_NAME", "DICT_CODE", "DICT_TYPE_CODE" ],
     "T_PROVINCE" : [ "PROVINCE_NAME", "PROVINCE_CODE" ],
     "T_CITY" : [ "CITY_NAME", "CITY_CODE", "PARENT_CODE" ],
-    "T_AREA" : [ "AREA_NAME", "AREA_CODE", "PARENT_CODE" ]
+    "T_AREA" : [ "AREA_NAME", "AREA_CODE", "PARENT_CODE" ],
+    "T_ROLE" : [ "ROLE_NAME", "ROLE_CODE" ]
   }
 }

@@ -1,6 +1,6 @@
 <#-- 用于生成Service接口实现的自定义模板 -->
 <#-- 初始化表的查询字段 -->
-<#assign searchFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFeilds) />
+<#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields)![] />
 package ${jsonParam.packagePath}
 
 import java.util.List;
@@ -19,7 +19,7 @@ import org.springframework.data.repository.support.PageableExecutionUtils;
 import ${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase};
 import ${jsonParam.basePackagePath}.model.condition.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Condition;
 import ${jsonParam.basePackagePath}.service.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Service;
-<#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFeilds, "Date")>
+<#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFields, "Date")>
 import cn.hutool.core.date.DateUtil;
 </#if>
 
@@ -38,10 +38,10 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements ${tableInfo.upper
     public Page<${tableInfo.upperCamelCase}> list${tableInfo.upperCamelCase}Page(${tableInfo.upperCamelCase}Condition condition) {
         Query query = new Query();
         Criteria criteria = Criteria.where("deleteFlag").is("1");
-    <#if searchFeilds?has_content>
+    <#if searchFields?has_content>
 
         <#list tableInfo.fieldInfos as fieldInfo>
-            <#list searchFeilds as fieldName>
+            <#list searchFields as fieldName>
                 <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
                     <#if fieldInfo.javaType == "Date">
         if (condition.get${fieldInfo.upperCamelCase}Begin() != null && condition.get${fieldInfo.upperCamelCase}End() != null) {

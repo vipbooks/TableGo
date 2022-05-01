@@ -1,6 +1,6 @@
 <#-- 用于生成Service接口实现的自定义模板 -->
 <#-- 初始化表的查询字段 -->
-<#assign searchFeilds = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFeilds) />
+<#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields) />
 package ${jsonParam.packagePath}
 
 import java.util.List;
@@ -21,7 +21,7 @@ import org.springframework.data.elasticsearch.core.query.IndexQuery;
 import org.springframework.data.elasticsearch.core.query.IndexQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
-<#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFeilds, "Date")>
+<#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFields, "Date")>
 import cn.hutool.core.date.DateUtil;
 </#if>
 import ${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase};
@@ -42,10 +42,10 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements ${tableInfo.upper
     @Override
     public Page<${tableInfo.upperCamelCase}> list${tableInfo.upperCamelCase}Page(${tableInfo.upperCamelCase}Condition condition) {
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
-    <#if searchFeilds?has_content>
+    <#if searchFields?has_content>
 
         <#list tableInfo.fieldInfos as fieldInfo>
-            <#list searchFeilds as fieldName>
+            <#list searchFields as fieldName>
                 <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
                     <#if fieldInfo.javaType == "Date">
         if (condition.get${fieldInfo.upperCamelCase}Begin() != null && condition.get${fieldInfo.upperCamelCase}End() != null) {

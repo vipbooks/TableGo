@@ -24,7 +24,7 @@
     "packagePath" : "${basePackagePath}.${moduleName}.controller",
     "relativePath" : "${srcPath}"
   } ],
-  "searchFeilds" : {
+  "searchFields" : {
     "IB_CHAT_CONTENT" : [ "CHAT_USER_ID", "CHAT_CONTENT", "CREATE_TIME", "DELETE_FLAG" ]
   }
 }

@@ -4,7 +4,7 @@ package cn.tablego.project.springboot.common.exception;
  * 业务异常类
  *
  * @author bianj
- * @version 1.0.0 2021-09-23
+ * @version 1.0.0 2021-09-26
  */
 public class BizException extends RuntimeException {
     /** 版本号 */
