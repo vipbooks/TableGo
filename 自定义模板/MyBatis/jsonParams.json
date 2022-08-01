@@ -8,7 +8,7 @@
     "templateName" : "${tableUpperCamelCase}[java].ftl",
     "packagePath" : "${basePackagePath}.model",
     "relativePath" : "${srcPath}",
-    "excludeFields" : "${logFields}"
+    "excludeFields" : "${commonFields}"
   }, {
     "templateName" : "${tableUpperCamelCase}Condition[java].ftl",
     "packagePath" : "${basePackagePath}.model.condition",
@@ -34,6 +34,36 @@
     "relativePath" : "${resourcesPath}/mapper",
     "needFilterField" : "false"
   } ],
+  "globalDataType" : {
+    "CHAR" : {
+      "operator" : "=",
+      "columnSize" : 1,
+      "fieldType" : "String"
+    },
+    "TINYINT" : {
+      "operator" : "=",
+      "columnSize" : 1,
+      "fieldType" : "Boolean"
+    },
+    "INT" : {
+      "operator" : ">",
+      "columnSize" : 8,
+      "fieldType" : "Long"
+    }
+  },
+  "globalFieldType" : {
+    "DELETE_FLAG" : "String",
+    "IS_ENABLE" : "YesNoEnum"
+  },
+  "tableFieldType" : {
+    "T_USER" : {
+      "USER_TYPE" : "UserTypeEnum"
+    }
+  },
+  "globalIgnoreValidFields" : [ "CREATED_BY", "CREATION_DATE", "LAST_UPDATED_BY", "LAST_UPDATE_DATE", "DELETE_FLAG" ],
+  "tableIgnoreValidFields" : {
+    "T_USER" : [ "USER_TYPE" ]
+  },
   "searchFields" : {
     "T_USER" : [ "USERNAME", "USER_TYPE", "FULL_NAME" ],
     "T_USER_EXT_INFO" : [ "BIRTHDAY", "PROVINCE_CODE", "CITY_CODE", "AREA_CODE" ],
@@ -45,5 +75,16 @@
     "T_CITY" : [ "CITY_NAME", "CITY_CODE", "PARENT_CODE" ],
     "T_AREA" : [ "AREA_NAME", "AREA_CODE", "PARENT_CODE" ],
     "T_ROLE" : [ "ROLE_NAME", "ROLE_CODE" ]
+  },
+  "checkValueExistedFields" : {
+    "T_USER" : [ "USERNAME" ],
+    "T_SYS_PARAM" : [ "PARAM_CODE" ],
+    "T_DEPARTMENT" : [ "DEPT_CODE" ],
+    "T_DICT_TYPE" : [ "TYPE_CODE" ],
+    "T_DICTIONARY" : [ "DICT_CODE" ],
+    "T_PROVINCE" : [ "PROVINCE_CODE" ],
+    "T_CITY" : [ "CITY_CODE" ],
+    "T_AREA" : [ "AREA_CODE" ],
+    "T_ROLE" : [ "ROLE_CODE" ]
   }
 }

@@ -1,6 +1,6 @@
 <#-- 用于生成Condition查询条件的自定义模板 -->
 <#-- 初始化表的查询字段 -->
-<#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields)![] />
+<#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields) />
 package ${jsonParam.packagePath}
 
 <#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFields, "Date")>

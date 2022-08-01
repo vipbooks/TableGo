@@ -1,0 +1,46 @@
+{
+  "projectDir" : "D:\\RuoYi",
+  "basePackagePath" : "com.ruoyi",
+  "moduleName" : "business",
+  "modulePath" : "/ruoyi-business",
+  "templatePath" : "/template",
+  "srcPath" : "/src/main/java",
+  "resourcesPath" : "/src/main/resources",
+  "commonFields" : "CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME",
+  "remarkMatchDict" : "类型, 类别, 状态, 是否",
+  "remarkMatchMulti" : "备注, 说明, 描述",
+  "ftlParamList" : [ {
+    "templateName" : "${tableUpperCamelCase}[java].ftl",
+    "ftlRelativeDir" : "${templatePath}/admin",
+    "packagePath" : "${basePackagePath}.${moduleName}.domain",
+    "relativePath" : "${srcPath}",
+    "projectSubDir" : "${modulePath}",
+    "excludeFields" : "${commonFields}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Mapper[xml].ftl",
+    "ftlRelativeDir" : "${templatePath}/admin",
+    "relativePath" : "${resourcesPath}/mapper/${moduleName}",
+    "projectSubDir" : "${modulePath}",
+    "needFilterField" : "false"
+  }],
+  "globalDataType" : {
+    "CHAR" : {
+      "operator" : "=",
+      "columnSize" : 1,
+      "fieldType" : "String"
+    }
+  },
+  "globalFieldType" : {
+    "DEL_FLAG" : "String",
+    "IS_ENABLE" : "YesNoEnum"
+  },
+  "tableFieldType" : {
+    "SYS_USER_ONLINE" : {
+      "STATUS" : "OnlineStatus"
+    }
+  },
+  "globalIgnoreValidFields" : [ "CREATE_BY", "CREATE_TIME", "UPDATE_BY", "UPDATE_TIME", "DEL_FLAG" ],
+  "exportFields" : {
+    "T_SYS_PARAM" : [ "PARAM_NAME", "PARAM_CODE", "PARAM_TYPE", "PARAM_VALUE" ]
+  }
+}

@@ -37,7 +37,9 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements ${tableInfo.upper
     @Override
     public Page<${tableInfo.upperCamelCase}> list${tableInfo.upperCamelCase}Page(${tableInfo.upperCamelCase}Condition condition) {
         Query query = new Query();
-        Criteria criteria = Criteria.where("deleteFlag").is("1");
+        <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")>
+        query.addCriteria(Criteria.where("DELETE_FLAG").is("1"));
+        </#if>
     <#if searchFields?has_content>
 
         <#list tableInfo.fieldInfos as fieldInfo>
@@ -45,30 +47,35 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements ${tableInfo.upper
                 <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
                     <#if fieldInfo.javaType == "Date">
         if (condition.get${fieldInfo.upperCamelCase}Begin() != null && condition.get${fieldInfo.upperCamelCase}End() != null) {
-            criteria.and("${fieldInfo.lowerCamelCase}").gte(condition.get${fieldInfo.upperCamelCase}Begin()).lte(DateUtil.endOfDay(condition.get${fieldInfo.upperCamelCase}End()));
+            Criteria criteria = Criteria.where("${fieldInfo.colName}").gte(condition.get${fieldInfo.upperCamelCase}Begin()).lte(DateUtil.endOfDay(condition.get${fieldInfo.upperCamelCase}End()));
+            query.addCriteria(criteria);
         } else if (condition.get${fieldInfo.upperCamelCase}Begin() != null) {
-            criteria.and("${fieldInfo.lowerCamelCase}").gte(condition.get${fieldInfo.upperCamelCase}Begin());
+            Criteria criteria = Criteria.where("${fieldInfo.colName}").gte(condition.get${fieldInfo.upperCamelCase}Begin());
+            query.addCriteria(criteria);
         } else if (condition.get${fieldInfo.upperCamelCase}End() != null) {
-            criteria.and("${fieldInfo.lowerCamelCase}").lte(DateUtil.endOfDay(condition.get${fieldInfo.upperCamelCase}End()));
+            Criteria criteria = Criteria.where("${fieldInfo.colName}").lte(DateUtil.endOfDay(condition.get${fieldInfo.upperCamelCase}End()));
+            query.addCriteria(criteria);
         }
                     <#elseif fieldInfo.javaType != "String">
         if (condition.get${fieldInfo.upperCamelCase}() != null) {
-            criteria.and("${fieldInfo.lowerCamelCase}").is(condition.get${fieldInfo.upperCamelCase}());
+            Criteria criteria = Criteria.where("${fieldInfo.colName}").is(condition.get${fieldInfo.upperCamelCase}());
+            query.addCriteria(criteria);
         }
                     <#elseif fieldInfo.primaryKey || fieldInfo.isDictType || fieldInfo.lowerColName?index_of("_id") != -1>
-        if (StringUtils.isNotBlank(condition.get${fieldInfo.upperCamelCase}())) {
-            criteria.and("${fieldInfo.lowerCamelCase}").is(condition.get${fieldInfo.upperCamelCase}());
+        if (StrUtil.isNotBlank(condition.get${fieldInfo.upperCamelCase}())) {
+            Criteria criteria = Criteria.where("${fieldInfo.colName}").is(condition.get${fieldInfo.upperCamelCase}());
+            query.addCriteria(criteria);
         }
                     <#else>
-        if (StringUtils.isNotBlank(condition.get${fieldInfo.upperCamelCase}())) {
-            criteria.and("${fieldInfo.lowerCamelCase}").regex(Pattern.compile("^.*" + condition.get${fieldInfo.upperCamelCase}() + ".*$", Pattern.CASE_INSENSITIVE));
+        if (StrUtil.isNotBlank(condition.get${fieldInfo.upperCamelCase}())) {
+            Criteria criteria = Criteria.where("${fieldInfo.colName}").regex(Pattern.compile("^.*" + condition.get${fieldInfo.upperCamelCase}() + ".*$", Pattern.CASE_INSENSITIVE));
+            query.addCriteria(criteria);
         }
                     </#if>
                 </#if>
             </#list>
         </#list>
     </#if>
-        query.addCriteria(criteria);
 
         long totalCount = mongoTemplate.count(query, ${tableInfo.upperCamelCase}.class);
         Pageable pageable = PageRequest.of(condition.getPage().intValue() - 1, condition.getRows().intValue(), Sort.by(Sort.Direction.DESC, "createTime"));

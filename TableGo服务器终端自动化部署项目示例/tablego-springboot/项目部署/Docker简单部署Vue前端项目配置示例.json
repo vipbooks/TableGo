@@ -1,0 +1,79 @@
+{
+  "isOpenTerminal" : true,
+  "isOutLogToTerminal" : true,
+  "projectPath" : "G:\\tablego-springboot\\AntDesignVueTest",
+  "scriptPath" : "G:\\tablego-springboot\\项目部署",
+  "serverProjectPath" : "/opt/AntDesignVueTest",
+  "profiles" : {
+    "dev" : {
+      "script" : "build"
+    },
+    "test" : {
+      "script" : "test"
+    },
+    "prod" : {
+      "script" : "prod"
+    }
+  },
+  "batchConfig" : [ {
+    "runtimeExec" : [ {
+      "command" : "${scriptPath}\\git-update-project ${projectPath}",
+      "enable" : false
+    }, {
+      "command" : "${scriptPath}\\vue-package.bat ${script} ${projectPath}",
+      "enable" : true
+    } ]
+  }, {
+    "zipFileList" : [ {
+      "srcDir" : "${projectPath}\\dist",
+      "outPath" : "${projectPath}\\dist-zip",
+      "enable" : true
+    } ]
+  }, {
+    "fileUploads" : [ {
+      "fromPath" : [ "${projectPath}\\dist-zip\\dist.zip" ],
+      "toPath" : "${serverProjectPath}",
+      "enable" : true
+    }, {
+      "fromPath" : [ "${projectPath}\\Dockerfile", "${projectPath}\\nginx.conf" ],
+      "toPath" : "${serverProjectPath}",
+      "enable" : true
+    } ]
+  }, {
+    "commands" : [ {
+      "command" : "cd ${serverProjectPath}"
+    }, {
+      "command" : "rm -rf dist",
+      "enable" : true
+    }, {
+      "command" : "unzip dist.zip",
+      "waitSeconds" : 2,
+      "enable" : true
+    }, {
+      "command" : "rm -f dist.zip",
+      "enable" : true
+    }, {
+      "command" : "docker rm -f vue-test",
+      "containsStr" : "vue-test",
+      "enable" : true
+    }, {
+      "command" : "docker build -t vue-test .",
+      "containsStr" : "Successfully tagged",
+      "enable" : true
+    }, {
+      "command" : "docker run -dp 8080:80 --name=vue-test vue-test",
+      "sleepSeconds" : 3,
+      "enable" : true
+    }, {
+      "command" : "docker logs -f vue-test",
+      "containsStrSigquit" : "start worker processes",
+      "waitSeconds" : 2,
+      "enable" : true
+    }, {
+      "command" : "docker image prune -f",
+      "containsStr" : "Total reclaimed space"
+    }, {
+      "command" : "docker ps"
+    } ]
+  } ]
+}

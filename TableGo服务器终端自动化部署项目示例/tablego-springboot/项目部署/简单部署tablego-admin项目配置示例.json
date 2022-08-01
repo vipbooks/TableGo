@@ -20,7 +20,7 @@
   },
   "batchConfig" : [ {
     "runtimeExec" : [ {
-      "command" : "${scriptPath}\\svn-update-project.bat",
+      "command" : "${scriptPath}\\svn-update-project.bat ${projectPath}",
       "enable" : false
     }, {
       "command" : "${scriptPath}\\maven-lifecycle.bat \"clean package\" ${projectPath}\\tablego-admin",

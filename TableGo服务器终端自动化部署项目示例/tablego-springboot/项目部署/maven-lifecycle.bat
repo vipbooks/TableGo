@@ -1,6 +1,7 @@
 @echo off
 ::Welcome to use the TableGo tools
-::璁剧疆鍙橀噺寤惰繜鎵╁睍clean package
+::pause: 按任意键继续
+::设置变量延迟扩展clean package
 setlocal enabledelayedexpansion
 
 set options=%~1

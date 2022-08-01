@@ -1,8 +1,8 @@
 <#-- 用于生成Service接口实现的自定义模板 -->
 <#-- 初始化表的查询字段 -->
-<#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields)![] />
+<#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields) />
 <#-- 初始化需要生成检查字段值是否已存在的接口的字段 -->
-<#assign checkValueExistedFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.checkValueExistedFields)![] />
+<#assign checkValueExistedFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.checkValueExistedFields) />
 <#-- 判断是否是需要生成SQL的表 -->
 <#if FtlUtils.tableExisted(jsonParam.noSqlTables, tableInfo.tableName)>
     <#assign isNoSqlTable = true />
@@ -24,6 +24,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 </#if>
 <#if checkValueExistedFields?has_content>
 import cn.hutool.core.util.BooleanUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 </#if>
 import ${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase};
 import ${jsonParam.basePackagePath}.model.condition.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Condition;
@@ -71,7 +73,7 @@ public class ${tableInfo.upperCamelCase}ServiceImpl extends ServiceImpl<${tableI
         return this.baseMapper.find${tableInfo.upperCamelCase}Page(page, condition);
 </#if>
     }
-<#if tableInfo.pkLowerCamelName??>
+<#if tableInfo.pkLowerCamelName?has_content>
 
     @Override
     public ${tableInfo.upperCamelCase} get${tableInfo.upperCamelCase}ById(${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}) {
@@ -84,8 +86,17 @@ public class ${tableInfo.upperCamelCase}ServiceImpl extends ServiceImpl<${tableI
             <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
 
     @Override
-    public Boolean check${fieldInfo.upperCamelCase}Existed(${fieldInfo.javaType} ${fieldInfo.proName}<#if tableInfo.pkLowerCamelName??>, ${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}</#if>) {
-        return BooleanUtil.toBoolean(this.baseMapper.check${fieldInfo.upperCamelCase}Existed(${fieldInfo.proName}<#if tableInfo.pkLowerCamelName??>, ${tableInfo.pkLowerCamelName}</#if>));
+    public Boolean check${fieldInfo.upperCamelCase}Existed(${fieldInfo.javaType} ${fieldInfo.proName}<#if tableInfo.pkLowerCamelName?has_content>, ${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}</#if>) {
+        QueryWrapper<${tableInfo.upperCamelCase}> queryWrapper = Wrappers.query();
+        queryWrapper.select("1").lambda().eq(${tableInfo.upperCamelCase}::get${fieldInfo.upperCamelCase}, ${fieldInfo.proName});
+        <#if tableInfo.pkLowerCamelName?has_content>
+        if (StrUtil.isNotBlank(${tableInfo.pkLowerCamelName})) {
+            queryWrapper.lambda().ne(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, ${tableInfo.pkLowerCamelName});
+        }
+        </#if>
+        queryWrapper.last("LIMIT 1");
+
+        return BooleanUtil.toBoolean(this.getObj(queryWrapper, Object::toString));
     }
             </#if>
         </#list>
@@ -103,7 +114,7 @@ public class ${tableInfo.upperCamelCase}ServiceImpl extends ServiceImpl<${tableI
     public Boolean update${tableInfo.upperCamelCase}(${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
         return this.updateById(${tableInfo.lowerCamelCase});
     }
-<#if tableInfo.pkLowerCamelName??>
+<#if tableInfo.pkLowerCamelName?has_content>
 
     @Transactional(rollbackFor = Exception.class)
     @Override

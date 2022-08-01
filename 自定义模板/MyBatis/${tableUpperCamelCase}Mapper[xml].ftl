@@ -1,6 +1,8 @@
 <#-- 用于生成Mapper.xml配置的自定义模板 -->
 <#-- 初始化表的查询字段 -->
-<#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields)![] />
+<#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields) />
+<#-- 初始化需要生成检查字段值是否已存在的接口的字段 -->
+<#assign checkValueExistedFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.checkValueExistedFields) />
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
@@ -31,11 +33,11 @@
     <!-- ${String.format(paramConfig.mergeFileMarkEnd, 1)} -->
     </#if>
 
-    <!-- 根据条件分页查询${tableInfo.simpleRemark}列表 -->
+    <!-- 分页查询${tableInfo.simpleRemark}列表 -->
     <select id="find${tableInfo.upperCamelCase}Page" resultMap="${tableInfo.lowerCamelCase}Map">
         SELECT
             <include refid="allColumns" />
-        FROM ${tableInfo.tableName} <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias} </#if>WHERE 1 = 1
+        FROM ${tableInfo.tableName} <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias} </#if>WHERE <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>DELETE_FLAG = 1<#else>1 = 1</#if>
     <#if searchFields?has_content>
         <#list tableInfo.fieldInfos as fieldInfo>
             <#list searchFields as fieldName>
@@ -57,17 +59,39 @@
         </#list>
     </#if>
     </select>
-<#if tableInfo.pkLowerCamelName??>
+<#if tableInfo.pkLowerCamelName?has_content>
 
-    <!-- 根据主键ID查询${tableInfo.simpleRemark}信息 -->
+    <!-- 根据主键ID查询${tableInfo.simpleRemark} -->
     <select id="get${tableInfo.upperCamelCase}ById" resultMap="${tableInfo.lowerCamelCase}Map">
         SELECT
             <include refid="allColumns" />
         FROM ${tableInfo.tableName} <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias} </#if>WHERE <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${tableInfo.pkColName} = ${"#"}{${tableInfo.pkLowerCamelName}}
     </select>
 </#if>
+<#if checkValueExistedFields?has_content>
+    <#list tableInfo.fieldInfos as fieldInfo>
+        <#list checkValueExistedFields as fieldName>
+            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
 
-    <!-- 新增${tableInfo.simpleRemark}信息 -->
+    <!-- 检查${fieldInfo.simpleRemark!fieldInfo.colName}是否存在 -->
+    <select id="check${fieldInfo.upperCamelCase}Existed" resultType="string">
+                <#if tableInfo.pkLowerCamelName?has_content>
+        SELECT 1 FROM ${tableInfo.tableName} WHERE<#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")> DELETE_FLAG = '1'</#if>
+            <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")>AND </#if>${fieldInfo.colName} = ${"#"}{${fieldInfo.proName}}
+            <if test="${tableInfo.pkLowerCamelName} != null<#if tableInfo.pkJavaType == "String"> and ${tableInfo.pkLowerCamelName} != ''</#if>">
+                AND ${tableInfo.pkColName} != ${"#"}{${tableInfo.pkLowerCamelName}}
+            </if>
+        LIMIT 1
+                <#else>
+        SELECT 1 FROM ${tableInfo.tableName} WHERE<#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")> DELETE_FLAG = '1' AND</#if> ${fieldInfo.colName} = ${"#"}{${fieldInfo.proName}} LIMIT 1
+                </#if>
+    </select>
+            </#if>
+        </#list>
+    </#list>
+</#if>
+
+    <!-- 新增${tableInfo.simpleRemark} -->
     <insert id="add${tableInfo.upperCamelCase}" useGeneratedKeys="true" keyColumn="${tableInfo.pkColName}" keyProperty="${tableInfo.pkLowerCamelName}">
         INSERT INTO ${tableInfo.tableName} (
             <#list tableInfo.pagingFieldInfos as pagingList>
@@ -84,7 +108,7 @@
         )
     </insert>
 
-    <!-- 修改${tableInfo.simpleRemark}信息 -->
+    <!-- 修改${tableInfo.simpleRemark} -->
     <update id="update${tableInfo.upperCamelCase}">
         UPDATE ${tableInfo.tableName}
         <set>
@@ -98,7 +122,7 @@
         </set>
         WHERE ${tableInfo.pkColName} = ${"#"}{${tableInfo.pkLowerCamelName}}
     </update>
-<#if tableInfo.pkLowerCamelName??>
+<#if tableInfo.pkLowerCamelName?has_content>
 
     <!-- 根据主键ID删除${tableInfo.simpleRemark} -->
     <delete id="delete${tableInfo.upperCamelCase}ById">

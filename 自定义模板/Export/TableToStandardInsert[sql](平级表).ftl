@@ -1,4 +1,4 @@
-<#-- 导出表数据并生成插入数据的标准SQL -->
+<#-- 导出表数据并生成逐条插入数据的标准SQL -->
 <#if tableInfoList?has_content>
     <#list tableInfoList as tableInfo>
         <#if tableInfo.fieldInfos?has_content && tableInfo.sqlQueryDataList?has_content>

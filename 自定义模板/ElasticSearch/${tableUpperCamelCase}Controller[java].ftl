@@ -22,19 +22,19 @@ import ${jsonParam.basePackagePath}.model.condition.<#if jsonParam.moduleName??>
 import ${jsonParam.basePackagePath}.service.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Service;
 
 /**
- * ${tableInfo.simpleRemark}Controller
+ * ${tableInfo.simpleRemark!tableInfo.tableName}Controller
  * 
  * @author ${paramConfig.author}
  * @version 1.0.0 ${today}
  */
-@Api(tags = "${tableInfo.simpleRemark!tableInfo.tableName}微服务")
+@Api(tags = "${tableInfo.simpleRemark!tableInfo.tableName}")
 @RestController
 @RequestMapping("/${tableInfo.lowerCamelCase}")
 public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     @Autowired
     private ${tableInfo.upperCamelCase}Service ${tableInfo.lowerCamelCase}Service;
 
-    @ApiOperation(value = "根据参数分页查询${tableInfo.simpleRemark}列表")
+    @ApiOperation(value = "分页查询${tableInfo.simpleRemark}列表")
     @ApiImplicitParam(name = "condition", value = "${tableInfo.simpleRemark}查询条件", required = true, dataType = "${tableInfo.upperCamelCase}Condition", paramType = "body")
     @PostMapping("/list${tableInfo.upperCamelCase}Page")
     public PageQueryResult<${tableInfo.upperCamelCase}> list${tableInfo.upperCamelCase}Page(@RequestBody ${tableInfo.upperCamelCase}Condition condition) {
@@ -43,7 +43,7 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     }
 
     @ApiOperation(value = "根据主键ID查询${tableInfo.simpleRemark}")
-    @ApiImplicitParam(name = "${tableInfo.pkLowerCamelName}", value = "主键ID", required = true, dataType = "${tableInfo.pkJavaType?uncap_first}", paramType = "query")
+    @ApiImplicitParam(name = "${tableInfo.pkLowerCamelName}", value = "${tableInfo.pkRemark}", required = true, dataType = "${tableInfo.pkJavaType?uncap_first}", paramType = "query")
     @PostMapping("/get${tableInfo.upperCamelCase}ById")
     public ${tableInfo.upperCamelCase} get${tableInfo.upperCamelCase}ById(${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}) {
         if (<#if tableInfo.pkJavaType == "String">StringUtils.isBlank(${tableInfo.pkLowerCamelName})<#else>${tableInfo.pkLowerCamelName} == null</#if>) {
@@ -53,21 +53,21 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     }
 
     @ApiOperation(value = "保存${tableInfo.simpleRemark}")
-    @ApiImplicitParam(name = "${tableInfo.lowerCamelCase}", value = "${tableInfo.simpleRemark}信息", required = true, dataType = "${tableInfo.upperCamelCase}", paramType = "body")
+    @ApiImplicitParam(name = "${tableInfo.lowerCamelCase}", value = "${tableInfo.simpleRemark}", required = true, dataType = "${tableInfo.upperCamelCase}", paramType = "body")
     @PostMapping("/save${tableInfo.upperCamelCase}")
     public Boolean save${tableInfo.upperCamelCase}(@RequestBody ${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
         return ${tableInfo.lowerCamelCase}Service.save${tableInfo.upperCamelCase}(${tableInfo.lowerCamelCase});
     }
 
     @ApiOperation(value = "批量保存${tableInfo.simpleRemark}")
-    @ApiImplicitParam(name = "${tableInfo.lowerCamelCase}List", value = "${tableInfo.simpleRemark}信息列表", required = true, dataType = "${tableInfo.upperCamelCase}", paramType = "body", allowMultiple = true)
+    @ApiImplicitParam(name = "${tableInfo.lowerCamelCase}List", value = "${tableInfo.simpleRemark}列表", required = true, dataType = "${tableInfo.upperCamelCase}", paramType = "body", allowMultiple = true)
     @PostMapping("/batchSave${tableInfo.upperCamelCase}")
     public Boolean batchSave${tableInfo.upperCamelCase}(@RequestBody List<${tableInfo.upperCamelCase}> ${tableInfo.lowerCamelCase}List) {
         return ${tableInfo.lowerCamelCase}Service.batchSave${tableInfo.upperCamelCase}(${tableInfo.lowerCamelCase}List);
     }
 
     @ApiOperation(value = "根据主键ID删除${tableInfo.simpleRemark}")
-    @ApiImplicitParam(name = "${tableInfo.pkLowerCamelName}", value = "主键ID", required = true, dataType = "${tableInfo.pkJavaType?uncap_first}", paramType = "query")
+    @ApiImplicitParam(name = "${tableInfo.pkLowerCamelName}", value = "${tableInfo.pkRemark}", required = true, dataType = "${tableInfo.pkJavaType?uncap_first}", paramType = "query")
     @PostMapping("/delete${tableInfo.upperCamelCase}ById")
     public Boolean delete${tableInfo.upperCamelCase}ById(${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}) {
         if (<#if tableInfo.pkJavaType == "String">StringUtils.isBlank(${tableInfo.pkLowerCamelName})<#else>${tableInfo.pkLowerCamelName} == null</#if>) {
@@ -77,7 +77,7 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     }
 
     @ApiOperation(value = "根据主键ID列表批量删除${tableInfo.simpleRemark}")
-    @ApiImplicitParam(name = "idList", value = "主键ID列表", required = true, paramType = "body", allowMultiple = true)
+    @ApiImplicitParam(name = "idList", value = "${tableInfo.pkRemark}列表", required = true, paramType = "body", allowMultiple = true)
     @PostMapping("/delete${tableInfo.upperCamelCase}ByIds")
     public Boolean delete${tableInfo.upperCamelCase}ByIds(@RequestBody List<${tableInfo.pkJavaType}> idList) {
         if (CollectionUtils.isEmpty(idList)) {

@@ -1,3 +1,5 @@
+<#-- 初始化需要生成检查字段值是否已存在的接口的字段 -->
+<#assign checkValueExistedFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.checkValueExistedFields) />
 package ${jsonParam.packagePath}
 
 import java.util.List;
@@ -29,13 +31,13 @@ import ${jsonParam.basePackagePath}.model.condition.<#if jsonParam.moduleName??>
 import ${jsonParam.basePackagePath}.service.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Service;
 
 /**
- * ${tableInfo.simpleRemark}服务
+ * ${tableInfo.simpleRemark!tableInfo.tableName}Controller
  * 
  * @author ${paramConfig.author}
  * @version 1.0.0 ${today}
  */
 <#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
-@Api(tags = "${tableInfo.simpleRemark!tableInfo.tableName}服务")
+@Api(tags = "${tableInfo.simpleRemark!tableInfo.tableName}")
 </#if>
 @RestController
 @RequestMapping("/${tableInfo.lowerCamelCase}")
@@ -45,13 +47,13 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
 
     <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /**
-     * 根据条件分页查询${tableInfo.simpleRemark}列表
+     * 分页查询${tableInfo.simpleRemark}列表
      *
      * @param condition ${tableInfo.simpleRemark}查询条件
      * @return 分页数据
      */
     <#else>
-    @ApiOperation(value = "根据条件分页查询${tableInfo.simpleRemark}列表")
+    @ApiOperation(value = "分页查询${tableInfo.simpleRemark}列表")
     @ApiImplicitParam(name = "condition", value = "${tableInfo.simpleRemark}查询条件", required = true, dataType = "${tableInfo.upperCamelCase}Condition", paramType = "body")
     </#if>
     @PostMapping("/find${tableInfo.upperCamelCase}Page")
@@ -59,18 +61,18 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
         IPage<${tableInfo.upperCamelCase}> page = ${tableInfo.lowerCamelCase}Service.find${tableInfo.upperCamelCase}Page(condition);
         return Paging.buildPaging(page);
     }
-<#if tableInfo.pkLowerCamelName??>
+<#if tableInfo.pkLowerCamelName?has_content>
 
     <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /**
      * 根据主键ID查询${tableInfo.simpleRemark}
      *
-     * @param ${tableInfo.pkLowerCamelName} 主键ID
+     * @param ${tableInfo.pkLowerCamelName} ${tableInfo.pkRemark}
      * @return 结果数据
      */
     <#else>
     @ApiOperation(value = "根据主键ID查询${tableInfo.simpleRemark}")
-    @ApiImplicitParam(name = "${tableInfo.pkLowerCamelName}", value = "主键ID", required = true)
+    @ApiImplicitParam(name = "${tableInfo.pkLowerCamelName}", value = "${tableInfo.pkRemark}", required = true)
     </#if>
     @GetMapping(value = "/get${tableInfo.upperCamelCase}ById/{${tableInfo.pkLowerCamelName}}")
     public Result<${tableInfo.upperCamelCase}> get${tableInfo.upperCamelCase}ById(@PathVariable ${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}) {
@@ -92,6 +94,17 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     </#if>
     @PostMapping("/add${tableInfo.upperCamelCase}")
     public Result<${tableInfo.upperCamelCase}> add${tableInfo.upperCamelCase}(@RequestBody @Valid ${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
+<#if checkValueExistedFields?has_content>
+    <#list tableInfo.fieldInfos as fieldInfo>
+        <#list checkValueExistedFields as fieldName>
+            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+        Boolean ${fieldInfo.proName}Existed = ${tableInfo.lowerCamelCase}Service.check${fieldInfo.upperCamelCase}Existed(${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}()<#if tableInfo.pkLowerCamelName?has_content>, null</#if>);
+        Assert.isFalse(${fieldInfo.proName}Existed, "${fieldInfo.simpleRemark}已存在，请重新输入！");
+
+            </#if>
+        </#list>
+    </#list>
+</#if>
         Boolean bool = ${tableInfo.lowerCamelCase}Service.add${tableInfo.upperCamelCase}(${tableInfo.lowerCamelCase});
         if (bool) {
             return Result.ok(${tableInfo.lowerCamelCase});
@@ -112,21 +125,32 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     </#if>
     @PutMapping(value = "/update${tableInfo.upperCamelCase}")
     public Result<Boolean> update${tableInfo.upperCamelCase}(@RequestBody ${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
+<#if checkValueExistedFields?has_content>
+    <#list tableInfo.fieldInfos as fieldInfo>
+        <#list checkValueExistedFields as fieldName>
+            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+        Boolean ${fieldInfo.proName}Existed = ${tableInfo.lowerCamelCase}Service.check${fieldInfo.upperCamelCase}Existed(${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}()<#if tableInfo.pkLowerCamelName?has_content>, ${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}()</#if>);
+        Assert.isFalse(${fieldInfo.proName}Existed, "${fieldInfo.simpleRemark}已存在，请重新输入！");
+
+            </#if>
+        </#list>
+    </#list>
+</#if>
         Boolean bool = ${tableInfo.lowerCamelCase}Service.update${tableInfo.upperCamelCase}(${tableInfo.lowerCamelCase});
         return Result.okOrFailed(bool);
     }
-<#if tableInfo.pkLowerCamelName??>
+<#if tableInfo.pkLowerCamelName?has_content>
 
     <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /**
      * 根据主键ID删除${tableInfo.simpleRemark}
      *
-     * @param ${tableInfo.pkLowerCamelName} 主键ID
+     * @param ${tableInfo.pkLowerCamelName} ${tableInfo.pkRemark}
      * @return 结果数据
      */
     <#else>
     @ApiOperation(value = "根据主键ID删除${tableInfo.simpleRemark}")
-    @ApiImplicitParam(name = "${tableInfo.pkLowerCamelName}", value = "主键ID", required = true)
+    @ApiImplicitParam(name = "${tableInfo.pkLowerCamelName}", value = "${tableInfo.pkRemark}", required = true)
     </#if>
     @DeleteMapping(value = "/delete${tableInfo.upperCamelCase}ById/{id}")
     public Result<Boolean> delete${tableInfo.upperCamelCase}ById(@PathVariable ${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}) {
@@ -138,12 +162,12 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     /**
      * 根据主键ID列表批量删除${tableInfo.simpleRemark}
      *
-     * @param idList 主键ID列表
+     * @param idList ${tableInfo.pkRemark}列表
      * @return 结果数据
      */
     <#else>
     @ApiOperation(value = "根据主键ID列表批量删除${tableInfo.simpleRemark}")
-    @ApiImplicitParam(name = "idList", value = "主键ID列表", required = true, allowMultiple = true, paramType = "body")
+    @ApiImplicitParam(name = "idList", value = "${tableInfo.pkRemark}列表", required = true, allowMultiple = true, paramType = "body")
     </#if>
     @DeleteMapping("/delete${tableInfo.upperCamelCase}ByIds")
     public Result<Boolean> delete${tableInfo.upperCamelCase}ByIds(@RequestBody List<${tableInfo.pkJavaType}> idList) {

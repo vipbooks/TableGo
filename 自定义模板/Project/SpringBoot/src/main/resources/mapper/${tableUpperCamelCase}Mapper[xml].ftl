@@ -1,7 +1,5 @@
 <#-- 初始化表的查询字段 -->
 <#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields) />
-<#-- 初始化需要生成检查字段值是否已存在的接口的字段 -->
-<#assign checkValueExistedFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.checkValueExistedFields) />
 <#-- 判断是否是需要生成SQL的表 -->
 <#if !FtlUtils.tableExisted(jsonParam.noSqlTables, tableInfo.tableName)>
     <#assign isNoSqlTable = false />
@@ -37,7 +35,7 @@
     <!-- ${String.format(paramConfig.mergeFileMarkEnd, 1)} -->
     </#if>
 
-    <!-- 根据条件分页查询${tableInfo.simpleRemark}列表 -->
+    <!-- 分页查询${tableInfo.simpleRemark}列表 -->
     <select id="find${tableInfo.upperCamelCase}Page" resultMap="${tableInfo.lowerCamelCase}Map">
         SELECT
             <include refid="allColumns" />
@@ -66,19 +64,6 @@
         ORDER BY <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>CREATION_DATE DESC
     </#if>
     </select>
-</#if>
-<#if checkValueExistedFields?has_content>
-    <#list tableInfo.fieldInfos as fieldInfo>
-        <#list checkValueExistedFields as fieldName>
-            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
-
-    <!-- 检查${fieldInfo.simpleRemark!fieldInfo.colName}是否存在 -->
-    <select id="check${fieldInfo.upperCamelCase}Existed" resultType="string">
-        SELECT 1 FROM ${tableInfo.tableName} WHERE<#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")> DELETE_FLAG = '1' AND</#if> ${fieldInfo.colName} = ${"#"}{${fieldInfo.proName}} LIMIT 1
-    </select>
-            </#if>
-        </#list>
-    </#list>
 </#if>
 
 </mapper>
