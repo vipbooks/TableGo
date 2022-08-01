@@ -20,7 +20,7 @@
   },
   "batchConfig" : [ {
     "runtimeExec" : [ {
-      "command" : "${scriptPath}\\svn-update-project.bat",
+      "command" : "${scriptPath}\\git-update-project.bat ${projectPath}",
       "enable" : false
     }, {
       "command" : "${scriptPath}\\maven-lifecycle.bat \"clean package\" ${projectPath}\\tablego-admin",
@@ -53,8 +53,7 @@
       "enable" : true
     }, {
       "command" : "docker image prune -f",
-      "containsStr" : "Total reclaimed space",
-      "enable" : true
+      "containsStr" : "Total reclaimed space"
     }, {
       "command" : "docker ps"
     } ]

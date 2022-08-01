@@ -1,6 +1,11 @@
 <#-- 用于生成Service接口实现的自定义模板 -->
+<#-- 初始化需要生成检查字段值是否已存在的接口的字段 -->
+<#assign checkValueExistedFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.checkValueExistedFields) />
 package ${jsonParam.packagePath}
 
+<#if checkValueExistedFields?has_content>
+import cn.hutool.core.util.BooleanUtil;
+</#if>
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -34,12 +39,25 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements ${tableInfo.upper
         IPage<${tableInfo.upperCamelCase}> page = condition.buildPage();
         return ${tableInfo.upperCamelCase}Mapper.find${tableInfo.upperCamelCase}Page(page, condition);
     }
-<#if tableInfo.pkLowerCamelName??>
+<#if tableInfo.pkLowerCamelName?has_content>
 
     @Override
     public ${tableInfo.upperCamelCase} get${tableInfo.upperCamelCase}ById(${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}) {
         return ${tableInfo.upperCamelCase}Mapper.get${tableInfo.upperCamelCase}ById(${tableInfo.pkLowerCamelName});
     }
+</#if>
+<#if checkValueExistedFields?has_content>
+    <#list tableInfo.fieldInfos as fieldInfo>
+        <#list checkValueExistedFields as fieldName>
+            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+
+    @Override
+    public Boolean check${fieldInfo.upperCamelCase}Existed(${fieldInfo.javaType} ${fieldInfo.proName}<#if tableInfo.pkLowerCamelName?has_content>, ${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}</#if>) {
+        return BooleanUtil.toBoolean(this.baseMapper.check${fieldInfo.upperCamelCase}Existed(${fieldInfo.proName}<#if tableInfo.pkLowerCamelName?has_content>, ${tableInfo.pkLowerCamelName}</#if>));
+    }
+            </#if>
+        </#list>
+    </#list>
 </#if>
 
     @Transactional(rollbackFor = Exception.class)
@@ -53,7 +71,7 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements ${tableInfo.upper
     public Boolean update${tableInfo.upperCamelCase}(${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
         return ${tableInfo.upperCamelCase}Mapper.update${tableInfo.upperCamelCase}(${tableInfo.lowerCamelCase});
     }
-<#if tableInfo.pkLowerCamelName??>
+<#if tableInfo.pkLowerCamelName?has_content>
 
     @Transactional(rollbackFor = Exception.class)
     @Override

@@ -3,7 +3,9 @@
 
 FROM openjdk:8-alpine
 
-MAINTAINER bianj
+MAINTAINER TableGo<www.tablego.cn>
+
+LABEL tablego-host="www.tablego.cn"
 
 WORKDIR /
 

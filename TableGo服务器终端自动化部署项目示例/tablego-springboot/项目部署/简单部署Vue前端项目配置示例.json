@@ -1,0 +1,59 @@
+{
+  "isOpenTerminal" : true,
+  "isOutLogToTerminal" : true,
+  "projectPath" : "G:\\tablego-springboot\\AntDesignVueTest",
+  "scriptPath" : "G:\\tablego-springboot\\项目部署",
+  "serverProjectPath" : "/opt/nginx/html",
+  "profiles" : {
+    "dev" : {
+      "script" : "build"
+    },
+    "test" : {
+      "script" : "test"
+    },
+    "prod" : {
+      "script" : "prod"
+    }
+  },
+  "batchConfig" : [ {
+    "runtimeExec" : [ {
+      "command" : "${scriptPath}\\svn-update-project.bat ${projectPath}",
+      "enable" : false
+    }, {
+      "command" : "${scriptPath}\\vue-package.bat ${script} ${projectPath}",
+      "enable" : true
+    } ]
+  }, {
+    "zipFileList" : [ {
+      "srcDir" : "${projectPath}\\dist",
+      "outPath" : "${projectPath}\\dist-zip",
+      "enable" : true
+    }, {
+      "srcFiles" : "${projectPath}\\package.json, ${projectPath}\\vue.config.js, ${projectPath}\\README.md",
+      "outPath" : "${projectPath}\\dist-zip\\example.zip",
+      "enable" : true
+    } ]
+  }, {
+    "fileUploads" : [ {
+      "fromPath" : [ "${projectPath}\\dist-zip\\dist.zip" ],
+      "toPath" : "${serverProjectPath}",
+      "enable" : true
+    } ]
+  }, {
+    "commands" : [ {
+      "command" : "cd ${serverProjectPath}"
+    }, {
+      "command" : "rm -rf dist",
+      "enable" : true
+    }, {
+      "command" : "unzip dist.zip",
+      "waitSeconds" : 2,
+      "enable" : true
+    }, {
+      "command" : "rm -f dist.zip",
+      "enable" : true
+    }, {
+      "command" : "ls"
+    } ]
+  } ]
+}

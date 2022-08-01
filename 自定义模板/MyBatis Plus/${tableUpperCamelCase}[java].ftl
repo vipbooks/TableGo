@@ -1,6 +1,10 @@
 <#-- 用于生成MyBatisPlus数据模型的自定义模板 -->
+<#-- 初始化全局忽略验证的字段 -->
+<#assign globalIgnoreValidFields = jsonParam.globalIgnoreValidFields />
+<#-- 初始化表要忽略验证的字段 -->
+<#assign tableIgnoreValidFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.tableIgnoreValidFields) />
 <#-- 初始化表的模糊查询字段 -->
-<#assign likeFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.likeFields)![] />
+<#assign likeFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.likeFields) />
 package ${jsonParam.packagePath}
 
 <#if FtlUtils.fieldTypeExisted(tableInfo, "Date")>
@@ -25,12 +29,26 @@ import ${jsonParam.basePackagePath}.common.model.BaseBean;
 <#else>
 import ${jsonParam.basePackagePath}.common.model.OverrideBeanMethods;
 </#if>
+<#assign importNotBlank = false />
+<#assign importNotNull = false />
+<#if tableInfo.fieldInfos?has_content>
+    <#list tableInfo.fieldInfos as fieldInfo>
+        <#if !fieldInfo.primaryKey && fieldInfo.isNotNull && !FtlUtils.fieldExisted(fieldInfo, globalIgnoreValidFields) && !FtlUtils.fieldExisted(fieldInfo, tableIgnoreValidFields)>
+            <#if !importNotBlank && fieldInfo.javaType == "String">
+                <#assign importNotBlank = true />
+import javax.validation.constraints.NotBlank;
+            <#elseif !importNotNull && fieldInfo.javaType != "String">
+                <#assign importNotNull = true />
+import javax.validation.constraints.NotNull;
+            </#if>
+        </#if>
+    </#list>
+</#if>
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import ${jsonParam.basePackagePath}.common.BaseBean;
 
 /**
  * <#if StringUtils.isNotBlank(tableInfo.remark)>${tableInfo.remark}(${tableInfo.tableName})<#else>${tableInfo.tableName}</#if>
@@ -52,6 +70,13 @@ public class ${tableInfo.upperCamelCase} extends <#if FtlUtils.fieldAllExisted(t
 
     @ApiModelProperty(value = "${fieldInfo.remark}", position = ${fieldInfo_index + 1})
     @JsonProperty(index = ${fieldInfo_index + 1})
+    <#if !fieldInfo.primaryKey && fieldInfo.isNotNull && !FtlUtils.fieldExisted(fieldInfo, globalIgnoreValidFields) && !FtlUtils.fieldExisted(fieldInfo, tableIgnoreValidFields)>
+        <#if fieldInfo.javaType == "String">
+    @NotBlank(message = "${fieldInfo.simpleRemark!fieldInfo.proName}不能为空！")
+        <#else>
+    @NotNull(message = "${fieldInfo.simpleRemark!fieldInfo.proName}不能为空！")
+        </#if>
+    </#if>
     <#if fieldInfo.primaryKey>
     @TableId
     </#if>

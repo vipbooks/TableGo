@@ -1,5 +1,6 @@
 @echo off
 ::Welcome to use the TableGo tools
+::pause: 按任意键继续
 ::设置变量延迟扩展
 setlocal enabledelayedexpansion
 

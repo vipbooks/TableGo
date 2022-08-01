@@ -47,7 +47,7 @@ public class ${tableInfo.upperCamelCase}ServiceTest {
     @Autowired
     private ${tableInfo.upperCamelCase}Service ${tableInfo.lowerCamelCase}Service;
 
-    /** 测试根据参数分页查询${tableInfo.simpleRemark}列表 */
+    /** 测试分页查询${tableInfo.simpleRemark}列表 */
     @Test
     public void testFind${tableInfo.upperCamelCase}Page() {
         Instant begin = Instant.now();
@@ -62,7 +62,7 @@ public class ${tableInfo.upperCamelCase}ServiceTest {
     }
 <#if tableInfo.pkLowerCamelName??>
 
-    /** 测试根据${tableInfo.simpleRemark}ID查询${tableInfo.simpleRemark} */
+    /** 测试根据主键ID查询${tableInfo.simpleRemark} */
     @Test
     public void testGet${tableInfo.upperCamelCase}ById() {
         Instant begin = Instant.now();
@@ -131,7 +131,7 @@ public class ${tableInfo.upperCamelCase}ServiceTest {
         Console.log("代码执行消耗时间: {} 毫秒", Duration.between(begin, end).toMillis());
     }
 
-    /** 测试根据主键ID集合批量删除${tableInfo.simpleRemark} */
+    /** 测试根据主键ID列表批量删除${tableInfo.simpleRemark} */
     @Test
     public void testDelete${tableInfo.upperCamelCase}ByIds() {
         Instant begin = Instant.now();

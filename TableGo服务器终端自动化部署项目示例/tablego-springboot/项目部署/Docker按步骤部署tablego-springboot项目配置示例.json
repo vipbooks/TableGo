@@ -20,7 +20,7 @@
       "enable" : true,
       "batchConfig" : [ {
         "runtimeExec" : [ {
-          "command" : "${scriptPath}\\svn-update-project.bat ${projectPath}",
+          "command" : "${scriptPath}\\git-update-project.bat ${projectPath}",
           "enable" : false
         }, {
           "command" : "${scriptPath}\\maven-lifecycle.bat clean ${projectPath}",
