@@ -1,4 +1,4 @@
-<#-- 自定义模板导出数据生成CSV-->
+<#-- 自定义模板导出数据生成CSV -->
 <#if tableInfo.fieldInfos?has_content>
 序号,<#list tableInfo.fieldInfos as fieldInfo><#if StringUtils.isNotBlank(fieldInfo.remark)>${fieldInfo.simpleRemark}<#else>${fieldInfo.proName}</#if><#if fieldInfo_has_next>,</#if></#list>
     <#if tableInfo.sqlQueryDataList?has_content>

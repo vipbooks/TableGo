@@ -1,4 +1,4 @@
-<#-- 自定义模板导出数据生成SQL -->
+<#-- 自定义模板导出数据生成SQL  -->
 <#if CollectionUtils.isNotEmpty(tableInfoList)>
     <#if jsonParam.sqlList?has_content>
         <#list jsonParam.sqlList as sql>
