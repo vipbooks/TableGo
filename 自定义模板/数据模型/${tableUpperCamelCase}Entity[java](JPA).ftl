@@ -13,17 +13,6 @@ import java.math.BigDecimal;
 <#if FtlUtils.fieldTypeExisted(tableInfo, "BigInteger")>
 import java.math.BigInteger;
 </#if>
-import common.bean.BaseBean;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.GenericGenerator;
 <#assign importNotBlank = false />
 <#assign importNotNull = false />
 <#if tableInfo.fieldInfos?has_content>
@@ -39,6 +28,20 @@ import javax.validation.constraints.NotNull;
     </#if>
     </#list>
 </#if>
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.GenericGenerator;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import common.bean.BaseBean;
 
 /**
  * <#if StringUtils.isNotBlank(tableInfo.remark)>${tableInfo.remark}(${tableInfo.tableName})<#else>${tableInfo.tableName}</#if>
@@ -92,27 +95,20 @@ public class ${tableInfo.upperCamelCase}Entity<#if StringUtils.isNotBlank(tableI
     </#if>
     <#list tableInfo.fieldInfos as fieldInfo>
 
-    <#if paramConfig.buildFieldRemark == 0>
     /**
      * 获取${fieldInfo.remark!fieldInfo.proName}
      * 
      * @return ${fieldInfo.simpleRemark!fieldInfo.proName}
      */
-    </#if>
     public ${fieldInfo.javaType} get${fieldInfo.upperCamelCase}() {
         return this.${fieldInfo.proName};
     }
 
-    <#if paramConfig.buildFieldRemark == 0>
     /**
      * 设置${fieldInfo.remark!fieldInfo.proName}
      * 
-     * @param ${fieldInfo.proName}
-<#if StringUtils.isNotBlank(fieldInfo.simpleRemark)>
-     *          ${fieldInfo.simpleRemark}
-</#if>
+     * @param ${fieldInfo.proName}<#if StringUtils.isNotBlank(fieldInfo.simpleRemark)> ${fieldInfo.simpleRemark}</#if>
      */
-    </#if>
     public void set${fieldInfo.upperCamelCase}(${fieldInfo.javaType} ${fieldInfo.proName}) {
         this.${fieldInfo.proName} = ${fieldInfo.proName};
     }

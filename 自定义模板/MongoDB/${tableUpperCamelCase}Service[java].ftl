@@ -3,8 +3,9 @@ package ${jsonParam.packagePath}
 
 import java.util.List;
 import org.springframework.data.domain.Page;
-import ${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase};
-import ${jsonParam.basePackagePath}.model.condition.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Condition;
+
+import ${jsonParam.basePackagePath}.model.${tableInfo.upperCamelCase};
+import ${jsonParam.basePackagePath}.model.condition.${tableInfo.upperCamelCase}Condition;
 
 /**
  * ${tableInfo.simpleRemark}Service接口

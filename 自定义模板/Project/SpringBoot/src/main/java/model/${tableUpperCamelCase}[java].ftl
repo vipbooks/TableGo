@@ -46,6 +46,7 @@ import ${jsonParam.basePackagePath}.common.model.OverrideBeanMethods;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -78,9 +79,8 @@ public class ${tableInfo.upperCamelCase} extends <#if FtlUtils.fieldAllExisted(t
     </#if>
     <#list tableInfo.fieldInfos as fieldInfo>
 
-        <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /** ${fieldInfo.remark} */
-        <#else>
+        <#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
     @ApiModelProperty(value = "${fieldInfo.remark}", position = ${fieldInfo_index + 1})
         </#if>
     @JsonProperty(index = ${fieldInfo_index + 1})

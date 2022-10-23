@@ -1,11 +1,9 @@
 <#-- 用于生成Controller的自定义模板 -->
-<#-- 初始化需要生成检查字段值是否已存在的接口的字段 -->
-<#assign checkValueExistedFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.checkValueExistedFields) />
 package ${jsonParam.packagePath}
 
 import java.util.List;
+import com.github.pagehelper.PageInfo;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,8 +12,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -24,9 +22,10 @@ import ${jsonParam.basePackagePath}.common.BaseController;
 import ${jsonParam.basePackagePath}.common.Paging;
 import ${jsonParam.basePackagePath}.common.Result;
 import ${jsonParam.basePackagePath}.common.util.Assert;
-import ${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase};
-import ${jsonParam.basePackagePath}.model.condition.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Condition;
-import ${jsonParam.basePackagePath}.service.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Service;
+
+import ${jsonParam.basePackagePath}.model.${tableInfo.upperCamelCase};
+import ${jsonParam.basePackagePath}.model.condition.${tableInfo.upperCamelCase}Condition;
+import ${jsonParam.basePackagePath}.service.${tableInfo.upperCamelCase}Service;
 
 /**
  * ${tableInfo.simpleRemark!tableInfo.tableName}Controller
@@ -43,10 +42,18 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
 
     @ApiOperation(value = "分页查询${tableInfo.simpleRemark}列表")
     @ApiImplicitParam(name = "condition", value = "${tableInfo.simpleRemark}查询条件", required = true, dataType = "${tableInfo.upperCamelCase}Condition", paramType = "body")
-    @PostMapping("/list")
-    public Paging<${tableInfo.upperCamelCase}> list(@RequestBody ${tableInfo.upperCamelCase}Condition condition) {
-        IPage<${tableInfo.upperCamelCase}> page = ${tableInfo.lowerCamelCase}Service.find${tableInfo.upperCamelCase}Page(condition);
-        return Paging.buildPaging(page);
+    @PostMapping("/findPage")
+    public Paging<${tableInfo.upperCamelCase}> findPage(@RequestBody ${tableInfo.upperCamelCase}Condition condition) {
+        PageInfo<${tableInfo.upperCamelCase}> pageInfo = ${tableInfo.lowerCamelCase}Service.find${tableInfo.upperCamelCase}Page(condition);
+        return Paging.buildPaging(pageInfo);
+    }
+
+    @ApiOperation(value = "查询${tableInfo.simpleRemark}列表")
+    @ApiImplicitParam(name = "condition", value = "${tableInfo.simpleRemark}查询条件", required = true, dataType = "${tableInfo.upperCamelCase}Condition", paramType = "body")
+    @PostMapping("/findList")
+    public Result<${tableInfo.upperCamelCase}> findList(@RequestBody ${tableInfo.upperCamelCase}Condition condition) {
+        List<${tableInfo.upperCamelCase}> list = ${tableInfo.lowerCamelCase}Service.find${tableInfo.upperCamelCase}List(condition);
+        return Result.ok(list);
     }
 <#if tableInfo.pkLowerCamelName?has_content>
 
@@ -63,17 +70,6 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     @ApiImplicitParam(name = "${tableInfo.lowerCamelCase}", value = "${tableInfo.simpleRemark}", required = true, dataType = "${tableInfo.upperCamelCase}", paramType = "body")
     @PostMapping("/add")
     public Result<${tableInfo.upperCamelCase}> add(@RequestBody ${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
-<#if checkValueExistedFields?has_content>
-    <#list tableInfo.fieldInfos as fieldInfo>
-        <#list checkValueExistedFields as fieldName>
-            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
-        Boolean ${fieldInfo.proName}Existed = ${tableInfo.lowerCamelCase}Service.check${fieldInfo.upperCamelCase}Existed(${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}()<#if tableInfo.pkLowerCamelName?has_content>, null</#if>);
-        Assert.isFalse(${fieldInfo.proName}Existed, "${fieldInfo.simpleRemark}已存在，请重新输入！");
-
-            </#if>
-        </#list>
-    </#list>
-</#if>
         Boolean bool = ${tableInfo.lowerCamelCase}Service.add${tableInfo.upperCamelCase}(${tableInfo.lowerCamelCase});
         if (bool) {
             return Result.ok(${tableInfo.lowerCamelCase});
@@ -85,17 +81,6 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     @ApiImplicitParam(name = "${tableInfo.lowerCamelCase}", value = "${tableInfo.simpleRemark}", required = true, dataType = "${tableInfo.upperCamelCase}", paramType = "body")
     @PutMapping(value = "/update")
     public Result<Boolean> update(@RequestBody ${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
-<#if checkValueExistedFields?has_content>
-    <#list tableInfo.fieldInfos as fieldInfo>
-        <#list checkValueExistedFields as fieldName>
-            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
-        Boolean ${fieldInfo.proName}Existed = ${tableInfo.lowerCamelCase}Service.check${fieldInfo.upperCamelCase}Existed(${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}()<#if tableInfo.pkLowerCamelName?has_content>, ${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}()</#if>);
-        Assert.isFalse(${fieldInfo.proName}Existed, "${fieldInfo.simpleRemark}已存在，请重新输入！");
-
-            </#if>
-        </#list>
-    </#list>
-</#if>
         Boolean bool = ${tableInfo.lowerCamelCase}Service.update${tableInfo.upperCamelCase}(${tableInfo.lowerCamelCase});
         return Result.okOrFailed(bool);
     }
@@ -109,12 +94,16 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
         return Result.okOrFailed(bool);
     }
 
-    @ApiOperation(value = "根据主键ID列表批量删除${tableInfo.simpleRemark}")
+    @ApiOperation(value = "批量删除${tableInfo.simpleRemark}")
     @ApiImplicitParam(name = "idList", value = "${tableInfo.pkRemark}列表", required = true, allowMultiple = true, paramType = "body")
     @DeleteMapping("/deleteList")
     public Result<Boolean> deleteList(@RequestBody List<${tableInfo.pkJavaType}> idList) {
         Assert.isNotEmpty(idList, "请选择需要删除的数据！");
+        <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")>
+        Boolean bool = ${tableInfo.lowerCamelCase}Service.delete${tableInfo.upperCamelCase}LogicByIds(idList);
+        <#else>
         Boolean bool = ${tableInfo.lowerCamelCase}Service.delete${tableInfo.upperCamelCase}ByIds(idList);
+        </#if>
         return Result.okOrFailed(bool);
     }
 </#if>

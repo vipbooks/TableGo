@@ -3,14 +3,18 @@
 <#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields) />
 package ${jsonParam.packagePath}
 
+<#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFields, "Date")>
+import cn.hutool.core.date.DateUtil;
+</#if>
 import java.util.List;
 import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,12 +25,10 @@ import org.springframework.data.elasticsearch.core.query.IndexQuery;
 import org.springframework.data.elasticsearch.core.query.IndexQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
-<#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFields, "Date")>
-import cn.hutool.core.date.DateUtil;
-</#if>
-import ${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase};
-import ${jsonParam.basePackagePath}.model.condition.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Condition;
-import ${jsonParam.basePackagePath}.service.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Service;
+
+import ${jsonParam.basePackagePath}.model.${tableInfo.upperCamelCase};
+import ${jsonParam.basePackagePath}.model.condition.${tableInfo.upperCamelCase}Condition;
+import ${jsonParam.basePackagePath}.service.${tableInfo.upperCamelCase}Service;
 
 /**
  * ${tableInfo.simpleRemark}Service接口实现

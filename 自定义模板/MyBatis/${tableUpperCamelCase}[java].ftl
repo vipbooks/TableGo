@@ -45,8 +45,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * <#if StringUtils.isNotBlank(tableInfo.remark)>${tableInfo.remark}(${tableInfo.tableName})<#else>${tableInfo.tableName}</#if>
  *
-* @author ${paramConfig.author}
-* @version 1.0.0 ${today}
+ * @author ${paramConfig.author}
+ * @version 1.0.0 ${today}
  */
 @ApiModel(description = "${tableInfo.simpleRemark!tableInfo.tableName}")
 public class ${tableInfo.upperCamelCase} extends <#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.commonFields)>BaseBean<#else>OverrideBeanMethods</#if> {
@@ -85,24 +85,20 @@ public class ${tableInfo.upperCamelCase} extends <#if FtlUtils.fieldAllExisted(t
     </#if>
     <#list tableInfo.fieldInfos as fieldInfo>
 
-    <#if paramConfig.buildFieldRemark == 0>
     /**
      * 获取${fieldInfo.remark!fieldInfo.proName}
      * 
      * @return ${fieldInfo.simpleRemark!fieldInfo.proName}
      */
-    </#if>
     public ${fieldInfo.javaType} get${fieldInfo.upperCamelCase}() {
         return this.${fieldInfo.proName};
     }
 
-    <#if paramConfig.buildFieldRemark == 0>
     /**
      * 设置${fieldInfo.remark!fieldInfo.proName}
      * 
      * @param ${fieldInfo.proName}<#if StringUtils.isNotBlank(fieldInfo.simpleRemark)> ${fieldInfo.simpleRemark}</#if>
      */
-    </#if>
     public void set${fieldInfo.upperCamelCase}(${fieldInfo.javaType} ${fieldInfo.proName}) {
         this.${fieldInfo.proName} = ${fieldInfo.proName};
     }

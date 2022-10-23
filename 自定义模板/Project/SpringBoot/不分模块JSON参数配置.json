@@ -196,11 +196,11 @@
     "knife4j" : "3.0.3",
     "snakeyaml" : "1.27",
     "lombok" : "1.18.24",
-    "hutoolAll" : "5.8.4",
+    "hutoolAll" : "5.8.8",
     "redisson" : "3.15.6",
     "mavenCompilerPlugin" : "3.8.1",
     "mavenSourcePlugin" : "3.2.1",
     "mavenSurefirePlugin" : "2.22.2",
-    "smartDocMavenPlugin" : "2.4.1"
+    "smartDocMavenPlugin" : "2.5.3"
   }
 }

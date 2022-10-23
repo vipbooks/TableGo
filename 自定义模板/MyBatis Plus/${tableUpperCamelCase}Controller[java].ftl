@@ -1,11 +1,9 @@
 <#-- 用于生成Controller的自定义模板 -->
-<#-- 初始化需要生成检查字段值是否已存在的接口的字段 -->
-<#assign checkValueExistedFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.checkValueExistedFields) />
 package ${jsonParam.packagePath}
 
 import java.util.List;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,19 +12,20 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 
-import ${jsonParam.basePackagePath}.common.BaseController;
-import ${jsonParam.basePackagePath}.common.Paging;
-import ${jsonParam.basePackagePath}.common.Result;
+import ${jsonParam.basePackagePath}.common.controller.BaseController;
+import ${jsonParam.basePackagePath}.common.model.Paging;
+import ${jsonParam.basePackagePath}.common.model.Result;
 import ${jsonParam.basePackagePath}.common.util.Assert;
-import ${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase};
-import ${jsonParam.basePackagePath}.model.condition.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Condition;
-import ${jsonParam.basePackagePath}.service.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Service;
+
+import ${jsonParam.basePackagePath}.model.${tableInfo.upperCamelCase};
+import ${jsonParam.basePackagePath}.model.condition.${tableInfo.upperCamelCase}Condition;
+import ${jsonParam.basePackagePath}.service.${tableInfo.upperCamelCase}Service;
 
 /**
  * ${tableInfo.simpleRemark!tableInfo.tableName}Controller
@@ -63,17 +62,6 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     @ApiImplicitParam(name = "${tableInfo.lowerCamelCase}", value = "${tableInfo.simpleRemark}", required = true, dataType = "${tableInfo.upperCamelCase}", paramType = "body")
     @PostMapping("/add")
     public Result<${tableInfo.upperCamelCase}> add(@RequestBody ${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
-<#if checkValueExistedFields?has_content>
-    <#list tableInfo.fieldInfos as fieldInfo>
-        <#list checkValueExistedFields as fieldName>
-            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
-        Boolean ${fieldInfo.proName}Existed = ${tableInfo.lowerCamelCase}Service.check${fieldInfo.upperCamelCase}Existed(${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}()<#if tableInfo.pkLowerCamelName?has_content>, null</#if>);
-        Assert.isFalse(${fieldInfo.proName}Existed, "${fieldInfo.simpleRemark}已存在，请重新输入！");
-
-            </#if>
-        </#list>
-    </#list>
-</#if>
         Boolean bool = ${tableInfo.lowerCamelCase}Service.add${tableInfo.upperCamelCase}(${tableInfo.lowerCamelCase});
         if (bool) {
             return Result.ok(${tableInfo.lowerCamelCase});
@@ -85,17 +73,6 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     @ApiImplicitParam(name = "${tableInfo.lowerCamelCase}", value = "${tableInfo.simpleRemark}", required = true, dataType = "${tableInfo.upperCamelCase}", paramType = "body")
     @PutMapping(value = "/update")
     public Result<Boolean> update(@RequestBody ${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
-<#if checkValueExistedFields?has_content>
-    <#list tableInfo.fieldInfos as fieldInfo>
-        <#list checkValueExistedFields as fieldName>
-            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
-        Boolean ${fieldInfo.proName}Existed = ${tableInfo.lowerCamelCase}Service.check${fieldInfo.upperCamelCase}Existed(${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}()<#if tableInfo.pkLowerCamelName?has_content>, ${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}()</#if>);
-        Assert.isFalse(${fieldInfo.proName}Existed, "${fieldInfo.simpleRemark}已存在，请重新输入！");
-
-            </#if>
-        </#list>
-    </#list>
-</#if>
         Boolean bool = ${tableInfo.lowerCamelCase}Service.update${tableInfo.upperCamelCase}(${tableInfo.lowerCamelCase});
         return Result.okOrFailed(bool);
     }

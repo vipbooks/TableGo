@@ -18,6 +18,7 @@ import java.math.BigInteger;
 import io.swagger.annotations.ApiModelProperty;
 </#if>
 import io.swagger.annotations.ApiModel;
+
 import ${jsonParam.basePackagePath}.common.BaseCondition;
 
 /**
@@ -67,10 +68,7 @@ public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
     /**
      * 设置${fieldInfo.simpleRemark!fieldInfo.proName}(开始)
      * 
-     * @param ${fieldInfo.proName}Begin
-    <#if StringUtils.isNotBlank(fieldInfo.simpleRemark)>
-     *          ${fieldInfo.simpleRemark}(开始)
-    </#if>
+     * @param ${fieldInfo.proName}Begin<#if StringUtils.isNotBlank(fieldInfo.simpleRemark)> ${fieldInfo.simpleRemark}(开始)</#if>
      */
     public void set${fieldInfo.upperCamelCase}Begin(${fieldInfo.javaType} ${fieldInfo.proName}Begin) {
         this.${fieldInfo.proName}Begin = ${fieldInfo.proName}Begin;
@@ -88,10 +86,7 @@ public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
     /**
      * 设置${fieldInfo.simpleRemark!fieldInfo.proName}(结束)
      * 
-     * @param ${fieldInfo.proName}End
-    <#if StringUtils.isNotBlank(fieldInfo.simpleRemark)>
-     *          ${fieldInfo.simpleRemark}(结束)
-    </#if>
+     * @param ${fieldInfo.proName}End<#if StringUtils.isNotBlank(fieldInfo.simpleRemark)> ${fieldInfo.simpleRemark}(结束)</#if>
      */
     public void set${fieldInfo.upperCamelCase}End(${fieldInfo.javaType} ${fieldInfo.proName}End) {
         this.${fieldInfo.proName}End = ${fieldInfo.proName}End;
@@ -109,10 +104,7 @@ public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
     /**
      * 设置${fieldInfo.remark!fieldInfo.proName}
      * 
-     * @param ${fieldInfo.proName}
-    <#if StringUtils.isNotBlank(fieldInfo.simpleRemark)>
-     *          ${fieldInfo.simpleRemark}
-    </#if>
+     * @param ${fieldInfo.proName}<#if StringUtils.isNotBlank(fieldInfo.simpleRemark)> ${fieldInfo.simpleRemark}</#if>
      */
     public void set${fieldInfo.upperCamelCase}(${fieldInfo.javaType} ${fieldInfo.proName}) {
         this.${fieldInfo.proName} = ${fieldInfo.proName};

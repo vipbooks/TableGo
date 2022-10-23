@@ -6,11 +6,10 @@ package ${jsonParam.packagePath}
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import ${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase};
-import ${jsonParam.basePackagePath}.model.condition.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Condition;
+import ${jsonParam.basePackagePath}.model.${tableInfo.upperCamelCase};
+import ${jsonParam.basePackagePath}.model.condition.${tableInfo.upperCamelCase}Condition;
 
 /**
  * ${tableInfo.simpleRemark}Mapper接口
@@ -18,15 +17,15 @@ import ${jsonParam.basePackagePath}.model.condition.<#if jsonParam.moduleName??>
  * @author ${paramConfig.author}
  * @version 1.0.0 ${today}
  */
+@Mapper
 public interface ${tableInfo.upperCamelCase}Mapper {
     /**
-     * 分页查询${tableInfo.simpleRemark}列表
+     * 查询${tableInfo.simpleRemark}列表
      * 
-     * @param page 分页参数
      * @param condition 查询条件
-     * @return 分页数据
+     * @return 列表数据
      */
-    IPage<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}Page(IPage<${tableInfo.upperCamelCase}> page, @Param("condition") ${tableInfo.upperCamelCase}Condition condition);
+    List<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}List(@Param("condition") ${tableInfo.upperCamelCase}Condition condition);
 <#if tableInfo.pkLowerCamelName?has_content>
 
     /**
@@ -83,11 +82,22 @@ public interface ${tableInfo.upperCamelCase}Mapper {
     Boolean delete${tableInfo.upperCamelCase}ById(@Param("${tableInfo.pkLowerCamelName}") ${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName});
 
     /**
-     * 根据主键ID列表批量删除${tableInfo.simpleRemark}
+     * 批量删除${tableInfo.simpleRemark}
      *
      * @param idList ${tableInfo.pkRemark}列表
      * @return 是否成功
      */
     Boolean delete${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList);
+    <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")>
+
+    /**
+     * 批量逻辑删除${tableInfo.simpleRemark}
+     *
+     * @param idList ${tableInfo.pkRemark}列表
+     * @param userId 登录用户ID
+     * @return 是否成功
+     */
+    Boolean delete${tableInfo.upperCamelCase}LogicByIds(@Param("idList") List<${tableInfo.pkJavaType}> idList, @Param("userId") String userId);
+    </#if>
 </#if>
 }

@@ -4,22 +4,26 @@ package ${jsonParam.packagePath}
 <#if FtlUtils.fieldSpecifyType(tableInfo, tableInfo.pkLowerCamelName, "String")>
 import org.apache.commons.lang3.StringUtils;
 </#if>
+import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
+
 import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import java.util.List;
+
 import ${jsonParam.basePackagePath}.common.BaseController;
 import ${jsonParam.basePackagePath}.common.Paging;
-import ${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase};
-import ${jsonParam.basePackagePath}.model.condition.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Condition;
-import ${jsonParam.basePackagePath}.service.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Service;
+
+import ${jsonParam.basePackagePath}.model.${tableInfo.upperCamelCase};
+import ${jsonParam.basePackagePath}.model.condition.${tableInfo.upperCamelCase}Condition;
+import ${jsonParam.basePackagePath}.service.${tableInfo.upperCamelCase}Service;
 
 /**
  * ${tableInfo.simpleRemark!tableInfo.tableName}Controller

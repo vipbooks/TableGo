@@ -6,8 +6,10 @@ package ${jsonParam.packagePath}
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import ${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase};
-import ${jsonParam.basePackagePath}.model.condition.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Condition;
+import com.baomidou.mybatisplus.extension.service.IService;
+
+import ${jsonParam.basePackagePath}.model.${tableInfo.upperCamelCase};
+import ${jsonParam.basePackagePath}.model.condition.${tableInfo.upperCamelCase}Condition;
 
 /**
  * ${tableInfo.simpleRemark}Service接口
@@ -15,7 +17,7 @@ import ${jsonParam.basePackagePath}.model.condition.<#if jsonParam.moduleName??>
  * @author ${paramConfig.author}
  * @version 1.0.0 ${today}
  */
-public interface ${tableInfo.upperCamelCase}Service {
+public interface ${tableInfo.upperCamelCase}Service extends IService<${tableInfo.upperCamelCase}> {
     /**
      * 分页查询${tableInfo.simpleRemark}列表
      *

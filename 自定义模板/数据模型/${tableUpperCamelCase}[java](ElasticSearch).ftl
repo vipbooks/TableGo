@@ -64,27 +64,20 @@ public class ${tableInfo.upperCamelCase}<#if StringUtils.isNotBlank(tableInfo.ex
     </#if>
     <#list tableInfo.fieldInfos as fieldInfo>
 
-    <#if paramConfig.buildFieldRemark == 0>
     /**
      * 获取${fieldInfo.remark!fieldInfo.proName}
      * 
      * @return ${fieldInfo.simpleRemark!fieldInfo.proName}
      */
-    </#if>
     public ${fieldInfo.javaType} get${fieldInfo.upperCamelCase}() {
         return this.${fieldInfo.proName};
     }
 
-    <#if paramConfig.buildFieldRemark == 0>
     /**
      * 设置${fieldInfo.remark!fieldInfo.proName}
      * 
-     * @param ${fieldInfo.proName}
-<#if StringUtils.isNotBlank(fieldInfo.simpleRemark)>
-     *          ${fieldInfo.simpleRemark}
-</#if>
+     * @param ${fieldInfo.proName}<#if StringUtils.isNotBlank(fieldInfo.simpleRemark)> ${fieldInfo.simpleRemark}</#if>
      */
-    </#if>
     public void set${fieldInfo.upperCamelCase}(${fieldInfo.javaType} ${fieldInfo.proName}) {
         this.${fieldInfo.proName} = ${fieldInfo.proName};
     }

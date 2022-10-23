@@ -1,20 +1,16 @@
 <#-- 用于生成Mapper.xml配置的自定义模板 -->
 <#-- 初始化表的查询字段 -->
 <#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields) />
-<#-- 初始化需要生成检查字段值是否已存在的接口的字段 -->
-<#assign checkValueExistedFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.checkValueExistedFields) />
-<#-- 判断是否是需要生成SQL的表 -->
-<#if !FtlUtils.tableExisted(jsonParam.noSqlTables, tableInfo.tableName)>
-    <#assign isNoSqlTable = false />
-</#if>
+<#-- 初始化是否不生成SQL查询的接口 -->
+<#assign isNoSqlTable = FtlUtils.tableExisted(tableInfo, jsonParam.noSqlTables) />
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- <#if StringUtils.isNotBlank(tableInfo.simpleRemark)>${tableInfo.simpleRemark}(${tableInfo.tableName})<#else>${tableInfo.tableName}</#if> -->
-<mapper namespace="${jsonParam.basePackagePath}.mapper.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Mapper">
-<#if isNoSqlTable?? && !isNoSqlTable>
+<mapper namespace="${jsonParam.basePackagePath}.mapper.${tableInfo.upperCamelCase}Mapper">
+<#if !isNoSqlTable>
     <!-- 字段映射 -->
-    <resultMap id="${tableInfo.lowerCamelCase}Map" type="${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}"/>
+    <resultMap id="${tableInfo.lowerCamelCase}Map" type="${jsonParam.basePackagePath}.model.${tableInfo.upperCamelCase}"/>
 
     <#if paramConfig.showMergeUpdateMark>
     <!-- ${String.format(paramConfig.mergeFileMarkBegin, 1)} -->
@@ -42,7 +38,7 @@
     <select id="find${tableInfo.upperCamelCase}Page" resultMap="${tableInfo.lowerCamelCase}Map">
         SELECT
             <include refid="allColumns" />
-        FROM ${tableInfo.tableName} <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias} </#if>WHERE <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>DELETE_FLAG = 1<#else>1 = 1</#if>
+        FROM ${tableInfo.tableName} <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias} </#if>WHERE <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>DELETE_FLAG = '1'<#else>1 = 1</#if>
     <#if searchFields?has_content>
         <#list tableInfo.fieldInfos as fieldInfo>
             <#list searchFields as fieldName>
@@ -67,28 +63,6 @@
         ORDER BY <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>CREATION_DATE DESC
     </#if>
     </select>
-</#if>
-<#if checkValueExistedFields?has_content>
-    <#list tableInfo.fieldInfos as fieldInfo>
-        <#list checkValueExistedFields as fieldName>
-            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
-
-    <!-- 检查${fieldInfo.simpleRemark!fieldInfo.colName}是否存在 -->
-    <select id="check${fieldInfo.upperCamelCase}Existed" resultType="string">
-                <#if tableInfo.pkLowerCamelName?has_content>
-        SELECT 1 FROM ${tableInfo.tableName} WHERE<#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")> DELETE_FLAG = '1'</#if>
-            <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")>AND </#if>${fieldInfo.colName} = ${"#"}{${fieldInfo.proName}}
-            <if test="${tableInfo.pkLowerCamelName} != null<#if tableInfo.pkJavaType == "String"> and ${tableInfo.pkLowerCamelName} != ''</#if>">
-                AND ${tableInfo.pkColName} != ${"#"}{${tableInfo.pkLowerCamelName}}
-            </if>
-        LIMIT 1
-                <#else>
-        SELECT 1 FROM ${tableInfo.tableName} WHERE<#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")> DELETE_FLAG = '1' AND</#if> ${fieldInfo.colName} = ${"#"}{${fieldInfo.proName}} LIMIT 1
-                </#if>
-    </select>
-            </#if>
-        </#list>
-    </#list>
 </#if>
 
 </mapper>

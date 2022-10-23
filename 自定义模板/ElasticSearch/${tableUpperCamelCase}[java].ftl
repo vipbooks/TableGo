@@ -19,9 +19,11 @@ import java.math.BigInteger;
 </#if>
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.annotation.Id;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import ${jsonParam.basePackagePath}.common.OverrideBeanMethods;
 
 /**
@@ -65,24 +67,20 @@ public class ${tableInfo.upperCamelCase} extends OverrideBeanMethods {
     </#if>
     <#list tableInfo.fieldInfos as fieldInfo>
 
-    <#if paramConfig.buildFieldRemark == 0>
     /**
      * 获取${fieldInfo.remark!fieldInfo.proName}
      * 
      * @return ${fieldInfo.simpleRemark!fieldInfo.proName}
      */
-    </#if>
     public ${fieldInfo.javaType} get${fieldInfo.upperCamelCase}() {
         return this.${fieldInfo.proName};
     }
 
-    <#if paramConfig.buildFieldRemark == 0>
     /**
      * 设置${fieldInfo.remark!fieldInfo.proName}
      * 
      * @param ${fieldInfo.proName}<#if StringUtils.isNotBlank(fieldInfo.simpleRemark)> ${fieldInfo.simpleRemark}</#if>
      */
-    </#if>
     public void set${fieldInfo.upperCamelCase}(${fieldInfo.javaType} ${fieldInfo.proName}) {
         this.${fieldInfo.proName} = ${fieldInfo.proName};
     }

@@ -17,7 +17,12 @@ import java.math.BigInteger;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
@@ -27,16 +32,15 @@ import lombok.experimental.Accessors;
  * @version 1.0.0 ${today}
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Accessors(chain = true)
+@EqualsAndHashCode(callSuper = false)
 @ApiModel(description = "${tableInfo.simpleRemark!tableInfo.tableName}")
 public class ${tableInfo.upperCamelCase}<#if StringUtils.isNotBlank(tableInfo.extendsClass)> extends ${tableInfo.extendsClass}</#if><#if StringUtils.isNotBlank(tableInfo.implementsClass)> implements ${tableInfo.implementsClass}</#if> {
     /** 版本号 */
     private static final long serialVersionUID = ${tableInfo.serialVersionUID!'1'}L;
-
-    /** 创建${tableInfo.simpleRemark}实例对象 */
-    public static ${tableInfo.upperCamelCase} newInstance() {
-        return new ${tableInfo.upperCamelCase}();
-    }
 <#if tableInfo.fieldInfos?has_content>
     <#if paramConfig.showMergeUpdateMark>
 
@@ -44,6 +48,7 @@ public class ${tableInfo.upperCamelCase}<#if StringUtils.isNotBlank(tableInfo.ex
     </#if>
     <#list tableInfo.fieldInfos as fieldInfo>
 
+    /** ${fieldInfo.remark} */
     @ApiModelProperty(value = "${fieldInfo.remark}", position = ${fieldInfo_index + 1})
     @JsonProperty(index = ${fieldInfo_index + 1})
     <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>

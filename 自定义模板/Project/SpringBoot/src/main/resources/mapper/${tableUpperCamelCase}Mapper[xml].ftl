@@ -1,17 +1,15 @@
 <#-- 初始化表的查询字段 -->
 <#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields) />
-<#-- 判断是否是需要生成SQL的表 -->
-<#if !FtlUtils.tableExisted(jsonParam.noSqlTables, tableInfo.tableName)>
-    <#assign isNoSqlTable = false />
-</#if>
+<#-- 初始化是否不生成SQL查询的接口 -->
+<#assign isNoSqlTable = FtlUtils.tableExisted(tableInfo, jsonParam.noSqlTables) />
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- <#if StringUtils.isNotBlank(tableInfo.simpleRemark)>${tableInfo.simpleRemark}(${tableInfo.tableName})<#else>${tableInfo.tableName}</#if> -->
-<mapper namespace="${jsonParam.basePackagePath}.mapper.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Mapper">
-<#if isNoSqlTable?? && !isNoSqlTable>
+<mapper namespace="${jsonParam.basePackagePath}.mapper.<#if jsonParam.moduleName?has_content>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Mapper">
+<#if !isNoSqlTable>
     <!-- 字段映射 -->
-    <resultMap id="${tableInfo.lowerCamelCase}Map" type="${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}"/>
+    <resultMap id="${tableInfo.lowerCamelCase}Map" type="${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName?has_content>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}"/>
 
     <#if paramConfig.showMergeUpdateMark>
     <!-- ${String.format(paramConfig.mergeFileMarkBegin, 1)} -->

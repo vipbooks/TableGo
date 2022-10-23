@@ -4,10 +4,10 @@
 package ${jsonParam.packagePath}
 
 import java.util.List;
+import com.github.pagehelper.PageInfo;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import ${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase};
-import ${jsonParam.basePackagePath}.model.condition.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Condition;
+import ${jsonParam.basePackagePath}.model.${tableInfo.upperCamelCase};
+import ${jsonParam.basePackagePath}.model.condition.${tableInfo.upperCamelCase}Condition;
 
 /**
  * ${tableInfo.simpleRemark}Service接口
@@ -22,7 +22,15 @@ public interface ${tableInfo.upperCamelCase}Service {
      * @param condition 查询条件
      * @return 分页信息
      */
-    IPage<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}Page(${tableInfo.upperCamelCase}Condition condition);
+    PageInfo<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}Page(${tableInfo.upperCamelCase}Condition condition);
+
+    /**
+     * 查询${tableInfo.simpleRemark}列表
+     *
+     * @param ${tableInfo.lowerCamelCase} 查询条件
+     * @return 列表信息
+     */
+    List<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}List(${tableInfo.upperCamelCase}Condition condition);
 <#if tableInfo.pkLowerCamelName?has_content>
 
     /**
@@ -79,11 +87,21 @@ public interface ${tableInfo.upperCamelCase}Service {
     Boolean delete${tableInfo.upperCamelCase}ById(${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName});
 
     /**
-     * 根据主键ID列表批量删除${tableInfo.simpleRemark}
+     * 批量删除${tableInfo.simpleRemark}
      *
      * @param idList ${tableInfo.pkRemark}列表
      * @return 是否成功
      */
     Boolean delete${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList);
+    <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")>
+
+    /**
+     * 批量逻辑删除${tableInfo.simpleRemark}
+     *
+     * @param idList ${tableInfo.pkRemark}列表
+     * @return 是否成功
+     */
+    Boolean delete${tableInfo.upperCamelCase}LogicByIds(List<${tableInfo.pkJavaType}> idList);
+    </#if>
 </#if>
 }

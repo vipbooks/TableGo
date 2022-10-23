@@ -7,9 +7,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- <#if StringUtils.isNotBlank(tableInfo.simpleRemark)>${tableInfo.simpleRemark}(${tableInfo.tableName})<#else>${tableInfo.tableName}</#if> -->
-<mapper namespace="${jsonParam.basePackagePath}.mapper.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Mapper">
+<mapper namespace="${jsonParam.basePackagePath}.mapper.${tableInfo.upperCamelCase}Mapper">
     <!-- 字段映射 -->
-    <resultMap id="${tableInfo.lowerCamelCase}Map" type="${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}"/>
+    <resultMap id="${tableInfo.lowerCamelCase}Map" type="${jsonParam.basePackagePath}.model.${tableInfo.upperCamelCase}"/>
 
     <#if paramConfig.showMergeUpdateMark>
     <!-- ${String.format(paramConfig.mergeFileMarkBegin, 1)} -->
@@ -33,11 +33,11 @@
     <!-- ${String.format(paramConfig.mergeFileMarkEnd, 1)} -->
     </#if>
 
-    <!-- 分页查询${tableInfo.simpleRemark}列表 -->
-    <select id="find${tableInfo.upperCamelCase}Page" resultMap="${tableInfo.lowerCamelCase}Map">
+    <!-- 查询${tableInfo.simpleRemark}列表 -->
+    <select id="find${tableInfo.upperCamelCase}List" resultMap="${tableInfo.lowerCamelCase}Map">
         SELECT
             <include refid="allColumns" />
-        FROM ${tableInfo.tableName} <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias} </#if>WHERE <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>DELETE_FLAG = 1<#else>1 = 1</#if>
+        FROM ${tableInfo.tableName} <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias} </#if>WHERE <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>DELETE_FLAG = '1'<#else>1 = 1</#if>
     <#if searchFields?has_content>
         <#list tableInfo.fieldInfos as fieldInfo>
             <#list searchFields as fieldName>
@@ -93,19 +93,21 @@
 
     <!-- 新增${tableInfo.simpleRemark} -->
     <insert id="add${tableInfo.upperCamelCase}" useGeneratedKeys="true" keyColumn="${tableInfo.pkColName}" keyProperty="${tableInfo.pkLowerCamelName}">
-        INSERT INTO ${tableInfo.tableName} (
-            <#list tableInfo.pagingFieldInfos as pagingList>
-            <#list pagingList as fieldInfo>${fieldInfo.colName}<#if fieldInfo_has_next>, </#if></#list><#if pagingList_has_next>, </#if>
-            </#list>
-        ) VALUES (
+        INSERT INTO ${tableInfo.tableName}
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+    <#list tableInfo.fieldInfos as fieldInfo>
+            <if test="${fieldInfo.proName} != null">${fieldInfo.colName}<#if fieldInfo_has_next>,</#if></if>
+    </#list>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
     <#list tableInfo.fieldInfos as fieldInfo>
         <#if dbConfig.dbType == "oracle">
-            ${"#"}{${fieldInfo.proName},jdbcType=${fieldInfo.typeName}}<#if fieldInfo_has_next>,</#if>
+            <if test="${fieldInfo.proName} != null">${"#"}{${fieldInfo.proName},jdbcType=${fieldInfo.jdbcType}}<#if fieldInfo_has_next>,</#if></if>
         <#else>
-            ${"#"}{${fieldInfo.proName}}<#if fieldInfo_has_next>,</#if>
+            <if test="${fieldInfo.proName} != null">${"#"}{${fieldInfo.proName}}<#if fieldInfo_has_next>,</#if></if>
         </#if>
     </#list>
-        )
+        </trim>
     </insert>
 
     <!-- 修改${tableInfo.simpleRemark} -->
@@ -129,12 +131,28 @@
         DELETE FROM ${tableInfo.tableName} WHERE ${tableInfo.pkColName} = ${"#"}{id}
     </delete>
 
-    <!-- 根据主键ID列表批量删除${tableInfo.simpleRemark} -->
+    <!-- 批量删除${tableInfo.simpleRemark} -->
     <delete id="delete${tableInfo.upperCamelCase}ByIds" parameterType="list">
         DELETE FROM ${tableInfo.tableName} WHERE ${tableInfo.pkColName} IN
         <foreach collection="list" index="index" item="${tableInfo.pkLowerCamelName}" open="(" separator="," close=")">
             ${"#"}{${tableInfo.pkLowerCamelName}}
         </foreach>
     </delete>
+    <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")>
+
+    <!-- 批量逻辑删除${tableInfo.simpleRemark} -->
+    <update id="delete${tableInfo.upperCamelCase}LogicByIds">
+        UPDATE ${tableInfo.tableName}
+        <set>
+            DELETE_FLAG = '0',
+            LAST_UPDATE_DATE = NOW(),
+            <if test="userId != null">LAST_UPDATED_BY = ${"#"}{userId}</if>
+        </set>
+        WHERE DELETE_FLAG = '1' AND ${tableInfo.pkColName} IN
+        <foreach collection="idList" index="index" item="${tableInfo.pkLowerCamelName}" open="(" separator="," close=")">
+            ${"#"}{${tableInfo.pkLowerCamelName}}
+        </foreach>
+    </update>
+    </#if>
 </#if>
 </mapper>

@@ -11,7 +11,6 @@
 　　使用自定义模板功能可以根据数据库表结构信息生成你想要的任何代码，例如：Java、C#、C++、Golang、Rust、Python、Objective-C、Swift、Kotlin、VB、VC、SQL、HTML、JSP、JS、PHP、Vue、React、Word、Excel等等，没有做不到只有想不到……<br/>
 　　可以生成Java、C#、C++、Golang、Rust、Python、Objective-C、Swift、iOS等各种不同平台编程语言的数据模型或结构体，对应的自定义模板示例已提供。<br/><br/>
 　　TableGo官网：[http://www.tablego.cn](http://www.tablego.cn)<br/>
-　　在CSDN博客可下载Jar包版本的TableGo，可在Linux和Mac OS上运行：[https://blog.csdn.net/vipbooks](https://blog.csdn.net/vipbooks)
 
 #### 运行环境
 

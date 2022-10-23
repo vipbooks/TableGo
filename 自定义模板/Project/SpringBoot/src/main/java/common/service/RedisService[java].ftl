@@ -224,7 +224,7 @@ public class RedisService {
      * @return 删除数量
      */
     public Long deletes(String... keys) {
-        if (ObjectUtil.isNotEmpty(keys)) {
+        if (ObjectUtil.isEmpty(keys)) {
             return null;
         }
         List<String> keyList = Stream.of(keys).filter(StrUtil::isNotBlank).distinct().collect(Collectors.toList());
@@ -358,7 +358,7 @@ public class RedisService {
      * @return 对象列表
      */
     public List<Object> multiGet(String... keys) {
-        if (ObjectUtil.isNotEmpty(keys)) {
+        if (ObjectUtil.isEmpty(keys)) {
             return Collections.emptyList();
         }
         List<String> keyList = Stream.of(keys).filter(StrUtil::isNotBlank).distinct().collect(Collectors.toList());

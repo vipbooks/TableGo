@@ -22,9 +22,11 @@ import com.baomidou.mybatisplus.annotation.SqlCondition;
 </#if>
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import ${jsonParam.basePackagePath}.common.BaseBean;
 
 /**
@@ -75,28 +77,21 @@ public class ${tableInfo.upperCamelCase} extends BaseBean {
     </#if>
     <#list tableInfo.fieldInfos as fieldInfo>
 
-    <#if paramConfig.buildFieldRemark == 0>
     /**
      * 获取${fieldInfo.remark!fieldInfo.proName}
      * 
      * @return ${fieldInfo.simpleRemark!fieldInfo.proName}
      */
-    </#if>
     public ${fieldInfo.javaType} get${fieldInfo.upperCamelCase}() {
         return this.${fieldInfo.proName};
     }
 
-    <#if paramConfig.buildFieldRemark == 0>
     /**
      * 设置${fieldInfo.remark!fieldInfo.proName}
      * 
-     * @param ${fieldInfo.proName}
-<#if StringUtils.isNotBlank(fieldInfo.simpleRemark)>
-     *          ${fieldInfo.simpleRemark}
-</#if>
+     * @param ${fieldInfo.proName}<#if StringUtils.isNotBlank(fieldInfo.simpleRemark)> ${fieldInfo.simpleRemark}</#if>
      * @return ${fieldInfo.simpleRemark!fieldInfo.proName}
      */
-    </#if>
     public ${tableInfo.upperCamelCase} set${fieldInfo.upperCamelCase}(${fieldInfo.javaType} ${fieldInfo.proName}) {
         this.${fieldInfo.proName} = ${fieldInfo.proName};
         return this;

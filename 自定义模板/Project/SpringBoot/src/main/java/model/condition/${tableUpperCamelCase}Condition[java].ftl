@@ -22,6 +22,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+
 import ${jsonParam.basePackagePath}.common.model.BaseCondition;
 
 /**
@@ -50,25 +51,22 @@ public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
             <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
 
     <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>
-        <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /** ${fieldInfo.remark!fieldInfo.colName}(开始) */
-        <#else>
+        <#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
     @ApiModelProperty(value = "${fieldInfo.remark!fieldInfo.colName}(开始)")
         </#if>
     @JsonFormat(timezone = "GMT+8", pattern = DatePattern.NORM_DATE_PATTERN)
     private ${fieldInfo.javaType} ${fieldInfo.proName}Begin;
 
-        <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /** ${fieldInfo.remark!fieldInfo.colName}(结束) */
-        <#else>
+        <#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
     @ApiModelProperty(value = "${fieldInfo.remark!fieldInfo.colName}(结束)")
         </#if>
     @JsonFormat(timezone = "GMT+8", pattern = DatePattern.NORM_DATE_PATTERN)
     private ${fieldInfo.javaType} ${fieldInfo.proName}End;
     <#else>
-        <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /** ${fieldInfo.remark} */
-        <#else>
+        <#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
     @ApiModelProperty(value = "${fieldInfo.remark}")
         </#if>
     private ${fieldInfo.javaType} ${fieldInfo.proName};
