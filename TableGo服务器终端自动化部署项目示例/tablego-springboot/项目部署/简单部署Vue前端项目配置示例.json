@@ -3,7 +3,7 @@
   "isOutLogToTerminal" : true,
   "projectPath" : "G:\\tablego-springboot\\AntDesignVueTest",
   "scriptPath" : "G:\\tablego-springboot\\项目部署",
-  "serverProjectPath" : "/opt/nginx/html",
+  "serverNginxPath" : "/opt/nginx",
   "profiles" : {
     "dev" : {
       "script" : "build"
@@ -26,7 +26,7 @@
   }, {
     "zipFileList" : [ {
       "srcDir" : "${projectPath}\\dist",
-      "outPath" : "${projectPath}\\dist-zip",
+      "outPath" : "${projectPath}\\dist-zip\\html.zip",
       "enable" : true
     }, {
       "srcFiles" : "${projectPath}\\package.json, ${projectPath}\\vue.config.js, ${projectPath}\\README.md",
@@ -34,23 +34,34 @@
       "enable" : true
     } ]
   }, {
+    "commands" : [ {
+      "command" : "cd ${serverNginxPath}",
+      "enable" : true
+    }, {
+      "command" : "mkdir -p ${serverNginxPath}/bak",
+      "enable" : true
+    }, {
+      "command" : "tar -zcf ./bak/html_`date +%Y%m%d%H%M%S`.tar.gz html",
+      "sleepSeconds" : 2,
+      "enable" : true
+    } ],
     "fileUploads" : [ {
-      "fromPath" : [ "${projectPath}\\dist-zip\\dist.zip" ],
-      "toPath" : "${serverProjectPath}",
+      "fromPath" : [ "${projectPath}\\dist-zip\\html.zip" ],
+      "toPath" : "${serverNginxPath}",
       "enable" : true
     } ]
   }, {
     "commands" : [ {
-      "command" : "cd ${serverProjectPath}"
+      "command" : "cd ${serverNginxPath}"
     }, {
-      "command" : "rm -rf dist",
+      "command" : "rm -rf html",
       "enable" : true
     }, {
-      "command" : "unzip dist.zip",
+      "command" : "unzip html.zip",
       "waitSeconds" : 2,
       "enable" : true
     }, {
-      "command" : "rm -f dist.zip",
+      "command" : "rm -f html.zip",
       "enable" : true
     }, {
       "command" : "ls"

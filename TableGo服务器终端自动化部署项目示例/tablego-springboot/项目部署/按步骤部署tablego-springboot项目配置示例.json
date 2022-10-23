@@ -56,6 +56,17 @@
           "enable" : true
         } ]
       }, {
+        "commands" : [ {
+          "command" : "cd ${serverProjectPath}",
+          "enable" : true
+        }, {
+          "command" : "mkdir -p ${serverProjectPath}/bak/tablego-admin",
+          "enable" : true
+        }, {
+          "command" : "cp -vf tablego-admin.jar ./bak/tablego-admin/tablego-admin_`date +%Y%m%d%H%M%S`.jar",
+          "containsStr" : ".jar",
+          "enable" : true
+        } ],
         "fileUploads" : [ {
           "fromPath" : [ "${projectPath}\\tablego-admin\\target\\tablego-admin.jar" ],
           "toPath" : "${serverProjectPath}",
@@ -82,6 +93,17 @@
           "enable" : true
         } ]
       }, {
+        "commands" : [ {
+          "command" : "cd ${serverProjectPath}",
+          "enable" : true
+        }, {
+          "command" : "mkdir -p ${serverProjectPath}/bak/tablego-basic",
+          "enable" : true
+        }, {
+          "command" : "cp -vf tablego-basic.jar ./bak/tablego-basic/tablego-basic_`date +%Y%m%d%H%M%S`.jar",
+          "containsStr" : ".jar",
+          "enable" : true
+        } ],
         "fileUploads" : [ {
           "fromPath" : [ "${projectPath}\\tablego-basic\\target\\tablego-basic.jar" ],
           "toPath" : "${serverProjectPath}",
@@ -108,6 +130,17 @@
           "enable" : true
         } ]
       }, {
+        "commands" : [ {
+          "command" : "cd ${serverProjectPath}",
+          "enable" : true
+        }, {
+          "command" : "mkdir -p ${serverProjectPath}/bak/tablego-iam",
+          "enable" : true
+        }, {
+          "command" : "cp -vf tablego-iam.jar ./bak/tablego-iam/tablego-iam_`date +%Y%m%d%H%M%S`.jar",
+          "containsStr" : ".jar",
+          "enable" : true
+        } ],
         "fileUploads" : [ {
           "fromPath" : [ "${projectPath}\\tablego-iam\\target\\tablego-iam.jar" ],
           "toPath" : "${serverProjectPath}",

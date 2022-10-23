@@ -27,6 +27,17 @@
       "enable" : true
     } ]
   }, {
+    "commands" : [ {
+      "command" : "cd ${serverProjectPath}",
+      "enable" : true
+    }, {
+      "command" : "mkdir -p ${serverProjectPath}/bak",
+      "enable" : true
+    }, {
+      "command" : "cp -vf tablego-admin.jar ./bak/tablego-admin_`date +%Y%m%d%H%M%S`.jar",
+      "containsStr" : ".jar",
+      "enable" : true
+    } ],
     "fileUploads" : [ {
       "fromPath" : [ "${scriptPath}\\AppService.sh" ],
       "toPath" : "${serverProjectPath}",

@@ -36,6 +36,10 @@
     "commands" : [ {
       "command" : "cd ${serverProjectPath}/tablego-admin"
     }, {
+      "command" : "docker tag tablego-admin tablego-admin_`date +%Y%m%d%H%M%S`",
+      "sleepSeconds" : 2,
+      "enable" : true
+    }, {
       "command" : "docker rm -f tablego-admin",
       "containsStr" : "tablego-admin",
       "enable" : true

@@ -53,6 +53,10 @@
       "command" : "rm -f dist.zip",
       "enable" : true
     }, {
+      "command" : "docker tag vue-test vue-test_`date +%Y%m%d%H%M%S`",
+      "sleepSeconds" : 2,
+      "enable" : true
+    }, {
       "command" : "docker rm -f vue-test",
       "containsStr" : "vue-test",
       "enable" : true
