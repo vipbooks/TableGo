@@ -1,4 +1,5 @@
 #!/bin/bash
+#按参数运行Jar应用程序的脚本
 
 #Welcome to use the TableGo tools
 #把Window中编辑产生的 \r 替换成空白：sed -i 's/\r$//' AppService.sh
@@ -7,17 +8,11 @@
 #使用nohup启动项目：nohup java -jar ${appName}.jar --spring.profiles.active=test > ${appName}.log 2>&1 &
 #使用setsid启动项目：setsid java -jar ${appName}.jar --spring.profiles.active=test > ${appName}.log 2>&1 &
 #根据名称批量终止进程：kill -9 `ps -ef | grep ${appName} | grep -v grep | awk '{print $2}'`
-#配置服务应用参数
+#配置脚本运行参数
 appName=serviceName
 appJarName=${appName}.jar
 profile=dev
 appPort=8080
-
-#使用说明，用来提示输入参数
-usage() {
-    echo "Usage: sh ${appName}.sh [start|stop|restart|status]"
-    exit 1
-}
 
 #检查程序是否在运行，$1表示第一个参数
 is_exist(){
@@ -86,6 +81,12 @@ initArgs(){
     then
       appPort=$3
     fi
+}
+
+#使用说明，用来提示输入参数
+usage() {
+    echo "Usage: sh ${appName}.sh [start|stop|restart|status]"
+    exit 1
 }
 
 #根据输入参数，选择执行对应方法，不输入则执行使用说明，$1表示第一个参数

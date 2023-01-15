@@ -1,6 +1,7 @@
 {
   "isOpenTerminal" : true,
   "isOutLogToTerminal" : true,
+  "isOutLogToFile" : false,
   "projectPath" : "G:\\tablego-springboot",
   "scriptPath" : "G:\\tablego-springboot\\项目部署",
   "serverProjectPath" : "/opt/tablego-springboot",
@@ -39,7 +40,7 @@
       "enable" : true
     } ],
     "fileUploads" : [ {
-      "fromPath" : [ "${scriptPath}\\AppService.sh" ],
+      "fromPath" : [ "${scriptPath}\\AppService.sh", "${scriptPath}\\ClearBakFile.sh" ],
       "toPath" : "${serverProjectPath}",
       "enable" : true
     }, {
@@ -51,11 +52,15 @@
     "commands" : [ {
       "command" : "cd ${serverProjectPath}"
     }, {
-      "command" : "sed -i 's/\\r$//' AppService.sh",
+      "command" : "sed -i 's/\\r$//' AppService.sh ClearBakFile.sh",
       "enable" : true
     }, {
-      "command" : "sudo chmod +x AppService.sh",
+      "command" : "sudo chmod +x AppService.sh ClearBakFile.sh",
       "enable" : false
+    }, {
+      "command" : "sh ClearBakFile.sh -d ${serverProjectPath}/bak -e jar",
+      "waitSeconds" : 2,
+      "enable" : true
     }, {
       "command" : "sh AppService.sh restart tablego-admin ${profile} ${port}"
     }, {
@@ -68,7 +73,7 @@
     "fileDownloads" : [ {
       "fromPath" : "${serverProjectPath}",
       "toPath" : "${projectPath}",
-      "files" : [ "AppService.sh" ],
+      "files" : [ "AppService.sh", "ClearBakFile.sh" ],
       "enable" : false
     } ]
   } ]

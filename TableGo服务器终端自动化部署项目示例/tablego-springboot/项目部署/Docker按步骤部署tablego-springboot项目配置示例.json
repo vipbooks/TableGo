@@ -1,23 +1,34 @@
 {
   "isOpenTerminal" : true,
   "isOutLogToTerminal" : true,
+  "isOutLogToFile" : false,
   "projectPath" : "G:\\tablego-springboot",
   "scriptPath" : "G:\\tablego-springboot\\项目部署",
   "serverProjectPath" : "/opt/tablego-springboot",
   "profiles" : {
     "dev" : {
-      "profile" : "dev"
+      "profile" : "dev",
+      "tablegoAdminPort" : "6611",
+      "tablegoBasicPort" : "6622",
+      "tablegoIamPort" : "6633"
     },
     "test" : {
-      "profile" : "test"
+      "profile" : "test",
+      "tablegoAdminPort" : "6611",
+      "tablegoBasicPort" : "6622",
+      "tablegoIamPort" : "6633"
     },
     "prod" : {
-      "profile" : "prod"
+      "profile" : "prod",
+      "tablegoAdminPort" : "6611",
+      "tablegoBasicPort" : "6622",
+      "tablegoIamPort" : "6633"
     }
   },
   "stepBatchConfig" : {
     "step1" : {
       "enable" : true,
+      "remark" : "更新Git代码并打包",
       "batchConfig" : [ {
         "runtimeExec" : [ {
           "command" : "${scriptPath}\\git-update-project.bat ${projectPath}",
@@ -30,6 +41,7 @@
     },
     "step2" : {
       "enable" : true,
+      "remark" : "部署 tablego-admin 工程",
       "batchConfig" : [ {
         "runtimeExec" : [ {
           "command" : "${scriptPath}\\maven-lifecycle.bat package ${projectPath}\\tablego-admin",
@@ -57,7 +69,7 @@
           "containsStr" : "Successfully tagged",
           "enable" : true
         }, {
-          "command" : "docker run -dp 6611:8080 --name=tablego-admin tablego-admin --spring.profiles.active=${profile}",
+          "command" : "docker run -dp ${tablegoAdminPort}:8080 --name=tablego-admin tablego-admin --spring.profiles.active=${profile}",
           "sleepSeconds" : 3,
           "enable" : true
         }, {
@@ -71,6 +83,7 @@
     },
     "step3" : {
       "enable" : true,
+      "remark" : "部署 tablego-basic 工程",
       "batchConfig" : [ {
         "runtimeExec" : [ {
           "command" : "${scriptPath}\\maven-lifecycle.bat package ${projectPath}\\tablego-basic",
@@ -98,7 +111,7 @@
           "containsStr" : "Successfully tagged",
           "enable" : true
         }, {
-          "command" : "docker run -dp 6622:8080 --name=tablego-basic tablego-basic --spring.profiles.active=${profile}",
+          "command" : "docker run -dp ${tablegoBasicPort}:8080 --name=tablego-basic tablego-basic --spring.profiles.active=${profile}",
           "sleepSeconds" : 3,
           "enable" : true
         }, {
@@ -112,6 +125,7 @@
     },
     "step4" : {
       "enable" : true,
+      "remark" : "部署 tablego-iam 工程",
       "batchConfig" : [ {
         "runtimeExec" : [ {
           "command" : "${scriptPath}\\maven-lifecycle.bat \"clean package\" ${projectPath}\\tablego-iam",
@@ -139,7 +153,7 @@
           "containsStr" : "Successfully tagged",
           "enable" : true
         }, {
-          "command" : "docker run -dp 6633:8080 --name=tablego-iam tablego-iam --spring.profiles.active=${profile}",
+          "command" : "docker run -dp ${tablegoIamPort}:8080 --name=tablego-iam tablego-iam --spring.profiles.active=${profile}",
           "sleepSeconds" : 3,
           "enable" : true
         }, {
@@ -153,6 +167,7 @@
     },
     "step5" : {
       "enable" : true,
+      "remark" : "清理Docker虚悬镜像",
       "batchConfig" : [ {
         "commands" : [ {
           "command" : "docker image prune -f",

@@ -26,6 +26,14 @@ public interface ${tableInfo.upperCamelCase}Mapper {
      * @return 列表数据
      */
     List<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}List(@Param("condition") ${tableInfo.upperCamelCase}Condition condition);
+
+    /**
+     * 查询${tableInfo.simpleRemark}
+     * 
+     * @param condition 查询条件
+     * @return ${tableInfo.simpleRemark}
+     */
+    List<${tableInfo.upperCamelCase}> get${tableInfo.upperCamelCase}(@Param("condition") ${tableInfo.upperCamelCase}Condition condition);
 <#if tableInfo.pkLowerCamelName?has_content>
 
     /**
@@ -35,6 +43,14 @@ public interface ${tableInfo.upperCamelCase}Mapper {
      * @return ${tableInfo.simpleRemark}
      */
     ${tableInfo.upperCamelCase} get${tableInfo.upperCamelCase}ById(@Param("${tableInfo.pkLowerCamelName}") ${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName});
+
+    /**
+     * 根据主键ID列表查询${tableInfo.simpleRemark}列表
+     *
+     * @param idList ${tableInfo.pkRemark}列表
+     * @return 列表数据
+     */
+    List<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}ByIds(@Param("idList") List<${tableInfo.pkJavaType}> idList);
 </#if>
 <#if checkValueExistedFields?has_content>
     <#list tableInfo.fieldInfos as fieldInfo>

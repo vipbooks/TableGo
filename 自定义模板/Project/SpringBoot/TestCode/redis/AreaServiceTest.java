@@ -52,7 +52,7 @@ public class AreaServiceTest {
     public void testFindAreaPage() {
         Instant begin = Instant.now();
 
-        AreaCondition condition = AreaCondition.newInstance().setAreaCode("88").setAreaName("江");
+        AreaCondition condition = AreaCondition.builder().areaCode("88").areaName("江").build();
 
         IPage<Area> page = areaService.findAreaPage(condition);
         Console.log("Records: {}", page.getRecords());
@@ -183,7 +183,7 @@ public class AreaServiceTest {
     public void testAddArea() {
         Instant begin = Instant.now();
 
-        Area area = Area.newInstance();
+        Area area = Area.builder().build();
 
         boolean bool = areaService.addArea(area);
         if (bool) {

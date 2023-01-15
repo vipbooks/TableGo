@@ -26,12 +26,14 @@ import cn.hutool.http.useragent.Browser;
 import cn.hutool.http.useragent.OS;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentInfo;
-import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import cn.tablego.project.springboot.common.model.UserRequestInfo;
-import cn.tablego.project.springboot.common.util.RequestUtils;
+<#if jsonParam.enableSwagger>
 import io.swagger.annotations.ApiOperation;
+</#if>
+
+import ${jsonParam.basePackagePath}.common.model.UserRequestInfo;
+import ${jsonParam.basePackagePath}.common.util.RequestUtils;
 
 /**
  * 日志切面拦截器
@@ -43,8 +45,6 @@ import io.swagger.annotations.ApiOperation;
 @Component
 public class LogAspect {
     private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
-    /** JSON配置 */
-    private static final JSONConfig JSON_CONFIG = new JSONConfig().setOrder(true);
 
     /** 配置Controller方法的切入点 */
     @Pointcut("execution(* *..controller..*Controller.*(..))")
@@ -68,11 +68,13 @@ public class LogAspect {
         String classMethod = String.format("%s.%s", methodSignature.getDeclaringTypeName(), methodSignature.getName());
         String requestMethod = request.getMethod();
 
+<#if jsonParam.enableSwagger>
         String apiDesc = null;
         ApiOperation annotation = method.getAnnotation(ApiOperation.class);
         if (annotation != null) {
             apiDesc = annotation.value();
         }
+</#if>
         JSONObject requestParams = new JSONObject();
         Map<String, String> paramMap = ServletUtil.getParamMap(request);
         if (MapUtil.isNotEmpty(paramMap)) {
@@ -136,26 +138,40 @@ public class LogAspect {
                 }
             }
         }
+        // 初始化用户请求信息
+        UserRequestInfo userRequestInfo = UserRequestInfo.builder()
+                .uri(uri)
+<#if jsonParam.enableSwagger>
+                .apiDesc(apiDesc)
+</#if>
+                .clientIp(clientIp)
+                .browser(browserName)
+                .os(osName)
+                .requestMethod(requestMethod)
+                .requestParams(requestParams.isEmpty() ? null : requestParams.toString())
+                .requestBody(requestBody)
+                .headerUserAgent(headerUserAgent)
+                .classMethod(classMethod)
+                .build();
+
         Instant begin = Instant.now();
-        Object result = joinPoint.proceed();
-        Instant end = Instant.now();
-        Long timeCost = Duration.between(begin, end).toMillis();
+        try {
+           // 执行目标方法并获取返回结果
+           Object result = joinPoint.proceed();
 
-        UserRequestInfo userRequestInfo = UserRequestInfo.newInstance()
-                .setUri(uri)
-                .setApiDesc(apiDesc)
-                .setClientIp(clientIp)
-                .setBrowser(browserName)
-                .setOs(osName)
-                .setRequestMethod(requestMethod)
-                .setRequestParams(requestParams.isEmpty() ? null : requestParams.toString())
-                .setRequestBody(requestBody)
-                .setHeaderUserAgent(headerUserAgent)
-                .setClassMethod(classMethod)
-                .setTimeCost(timeCost);
+            Instant end = Instant.now();
+            Long timeCost = Duration.between(begin, end).toMillis();
+            userRequestInfo.setTimeCost(timeCost);
 
-        logger.info("UserRequestInfo: {}", JSONUtil.toJsonStr(userRequestInfo, JSON_CONFIG));
+            logger.info("UserRequestInfo: {}", JSONUtil.toJsonStr(userRequestInfo));
+            return result;
+        } catch (Exception e) {
+            Instant end = Instant.now();
+            Long timeCost = Duration.between(begin, end).toMillis();
+            userRequestInfo.setTimeCost(timeCost).setErrorMsg(e.getMessage());
 
-        return result;
+            logger.error("UserRequestInfo: {}", JSONUtil.toJsonStr(userRequestInfo));
+            throw e;
+        }
     }
 }

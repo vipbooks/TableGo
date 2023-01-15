@@ -4,7 +4,7 @@
   "srcPath" : "/src/main/java",
   "resourcesPath" : "/src/main/resources",
   "excludeFields" : "CREATED_BY, CREATION_DATE, LAST_UPDATED_BY, LAST_UPDATE_DATE, DELETE_FLAG",
-  "remarkMatchDict" : "类型, 类别, 状态, 是否",
+  "remarkMatchDict" : "类型, 类别, 分类, 状态, 是否",
   "remarkMatchMulti" : "备注, 说明",
   "ftlParamList" : [ {
     "templateName" : "${tableUpperCamelCase}[java].ftl",

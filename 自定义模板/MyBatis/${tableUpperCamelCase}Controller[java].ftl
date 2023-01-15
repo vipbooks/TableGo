@@ -51,7 +51,7 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     @ApiOperation(value = "查询${tableInfo.simpleRemark}列表")
     @ApiImplicitParam(name = "condition", value = "${tableInfo.simpleRemark}查询条件", required = true, dataType = "${tableInfo.upperCamelCase}Condition", paramType = "body")
     @PostMapping("/findList")
-    public Result<${tableInfo.upperCamelCase}> findList(@RequestBody ${tableInfo.upperCamelCase}Condition condition) {
+    public Result<List<${tableInfo.upperCamelCase}>> findList(@RequestBody ${tableInfo.upperCamelCase}Condition condition) {
         List<${tableInfo.upperCamelCase}> list = ${tableInfo.lowerCamelCase}Service.find${tableInfo.upperCamelCase}List(condition);
         return Result.ok(list);
     }

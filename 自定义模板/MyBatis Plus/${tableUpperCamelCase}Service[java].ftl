@@ -3,6 +3,9 @@
 <#assign checkValueExistedFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.checkValueExistedFields) />
 package ${jsonParam.packagePath}
 
+<#if tableInfo.pkLowerCamelName?has_content>
+import java.util.Map;
+</#if>
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -25,6 +28,22 @@ public interface ${tableInfo.upperCamelCase}Service extends IService<${tableInfo
      * @return 分页信息
      */
     IPage<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}Page(${tableInfo.upperCamelCase}Condition condition);
+
+    /**
+     * 查询${tableInfo.simpleRemark}列表
+     * 
+     * @param condition ${tableInfo.simpleRemark}查询条件
+     * @return 列表数据
+     */
+    List<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}List(${tableInfo.upperCamelCase}Condition condition);
+
+    /**
+     * 查询${tableInfo.simpleRemark}
+     *
+     * @param condition 查询条件
+     * @return ${tableInfo.simpleRemark}
+     */
+    ${tableInfo.upperCamelCase} get${tableInfo.upperCamelCase}(${tableInfo.upperCamelCase}Condition condition);
 <#if tableInfo.pkLowerCamelName?has_content>
 
     /**
@@ -34,6 +53,22 @@ public interface ${tableInfo.upperCamelCase}Service extends IService<${tableInfo
      * @return ${tableInfo.simpleRemark}
      */
     ${tableInfo.upperCamelCase} get${tableInfo.upperCamelCase}ById(${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName});
+
+    /**
+     * 根据主键ID列表查询${tableInfo.simpleRemark}列表
+     *
+     * @param idList ${tableInfo.pkSimpleRemark}列表
+     * @return 列表数据
+     */
+    List<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList);
+
+    /**
+     * 查询主键ID列表对应的${tableInfo.simpleRemark}集合
+     *
+     * @param idList ${tableInfo.pkSimpleRemark}列表
+     * @return Map<${tableInfo.pkSimpleRemark}, ${tableInfo.simpleRemark}>
+     */
+    Map<${tableInfo.pkJavaType}, ${tableInfo.upperCamelCase}> map${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList);
 </#if>
 <#if checkValueExistedFields?has_content>
     <#list tableInfo.fieldInfos as fieldInfo>

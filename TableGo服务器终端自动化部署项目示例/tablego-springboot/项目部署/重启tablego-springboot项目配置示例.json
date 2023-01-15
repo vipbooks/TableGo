@@ -1,36 +1,46 @@
 {
   "isOpenTerminal" : true,
   "isOutLogToTerminal" : false,
+  "isOutLogToFile" : false,
   "profiles" : {
     "dev" : {
-      "profile" : "dev"
+      "profile" : "dev",
+      "tablegoAdminPort" : "6611",
+      "tablegoBasicPort" : "6622",
+      "tablegoIamPort" : "6633"
     },
     "test" : {
-      "profile" : "test"
+      "profile" : "test",
+      "tablegoAdminPort" : "6611",
+      "tablegoBasicPort" : "6622",
+      "tablegoIamPort" : "6633"
     },
     "prod" : {
-      "profile" : "prod"
+      "profile" : "prod",
+      "tablegoAdminPort" : "6611",
+      "tablegoBasicPort" : "6622",
+      "tablegoIamPort" : "6633"
     }
   },
   "batchConfig" : [ {
     "commands" : [ {
       "command" : "cd /opt/tablego-springboot"
     }, {
-      "command" : "sh AppService.sh restart tablego-admin ${profile} 6611",
+      "command" : "sh AppService.sh restart tablego-admin ${profile} ${tablegoAdminPort}",
       "enable" : true
     }, {
       "command" : "touch tablego-admin.log && tail -f tablego-admin.log",
       "containsStrSigquit" : "Started AdminApplication",
       "enable" : true
     }, {
-      "command" : "sh AppService.sh restart tablego-basic ${profile} 6622",
+      "command" : "sh AppService.sh restart tablego-basic ${profile} ${tablegoBasicPort}",
       "enable" : true
     }, {
       "command" : "touch tablego-basic.log && tail -f tablego-basic.log",
       "containsStrSigquit" : "Started BasicApplication",
       "enable" : true
     }, {
-      "command" : "sh AppService.sh restart tablego-iam ${profile} 6633",
+      "command" : "sh AppService.sh restart tablego-iam ${profile} ${tablegoIamPort}",
       "enable" : true
     }, {
       "command" : "touch tablego-iam.log && tail -f tablego-iam.log",

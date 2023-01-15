@@ -1,7 +1,6 @@
 package ${jsonParam.packagePath}
 
 import java.util.Date;
-import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Range;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
@@ -11,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import cn.hutool.core.date.DatePattern;
-<#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
+<#if jsonParam.enableSwagger>
 import io.swagger.annotations.ApiModelProperty;
 </#if>
 
@@ -25,49 +24,44 @@ public abstract class BaseBean extends OverrideBeanMethods {
     /** 版本号 */
     private static final long serialVersionUID = 6101499067277733665L;
 
-    <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /** 创建人，保存用户ID值 */
-    <#else>
+<#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "创建人，保存用户ID值", position = 1000)
-    </#if>
+</#if>
     @JsonProperty(index = 1000)
     @TableField(fill = FieldFill.INSERT)
     private String createdBy;
 
-    <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /** 创建日期 */
-    <#else>
+<#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "创建日期", position = 1001)
-    </#if>
+</#if>
     @JsonProperty(index = 1001)
     @JsonFormat(timezone = "GMT+8", pattern = DatePattern.NORM_DATETIME_PATTERN)
     @TableField(fill = FieldFill.INSERT)
     private Date creationDate;
 
-    <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /** 最后修改人，保存用户ID值 */
-    <#else>
+<#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "最后修改人，保存用户ID值", position = 1002)
-    </#if>
+</#if>
     @JsonProperty(index = 1002)
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private String lastUpdatedBy;
 
-    <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /** 最后修改日期 */
-    <#else>
+<#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "最后修改日期", position = 1003)
-    </#if>
+</#if>
     @JsonProperty(index = 1003)
     @JsonFormat(timezone = "GMT+8", pattern = DatePattern.NORM_DATETIME_PATTERN)
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date lastUpdateDate;
 
-    <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /** 删除标记，字典数据，例如：0：已删除、1：未删除 */
-    <#else>
+<#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "删除标记，字典数据，例如：0：已删除、1：未删除", example = "1", position = 1004)
-    </#if>
+</#if>
     @JsonProperty(index = 1004)
     @Range(min = 0, max = 1, message = "删除标记必需是{min}或{max}的一位正整数！")
     @TableLogic

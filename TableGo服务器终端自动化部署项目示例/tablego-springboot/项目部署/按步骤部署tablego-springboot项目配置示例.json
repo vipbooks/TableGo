@@ -1,26 +1,37 @@
 {
   "isOpenTerminal" : true,
   "isOutLogToTerminal" : true,
+  "isOutLogToFile" : false,
   "projectPath" : "G:\\tablego-springboot",
   "scriptPath" : "G:\\tablego-springboot\\项目部署",
   "serverProjectPath" : "/opt/tablego-springboot",
   "profiles" : {
     "dev" : {
-      "profile" : "dev"
+      "profile" : "dev",
+      "tablegoAdminPort" : "6611",
+      "tablegoBasicPort" : "6622",
+      "tablegoIamPort" : "6633"
     },
     "test" : {
-      "profile" : "test"
+      "profile" : "test",
+      "tablegoAdminPort" : "6611",
+      "tablegoBasicPort" : "6622",
+      "tablegoIamPort" : "6633"
     },
     "prod" : {
-      "profile" : "prod"
+      "profile" : "prod",
+      "tablegoAdminPort" : "6611",
+      "tablegoBasicPort" : "6622",
+      "tablegoIamPort" : "6633"
     }
   },
   "stepBatchConfig" : {
     "step1" : {
       "enable" : true,
+      "remark" : "上传脚本文件",
       "batchConfig" : [ {
         "fileUploads" : [ {
-          "fromPath" : [ "${scriptPath}\\AppService.sh" ],
+          "fromPath" : [ "${scriptPath}\\AppService.sh", "${scriptPath}\\ClearBakFile.sh" ],
           "toPath" : "${serverProjectPath}",
           "enable" : true
         } ]
@@ -28,16 +39,17 @@
         "commands" : [ {
           "command" : "cd ${serverProjectPath}"
         }, {
-          "command" : "sed -i 's/\\r$//' AppService.sh",
+          "command" : "sed -i 's/\\r$//' AppService.sh ClearBakFile.sh",
           "enable" : true
         }, {
-          "command" : "sudo chmod +x AppService.sh",
+          "command" : "sudo chmod +x AppService.sh ClearBakFile.sh",
           "enable" : false
         } ]
       } ]
     },
     "step2" : {
       "enable" : true,
+      "remark" : "更新SVN代码并打包",
       "batchConfig" : [ {
         "runtimeExec" : [ {
           "command" : "${scriptPath}\\svn-update-project.bat ${projectPath}",
@@ -50,6 +62,7 @@
     },
     "step3" : {
       "enable" : true,
+      "remark" : "部署 tablego-admin 工程",
       "batchConfig" : [ {
         "runtimeExec" : [ {
           "command" : "${scriptPath}\\maven-lifecycle.bat package ${projectPath}\\tablego-admin",
@@ -66,6 +79,10 @@
           "command" : "cp -vf tablego-admin.jar ./bak/tablego-admin/tablego-admin_`date +%Y%m%d%H%M%S`.jar",
           "containsStr" : ".jar",
           "enable" : true
+        }, {
+          "command" : "sh ClearBakFile.sh -d ${serverProjectPath}/bak/tablego-admin -e jar",
+          "waitSeconds" : 2,
+          "enable" : true
         } ],
         "fileUploads" : [ {
           "fromPath" : [ "${projectPath}\\tablego-admin\\target\\tablego-admin.jar" ],
@@ -76,7 +93,7 @@
         "commands" : [ {
           "command" : "cd ${serverProjectPath}"
         }, {
-          "command" : "sh AppService.sh restart tablego-admin ${profile} 6611"
+          "command" : "sh AppService.sh restart tablego-admin ${profile} ${tablegoAdminPort}"
         }, {
           "command" : "touch tablego-admin.log && tail -f tablego-admin.log",
           "containsStrSigquit" : "Started AdminApplication"
@@ -87,6 +104,7 @@
     },
     "step4" : {
       "enable" : true,
+      "remark" : "部署 tablego-basic 工程",
       "batchConfig" : [ {
         "runtimeExec" : [ {
           "command" : "${scriptPath}\\maven-lifecycle.bat package ${projectPath}\\tablego-basic",
@@ -103,6 +121,10 @@
           "command" : "cp -vf tablego-basic.jar ./bak/tablego-basic/tablego-basic_`date +%Y%m%d%H%M%S`.jar",
           "containsStr" : ".jar",
           "enable" : true
+        }, {
+          "command" : "sh ClearBakFile.sh -d ${serverProjectPath}/bak/tablego-basic -e jar",
+          "waitSeconds" : 2,
+          "enable" : true
         } ],
         "fileUploads" : [ {
           "fromPath" : [ "${projectPath}\\tablego-basic\\target\\tablego-basic.jar" ],
@@ -113,7 +135,7 @@
         "commands" : [ {
           "command" : "cd ${serverProjectPath}"
         }, {
-          "command" : "sh AppService.sh restart tablego-basic ${profile} 6622"
+          "command" : "sh AppService.sh restart tablego-basic ${profile} ${tablegoBasicPort}"
         }, {
           "command" : "touch tablego-basic.log && tail -f tablego-basic.log",
           "containsStrSigquit" : "Started BasicApplication"
@@ -124,6 +146,7 @@
     },
     "step5" : {
       "enable" : true,
+      "remark" : "部署 tablego-iam 工程",
       "batchConfig" : [ {
         "runtimeExec" : [ {
           "command" : "${scriptPath}\\maven-lifecycle.bat package ${projectPath}\\tablego-iam",
@@ -140,6 +163,10 @@
           "command" : "cp -vf tablego-iam.jar ./bak/tablego-iam/tablego-iam_`date +%Y%m%d%H%M%S`.jar",
           "containsStr" : ".jar",
           "enable" : true
+        }, {
+          "command" : "sh ClearBakFile.sh -d ${serverProjectPath}/bak/tablego-iam -e jar",
+          "waitSeconds" : 2,
+          "enable" : true
         } ],
         "fileUploads" : [ {
           "fromPath" : [ "${projectPath}\\tablego-iam\\target\\tablego-iam.jar" ],
@@ -150,7 +177,7 @@
         "commands" : [ {
           "command" : "cd ${serverProjectPath}"
         }, {
-          "command" : "sh AppService.sh restart tablego-iam ${profile} 6633"
+          "command" : "sh AppService.sh restart tablego-iam ${profile} ${tablegoIamPort}"
         }, {
           "command" : "touch tablego-iam.log && tail -f tablego-iam.log",
           "containsStrSigquit" : "Started IamApplication"
@@ -161,11 +188,12 @@
     },
     "step6" : {
       "enable" : false,
+      "remark" : "下载脚本文件",
       "batchConfig" : [ {
         "fileDownloads" : [ {
           "fromPath" : "${serverProjectPath}",
           "toPath" : "${projectPath}",
-          "files" : [ "AppService.sh" ]
+          "files" : [ "AppService.sh", "ClearBakFile.sh" ]
         } ]
       } ]
     }

@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.DataType;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
@@ -21,13 +22,14 @@ import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Redis客户端操作服务<br/>
+ * Redis客户端接口<br/>
  * Redis命令参考：http://redisdoc.com
  *
  * @author ${paramConfig.author}
  * @version 1.0.0 ${today}
  */
 @Slf4j
+@Service
 public class RedisService {
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;

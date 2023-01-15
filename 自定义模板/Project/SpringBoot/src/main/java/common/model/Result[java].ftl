@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import cn.hutool.core.exceptions.ExceptionUtil;
 
-<#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
+<#if jsonParam.enableSwagger>
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 </#if>
@@ -15,50 +15,45 @@ import io.swagger.annotations.ApiModelProperty;
  * @author ${paramConfig.author}
  * @version 1.0.0 ${today}
  */
-<#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
+<#if jsonParam.enableSwagger>
 @ApiModel(description = "响应参数")
 </#if>
 public class Result<T> extends OverrideBeanMethods {
     /** 版本号 */
     private static final long serialVersionUID = 8856956965424828815L;
 
-    <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /** 请求是否成功的标识 */
-    <#else>
+<#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "请求是否成功的标识", position = 1)
-    </#if>
+</#if>
     @JsonProperty(index = 1)
     private boolean flag = true;
 
-    <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /** 响应成功或失败的编码 */
-    <#else>
+<#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "响应成功或失败的编码", position = 2)
-    </#if>
+</#if>
     @JsonProperty(index = 2)
     private Integer code;
 
-    <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /** 响应的提示消息 */
-    <#else>
+<#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "响应的提示消息", position = 3)
-    </#if>
+</#if>
     @JsonProperty(index = 3)
     private String msg = "请求成功";
 
-    <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /** 响应的异常消息 */
-    <#else>
+<#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "响应的异常消息", position = 4)
-    </#if>
+</#if>
     @JsonProperty(index = 4)
     private String exceptionMsg;
 
-    <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /** 响应数据 */
-    <#else>
+<#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "响应数据", position = 5)
-    </#if>
+</#if>
     @JsonProperty(index = 5)
     private T data;
 
@@ -68,7 +63,7 @@ public class Result<T> extends OverrideBeanMethods {
      * @return 响应参数
      */
     public static <T> Result<T> newInstance() {
-        return new Result();
+        return new Result<>();
     }
 
     /**

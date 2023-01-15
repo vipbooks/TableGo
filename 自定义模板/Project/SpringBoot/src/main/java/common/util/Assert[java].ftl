@@ -408,7 +408,7 @@ public class Assert {
      * @param message 错误消息
      */
     public static void failed(String message) {
-        throw new BizException(message);
+        throw BizException.newInstance(message);
     }
 
     /**
@@ -418,6 +418,6 @@ public class Assert {
      * @param code    错误编码
      */
     public static void failed(String message, Integer code) {
-        throw new BizException(message, code);
+        throw BizException.newInstance(message, code);
     }
 }

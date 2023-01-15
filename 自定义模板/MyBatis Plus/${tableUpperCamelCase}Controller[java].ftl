@@ -42,10 +42,18 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
 
     @ApiOperation(value = "分页查询${tableInfo.simpleRemark}列表")
     @ApiImplicitParam(name = "condition", value = "${tableInfo.simpleRemark}查询条件", required = true, dataType = "${tableInfo.upperCamelCase}Condition", paramType = "body")
-    @PostMapping("/list")
-    public Paging<${tableInfo.upperCamelCase}> list(@RequestBody ${tableInfo.upperCamelCase}Condition condition) {
+    @PostMapping("/findPage")
+    public Paging<${tableInfo.upperCamelCase}> findPage(@RequestBody ${tableInfo.upperCamelCase}Condition condition) {
         IPage<${tableInfo.upperCamelCase}> page = ${tableInfo.lowerCamelCase}Service.find${tableInfo.upperCamelCase}Page(condition);
         return Paging.buildPaging(page);
+    }
+
+    @ApiOperation(value = "查询${tableInfo.simpleRemark}列表")
+    @ApiImplicitParam(name = "condition", value = "${tableInfo.simpleRemark}查询条件", required = true, dataType = "${tableInfo.upperCamelCase}Condition", paramType = "body")
+    @PostMapping("/findList")
+    public Result<List<${tableInfo.upperCamelCase}>> findList(@RequestBody ${tableInfo.upperCamelCase}Condition condition) {
+        List<${tableInfo.upperCamelCase}> list = ${tableInfo.lowerCamelCase}Service.find${tableInfo.upperCamelCase}List(condition);
+        return Result.ok(list);
     }
 <#if tableInfo.pkLowerCamelName?has_content>
 

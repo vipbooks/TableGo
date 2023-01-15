@@ -2,6 +2,14 @@ server:
   port: ${jsonParam.port}
   servlet:
     context-path: ${jsonParam.contextPath}
+  tomcat:
+    uri-encoding: UTF-8
+    max-connections: 10000
+    acceptCount: 2000
+    threads:
+      max: 1000
+      min-spare: 20
+    max-http-form-post-size: 50MB
 spring:
   profiles:
     active: dev
@@ -14,10 +22,14 @@ spring:
       date: yyyy-MM-dd
       time: HH:mm:ss
       date-time: yyyy-MM-dd HH:mm:ss
-<#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
+<#if jsonParam.enableSwagger>
     pathmatch:
       matching-strategy: ant_path_matcher
 </#if>
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     locale: zh
@@ -33,6 +45,11 @@ spring:
       max-lifetime: 1800000
       connection-timeout: 30000
       connection-test-query: SELECT 1
+<#if jsonParam.enableEhCache>
+  cache:
+    ehcache:
+      config: classpath:ehcache.xml
+</#if>
 mybatis-plus:
   mapper-locations: classpath*:mapper/**/*Mapper.xml
   global-config:
@@ -46,7 +63,7 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false
-<#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
+<#if jsonParam.enableSwagger>
 swagger:
   title: ${"$"}{spring.application.name}
   description: "@project.description@API文档"
@@ -55,8 +72,16 @@ swagger:
     name: bianj
     email: tablego@qq.com
     url: http://www.tablego.cn
-  base-package: ${jsonParam.basePackagePath}.controller
+  base-package: ${jsonParam.basePackagePath}
   authorization:
     key-name: token
     type: None
+</#if>
+<#if jsonParam.enableAliyunOss>
+aliyun:
+  oss:
+    endpoint: oss-cn-hangzhou.aliyuncs.com
+    access-key-id: key-id
+    access-key-secret: key-secret
+    bucket-name: bucket
 </#if>

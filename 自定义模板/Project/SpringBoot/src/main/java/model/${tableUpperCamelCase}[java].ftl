@@ -34,7 +34,7 @@ import javax.validation.constraints.NotNull;
         </#if>
     </#list>
 </#if>
-<#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
+<#if jsonParam.enableSwagger>
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 </#if>
@@ -47,6 +47,11 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+<#if tableInfo.fieldInfos?has_content>
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+</#if>
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -59,19 +64,19 @@ import lombok.experimental.Accessors;
  */
 @Setter
 @Getter
+@Builder
+<#if tableInfo.fieldInfos?has_content>
+@NoArgsConstructor
+@AllArgsConstructor
+</#if>
 @Accessors(chain = true)
-<#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
+<#if jsonParam.enableSwagger>
 @ApiModel(description = "${tableInfo.simpleRemark!tableInfo.tableName}")
 </#if>
 @TableName("${tableInfo.tableName}")
 public class ${tableInfo.upperCamelCase} extends <#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.commonFields)>BaseBean<#else>OverrideBeanMethods</#if> {
     /** 版本号 */
     private static final long serialVersionUID = ${tableInfo.serialVersionUID!'1'}L;
-
-    /** 创建${tableInfo.simpleRemark}实例对象 */
-    public static ${tableInfo.upperCamelCase} newInstance() {
-        return new ${tableInfo.upperCamelCase}();
-    }
 <#if tableInfo.fieldInfos?has_content>
     <#if paramConfig.showMergeUpdateMark>
 
@@ -80,7 +85,7 @@ public class ${tableInfo.upperCamelCase} extends <#if FtlUtils.fieldAllExisted(t
     <#list tableInfo.fieldInfos as fieldInfo>
 
     /** ${fieldInfo.remark} */
-        <#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
+        <#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "${fieldInfo.remark}", position = ${fieldInfo_index + 1})
         </#if>
     @JsonProperty(index = ${fieldInfo_index + 1})

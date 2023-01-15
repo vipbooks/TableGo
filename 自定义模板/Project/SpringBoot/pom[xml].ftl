@@ -23,6 +23,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>${jsonParam.version.java}</java.version>
+        <skipTests>true</skipTests>
 
         <mysql-connector-java.version>${jsonParam.version.mysqlConnectorJava}</mysql-connector-java.version>
         <mybatis-plus-boot-starter.version>${jsonParam.version.mybatisPlusBootStarter}</mybatis-plus-boot-starter.version>
@@ -30,23 +31,23 @@
         <commons-lang3.version>${jsonParam.version.commonsLang3}</commons-lang3.version>
         <lombok.version>${jsonParam.version.lombok}</lombok.version>
         <hutool-all.version>${jsonParam.version.hutoolAll}</hutool-all.version>
-<#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
+<#if jsonParam.enableSwagger>
         <swagger-spring-boot-starter.version>${jsonParam.version.swaggerSpringBootStarter}</swagger-spring-boot-starter.version>
-        <snakeyaml.version>${jsonParam.version.snakeyaml}</snakeyaml.version>
-    <#if jsonParam.enableKnife4j>
         <knife4j.version>${jsonParam.version.knife4j}</knife4j.version>
-    </#if>
+        <snakeyaml.version>${jsonParam.version.snakeyaml}</snakeyaml.version>
+</#if>
+<#if jsonParam.enableSmartDoc>
+        <smart-doc-maven-plugin.version>${jsonParam.version.smartDocMavenPlugin}</smart-doc-maven-plugin.version>
 </#if>
 <#if jsonParam.enableRedis>
         <redisson.version>${jsonParam.version.redisson}</redisson.version>
 </#if>
+<#if jsonParam.enableAliyunOss>
+        <aliyun-sdk-oss.version>${jsonParam.version.aliyunSdkOss}</aliyun-sdk-oss.version>
+</#if>
 
         <maven-compiler-plugin.version>${jsonParam.version.mavenCompilerPlugin}</maven-compiler-plugin.version>
         <maven-source-plugin.version>${jsonParam.version.mavenSourcePlugin}</maven-source-plugin.version>
-        <maven-surefire-plugin.version>${jsonParam.version.mavenSurefirePlugin}</maven-surefire-plugin.version>
-<#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
-        <smart-doc-maven-plugin.version>${jsonParam.version.smartDocMavenPlugin}</smart-doc-maven-plugin.version>
-</#if>
 	</properties>
 
 	<dependencies>
@@ -73,8 +74,8 @@
         </dependency>
 
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
             <version>${"$"}{mysql-connector-java.version}</version>
             <scope>runtime</scope>
         </dependency>
@@ -109,7 +110,7 @@
             <artifactId>hutool-all</artifactId>
             <version>${"$"}{hutool-all.version}</version>
         </dependency>
-<#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
+<#if jsonParam.enableSwagger>
 
         <dependency>
             <groupId>com.spring4all</groupId>
@@ -118,18 +119,30 @@
         </dependency>
 
         <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>${"$"}{snakeyaml.version}</version>
-        </dependency>
-    <#if jsonParam.enableKnife4j>
-
-        <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-spring-ui</artifactId>
             <version>${"$"}{knife4j.version}</version>
         </dependency>
-    </#if>
+
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>${"$"}{snakeyaml.version}</version>
+        </dependency>
+</#if>
+<#if jsonParam.enableEhCache || jsonParam.enableRedis>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+</#if>
+<#if jsonParam.enableEhCache>
+
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+        </dependency>
 </#if>
 <#if jsonParam.enableRedis>
 
@@ -146,6 +159,15 @@
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
 </#if>
+<#if jsonParam.enableAliyunOss>
+
+        <dependency>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+            <version>${"$"}{aliyun-sdk-oss.version}</version>
+        </dependency>
+</#if>
+
 	</dependencies>
 
 	<build>
@@ -154,6 +176,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${"$"}{project.parent.version}</version>
 			</plugin>
 
             <!-- 设置Maven的编译参数 -->
@@ -166,6 +189,7 @@
                     <source>${"$"}{java.version}</source>
                     <target>${"$"}{java.version}</target>
                     <encoding>${"$"}{project.build.sourceEncoding}</encoding>
+                    <compilerArgument>-Xlint:deprecation</compilerArgument>
                 </configuration>
             </plugin>
 
@@ -183,17 +207,7 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!-- Maven打包时跳过单元测试的运行，也跳过测试代码的编译 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${"$"}{maven-surefire-plugin.version}</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-<#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
+<#if jsonParam.enableSmartDoc>
 
             <!-- https://gitee.com/smart-doc-team/smart-doc -->
             <plugin>

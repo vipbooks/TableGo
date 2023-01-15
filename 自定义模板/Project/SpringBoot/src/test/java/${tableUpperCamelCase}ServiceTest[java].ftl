@@ -18,22 +18,22 @@ import ${jsonParam.basePackagePath}.service.<#if jsonParam.moduleName??>${jsonPa
 
 <#if tableInfo.pkIsNumericType>
     <#if tableInfo.pkColumnSize &gt; 6>
-        <#assign id = RandomStringUtils.randomNumeric(6) />
+        <#assign id = FtlUtils.getRandomString19(6) />
     <#elseif tableInfo.pkColumnSize &gt; 1>
-        <#assign id = RandomStringUtils.randomNumeric(tableInfo.pkColumnSize - 1) />
+        <#assign id = FtlUtils.getRandomString19(tableInfo.pkColumnSize - 1) />
     <#else>
-        <#assign id = RandomStringUtils.randomNumeric(1) />
+        <#assign id = FtlUtils.getRandomString19(1) />
     </#if>
     <#if tableInfo.pkJavaType == "Long">
         <#assign id = id + "L" />
     </#if>
 <#elseif tableInfo.pkJavaType == "String">
     <#if tableInfo.pkColumnSize &gt; 6>
-        <#assign id = StringUtils.join("\"", RandomStringUtils.randomNumeric(6), "\"") />
+        <#assign id = StringUtils.join("\"", FtlUtils.getRandomStringAz(6), "\"") />
     <#elseif tableInfo.pkColumnSize &gt; 1>
-        <#assign id = StringUtils.join("\"", RandomStringUtils.randomNumeric(tableInfo.pkColumnSize - 1), "\"") />
+        <#assign id = StringUtils.join("\"", FtlUtils.getRandomStringAz(tableInfo.pkColumnSize - 1), "\"") />
     <#else>
-        <#assign id = StringUtils.join("\"", RandomStringUtils.randomNumeric(1), "\"") />
+        <#assign id = StringUtils.join("\"", FtlUtils.getRandomStringAz(1), "\"") />
     </#if>
 </#if>
 /**
@@ -52,10 +52,24 @@ public class ${tableInfo.upperCamelCase}ServiceTest {
     public void testFind${tableInfo.upperCamelCase}Page() {
         Instant begin = Instant.now();
 
-        ${tableInfo.upperCamelCase}Condition condition = ${tableInfo.upperCamelCase}Condition.newInstance();
+        ${tableInfo.upperCamelCase}Condition condition = ${tableInfo.upperCamelCase}Condition.builder().build();
 
         IPage<${tableInfo.upperCamelCase}> page = ${tableInfo.lowerCamelCase}Service.find${tableInfo.upperCamelCase}Page(condition);
         Console.log("Records: {}", page.getRecords());
+
+        Instant end = Instant.now();
+        Console.log("代码执行消耗时间: {} 毫秒", Duration.between(begin, end).toMillis());
+    }
+
+    /** 测试查询${tableInfo.simpleRemark}列表 */
+    @Test
+    public void testFind${tableInfo.upperCamelCase}List() {
+        Instant begin = Instant.now();
+
+        ${tableInfo.upperCamelCase}Condition condition = ${tableInfo.upperCamelCase}Condition.builder().build();
+
+        List<${tableInfo.upperCamelCase}> list = ${tableInfo.lowerCamelCase}Service.find${tableInfo.upperCamelCase}List(condition);
+        Console.log("List: {}", list);
 
         Instant end = Instant.now();
         Console.log("代码执行消耗时间: {} 毫秒", Duration.between(begin, end).toMillis());
@@ -80,7 +94,7 @@ public class ${tableInfo.upperCamelCase}ServiceTest {
     public void testAdd${tableInfo.upperCamelCase}() {
         Instant begin = Instant.now();
 
-        ${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase} = ${tableInfo.upperCamelCase}.newInstance();
+        ${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase} = ${tableInfo.upperCamelCase}.builder().build();
 
         boolean bool = ${tableInfo.lowerCamelCase}Service.add${tableInfo.upperCamelCase}(${tableInfo.lowerCamelCase});
         if (bool) {
@@ -136,7 +150,7 @@ public class ${tableInfo.upperCamelCase}ServiceTest {
     public void testDelete${tableInfo.upperCamelCase}ByIds() {
         Instant begin = Instant.now();
 
-        List<String> idList = new ArrayList<>();
+        List<${tableInfo.pkJavaType}> idList = new ArrayList<>();
 
         boolean bool = ${tableInfo.lowerCamelCase}Service.delete${tableInfo.upperCamelCase}ByIds(idList);
         if (bool) {

@@ -14,7 +14,7 @@ spring:
     mongodb:
       uri: ${jsonParam.projectConfig.mongodbUri}
 </#if>
-<#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
+<#if jsonParam.enableSwagger>
 swagger:
   enabled: true
 </#if>

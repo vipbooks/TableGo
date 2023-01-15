@@ -1,9 +1,11 @@
 {
   "isOpenTerminal" : true,
   "isOutLogToTerminal" : true,
+  "isOutLogToFile" : false,
   "projectPath" : "G:\\tablego-springboot\\AntDesignVueTest",
   "scriptPath" : "G:\\tablego-springboot\\项目部署",
-  "serverNginxPath" : "/opt/nginx",
+  "serverProjectPath" : "/opt/nginx",
+  "serverScriptPath" : "/opt/tablego-springboot",
   "profiles" : {
     "dev" : {
       "script" : "build"
@@ -35,24 +37,28 @@
     } ]
   }, {
     "commands" : [ {
-      "command" : "cd ${serverNginxPath}",
+      "command" : "cd ${serverProjectPath}",
       "enable" : true
     }, {
-      "command" : "mkdir -p ${serverNginxPath}/bak",
+      "command" : "mkdir -p ${serverProjectPath}/bak",
       "enable" : true
     }, {
       "command" : "tar -zcf ./bak/html_`date +%Y%m%d%H%M%S`.tar.gz html",
       "sleepSeconds" : 2,
       "enable" : true
+    }, {
+      "command" : "sh ${serverScriptPath}/ClearBakFile.sh -d ${serverProjectPath}/bak -e tar.gz",
+      "waitSeconds" : 2,
+      "enable" : true
     } ],
     "fileUploads" : [ {
       "fromPath" : [ "${projectPath}\\dist-zip\\html.zip" ],
-      "toPath" : "${serverNginxPath}",
+      "toPath" : "${serverProjectPath}",
       "enable" : true
     } ]
   }, {
     "commands" : [ {
-      "command" : "cd ${serverNginxPath}"
+      "command" : "cd ${serverProjectPath}"
     }, {
       "command" : "rm -rf html",
       "enable" : true

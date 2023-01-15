@@ -13,12 +13,17 @@ import java.math.BigDecimal;
 <#if FtlUtils.fieldTypeExisted(tableInfo, "BigInteger")>
 import java.math.BigInteger;
 </#if>
-<#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
+<#if jsonParam.enableSwagger>
 import io.swagger.annotations.ApiModel;
     <#if searchFields?has_content>
 import io.swagger.annotations.ApiModelProperty;
     </#if>
 </#if>
+<#if searchFields?has_content>
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+</#if>
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -33,18 +38,18 @@ import ${jsonParam.basePackagePath}.common.model.BaseCondition;
  */
 @Setter
 @Getter
+@Builder
+<#if searchFields?has_content>
+@NoArgsConstructor
+@AllArgsConstructor
+</#if>
 @Accessors(chain = true)
-<#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
+<#if jsonParam.enableSwagger>
 @ApiModel(description = "${tableInfo.simpleRemark!tableInfo.tableName}查询条件")
 </#if>
 public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
     /** 版本号 */
     private static final long serialVersionUID = ${tableInfo.serialVersionUID!'1'}L;
-
-    /** 创建${tableInfo.simpleRemark}实例对象 */
-    public static ${tableInfo.upperCamelCase}Condition newInstance() {
-        return new ${tableInfo.upperCamelCase}Condition();
-    }
 <#if searchFields?has_content>
     <#list tableInfo.fieldInfos as fieldInfo>
         <#list searchFields as fieldName>
@@ -52,21 +57,21 @@ public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
 
     <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>
     /** ${fieldInfo.remark!fieldInfo.colName}(开始) */
-        <#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
+        <#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "${fieldInfo.remark!fieldInfo.colName}(开始)")
         </#if>
     @JsonFormat(timezone = "GMT+8", pattern = DatePattern.NORM_DATE_PATTERN)
     private ${fieldInfo.javaType} ${fieldInfo.proName}Begin;
 
     /** ${fieldInfo.remark!fieldInfo.colName}(结束) */
-        <#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
+        <#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "${fieldInfo.remark!fieldInfo.colName}(结束)")
         </#if>
     @JsonFormat(timezone = "GMT+8", pattern = DatePattern.NORM_DATE_PATTERN)
     private ${fieldInfo.javaType} ${fieldInfo.proName}End;
     <#else>
     /** ${fieldInfo.remark} */
-        <#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
+        <#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "${fieldInfo.remark}")
         </#if>
     private ${fieldInfo.javaType} ${fieldInfo.proName};

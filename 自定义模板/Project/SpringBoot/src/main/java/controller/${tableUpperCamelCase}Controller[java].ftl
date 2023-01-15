@@ -1,14 +1,14 @@
 <#-- 初始化需要生成检查字段值是否已存在的接口的字段 -->
 package ${jsonParam.packagePath}
 
-import java.util.List;
-import javax.validation.Valid;
-
-<#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
+<#if jsonParam.enableSwagger>
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 </#if>
+import java.util.List;
+import javax.validation.Valid;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,7 +36,7 @@ import ${jsonParam.basePackagePath}.service.<#if jsonParam.moduleName?has_conten
  * @author ${paramConfig.author}
  * @version 1.0.0 ${today}
  */
-<#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
+<#if jsonParam.enableSwagger>
 @Api(tags = "${tableInfo.simpleRemark!tableInfo.tableName}")
 </#if>
 @RestController
@@ -45,25 +45,42 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     @Autowired
     private ${tableInfo.upperCamelCase}Service ${tableInfo.lowerCamelCase}Service;
 
-    <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
+<#if !jsonParam.enableSwagger>
     /**
      * 分页查询${tableInfo.simpleRemark}列表
      *
      * @param condition ${tableInfo.simpleRemark}查询条件
      * @return 分页数据
      */
-    <#else>
+<#else>
     @ApiOperation(value = "分页查询${tableInfo.simpleRemark}列表")
     @ApiImplicitParam(name = "condition", value = "${tableInfo.simpleRemark}查询条件", required = true, dataType = "${tableInfo.upperCamelCase}Condition", paramType = "body")
-    </#if>
+</#if>
     @PostMapping("/find${tableInfo.upperCamelCase}Page")
     public Paging<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}Page(@RequestBody ${tableInfo.upperCamelCase}Condition condition) {
         IPage<${tableInfo.upperCamelCase}> page = ${tableInfo.lowerCamelCase}Service.find${tableInfo.upperCamelCase}Page(condition);
         return Paging.buildPaging(page);
     }
+
+<#if !jsonParam.enableSwagger>
+    /**
+     * 查询${tableInfo.simpleRemark}列表
+     *
+     * @param condition ${tableInfo.simpleRemark}查询条件
+     * @return 列表数据
+     */
+<#else>
+    @ApiOperation(value = "查询${tableInfo.simpleRemark}列表")
+    @ApiImplicitParam(name = "condition", value = "${tableInfo.simpleRemark}查询条件", required = true, dataType = "${tableInfo.upperCamelCase}Condition", paramType = "body")
+</#if>
+    @PostMapping("/find${tableInfo.upperCamelCase}List")
+    public Result<List<${tableInfo.upperCamelCase}>> find${tableInfo.upperCamelCase}List(@RequestBody ${tableInfo.upperCamelCase}Condition condition) {
+        List<${tableInfo.upperCamelCase}> list = ${tableInfo.lowerCamelCase}Service.find${tableInfo.upperCamelCase}List(condition);
+        return Result.ok(list);
+    }
 <#if tableInfo.pkLowerCamelName?has_content>
 
-    <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
+    <#if !jsonParam.enableSwagger>
     /**
      * 根据主键ID查询${tableInfo.simpleRemark}
      *
@@ -81,17 +98,17 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     }
 </#if>
 
-    <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
+<#if !jsonParam.enableSwagger>
     /**
      * 新增${tableInfo.simpleRemark}
      *
      * @param ${tableInfo.lowerCamelCase} ${tableInfo.simpleRemark}
      * @return 结果数据
      */
-    <#else>
+<#else>
     @ApiOperation(value = "新增${tableInfo.simpleRemark}")
     @ApiImplicitParam(name = "${tableInfo.lowerCamelCase}", value = "${tableInfo.simpleRemark}", required = true, dataType = "${tableInfo.upperCamelCase}", paramType = "body")
-    </#if>
+</#if>
     @PostMapping("/add${tableInfo.upperCamelCase}")
     public Result<${tableInfo.upperCamelCase}> add${tableInfo.upperCamelCase}(@RequestBody @Valid ${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
         Boolean bool = ${tableInfo.lowerCamelCase}Service.add${tableInfo.upperCamelCase}(${tableInfo.lowerCamelCase});
@@ -101,17 +118,17 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
         return Result.failed();
     }
 
-    <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
+<#if !jsonParam.enableSwagger>
     /**
      * 修改${tableInfo.simpleRemark}
      *
      * @param ${tableInfo.lowerCamelCase} ${tableInfo.simpleRemark}
      * @return 结果数据
      */
-    <#else>
+<#else>
     @ApiOperation(value = "修改${tableInfo.simpleRemark}")
     @ApiImplicitParam(name = "${tableInfo.lowerCamelCase}", value = "${tableInfo.simpleRemark}", required = true, dataType = "${tableInfo.upperCamelCase}", paramType = "body")
-    </#if>
+</#if>
     @PutMapping(value = "/update${tableInfo.upperCamelCase}")
     public Result<Boolean> update${tableInfo.upperCamelCase}(@RequestBody ${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
         Boolean bool = ${tableInfo.lowerCamelCase}Service.update${tableInfo.upperCamelCase}(${tableInfo.lowerCamelCase});
@@ -119,7 +136,7 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     }
 <#if tableInfo.pkLowerCamelName?has_content>
 
-    <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
+    <#if !jsonParam.enableSwagger>
     /**
      * 根据主键ID删除${tableInfo.simpleRemark}
      *
@@ -136,7 +153,7 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
         return Result.okOrFailed(bool);
     }
 
-    <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
+    <#if !jsonParam.enableSwagger>
     /**
      * 根据主键ID列表批量删除${tableInfo.simpleRemark}
      *

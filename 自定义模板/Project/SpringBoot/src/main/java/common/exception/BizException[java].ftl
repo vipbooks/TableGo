@@ -10,8 +10,33 @@ public class BizException extends RuntimeException {
     /** 版本号 */
     private static final long serialVersionUID = 6600666999314080292L;
 
-    /** 异常编码 */
+    /** 异常编码，与org.springframework.http.HttpStatus同 */
     private Integer code;
+
+    /** 创建业务异常实例对象 */
+    public static BizException newInstance(String message) {
+        return new BizException(message);
+    }
+
+    /** 创建业务异常实例对象 */
+    public static BizException newInstance(Throwable cause) {
+        return new BizException(cause);
+    }
+
+    /** 创建业务异常实例对象 */
+    public static BizException newInstance(String message, Integer code) {
+        return new BizException(message, code);
+    }
+
+    /** 创建业务异常实例对象 */
+    public static BizException newInstance(String message, Throwable cause) {
+        return new BizException(message, cause);
+    }
+
+    /** 创建业务异常实例对象 */
+    public static BizException newInstance(String message, Integer code, Throwable cause) {
+        return new BizException(message, code, cause);
+    }
 
     public BizException(String message) {
         super(message);

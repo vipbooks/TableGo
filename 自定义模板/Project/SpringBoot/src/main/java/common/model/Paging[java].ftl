@@ -5,77 +5,71 @@ import java.io.Serializable;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.fasterxml.jackson.annotation.JsonProperty;
-<#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
+<#if jsonParam.enableSwagger>
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 </#if>
 
 /**
  * 分页响应参数
- * 
+ *
  * @author ${paramConfig.author}
  * @version 1.0.0 ${today}
  */
-<#if !jsonParam.enableSmartDoc?? || !jsonParam.enableSmartDoc>
+<#if jsonParam.enableSwagger>
 @ApiModel(description = "分页响应参数")
 </#if>
 public class Paging<T extends Serializable> extends OverrideBeanMethods {
     /** 版本号 */
     private static final long serialVersionUID = 6242056024283004874L;
 
-    <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /** 每页显示多少条记录 */
-    <#else>
+<#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "每页显示多少条记录", example = "20", position = 1)
-    </#if>
+</#if>
     @JsonProperty(index = 1)
     private Long pageSize = 20L;
 
-    <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /** 当前页 */
-    <#else>
+<#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "当前页", example = "1", position = 2)
-    </#if>
+</#if>
     @JsonProperty(index = 2)
     private Long page = 1L;
 
-    <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /** 总记录数 */
-    <#else>
+<#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "总记录数", position = 3)
-    </#if>
+</#if>
     @JsonProperty(index = 3)
     private Long total = 0L;
 
-    <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /** 总页数 */
-    <#else>
+<#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "总页数", position = 4)
-    </#if>
+</#if>
     @JsonProperty(index = 4)
     private Long totalPage = 0L;
 
-    <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /** 是否存在上一页 */
-    <#else>
+<#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "是否存在上一页", position = 5)
-    </#if>
+</#if>
     @JsonProperty(index = 5)
     private Boolean hasPrevious;
 
-    <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /** 是否存在下一页 */
-    <#else>
+<#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "是否存在下一页", position = 6)
-    </#if>
+</#if>
     @JsonProperty(index = 6)
     private Boolean hasNext;
 
-    <#if jsonParam.enableSmartDoc?? && jsonParam.enableSmartDoc>
     /** 当前页的记录集 */
-    <#else>
+<#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "当前页的记录集", position = 7)
-    </#if>
+</#if>
     @JsonProperty(index = 7)
     private List<T> records;
 

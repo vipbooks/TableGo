@@ -1,7 +1,11 @@
 package ${jsonParam.packagePath}
 
-import lombok.Getter;
-import lombok.Setter;
+import java.io.Serializable;
+
+import lombok.Data;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
@@ -10,17 +14,14 @@ import lombok.experimental.Accessors;
  * @author ${paramConfig.author}
  * @version 1.0.0 ${today}
  */
-@Setter
-@Getter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Accessors(chain = true)
-public class UserRequestInfo extends OverrideBeanMethods {
+public class UserRequestInfo implements Serializable {
     /** 版本号 */
     private static final long serialVersionUID = 66334266866024978L;
-
-    /** 创建用户请求信息对象 */
-    public static UserRequestInfo newInstance() {
-        return new UserRequestInfo();
-    }
 
     /** 请求路径 */
     private String uri;
@@ -54,4 +55,7 @@ public class UserRequestInfo extends OverrideBeanMethods {
 
     /** 执行耗时 */
     private Long timeCost;
+
+    /** 错误消息 */
+    private String errorMsg;
 }
