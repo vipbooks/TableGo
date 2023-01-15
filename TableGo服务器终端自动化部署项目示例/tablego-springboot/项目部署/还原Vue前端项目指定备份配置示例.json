@@ -1,0 +1,19 @@
+{
+  "isOpenTerminal" : true,
+  "isOutLogToTerminal" : true,
+  "isOutLogToFile" : false,
+  "restoreVersion" : "html_20230115163622.tar.gz",
+  "serverProjectPath" : "/opt/nginx",
+  "batchConfig" : [ {
+    "commands" : [ {
+      "command" : "cd ${serverProjectPath}"
+    }, {
+      "command" : "rm -rf html"
+    }, {
+      "command" : "tar -zxvf ${serverProjectPath}/bak/${restoreVersion} -C ${serverProjectPath}",
+      "waitSeconds" : 2
+    }, {
+      "command" : "ls"
+    } ]
+  } ]
+}
