@@ -81,6 +81,13 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     @ApiImplicitParam(name = "${tableInfo.lowerCamelCase}", value = "${tableInfo.simpleRemark}", required = true, dataType = "${tableInfo.upperCamelCase}", paramType = "body")
     @PutMapping(value = "/update")
     public Result<Boolean> update(@RequestBody ${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
+        <#if tableInfo.pkUpperCamelName?has_content>
+            <#if tableInfo.pkIsStringType>
+        Assert.isNotBlank(${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}(), "请选择需要修改的数据！");
+            <#else>
+        Assert.isNotNull(${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}(), "请选择需要修改的数据！");
+            </#if>
+        </#if>
         Boolean bool = ${tableInfo.lowerCamelCase}Service.update${tableInfo.upperCamelCase}(${tableInfo.lowerCamelCase});
         return Result.okOrFailed(bool);
     }

@@ -85,8 +85,15 @@
     "T_AREA" : [ "AREA_NAME", "AREA_CODE", "PARENT_CODE" ],
     "T_ROLE" : [ "ROLE_NAME", "ROLE_CODE" ]
   },
+  "batchSearchFields" : {
+    "T_USER" : [ "ID" ],
+    "T_DICTIONARY" : [ "DICT_TYPE_CODE" ],
+    "T_PROVINCE" : [ "PROVINCE_CODE" ],
+    "T_CITY" : [ "CITY_CODE" ],
+    "T_AREA" : [ "AREA_CODE" ]
+  },
   "checkValueExistedFields" : {
-    "T_USER" : [ "USERNAME" ],
+    "T_USER" : [ "USERNAME", "ID_CARD", "MOBILE_PHONE" ],
     "T_SYS_PARAM" : [ "PARAM_CODE" ],
     "T_DEPARTMENT" : [ "DEPT_CODE" ],
     "T_DICT_TYPE" : [ "TYPE_CODE" ],

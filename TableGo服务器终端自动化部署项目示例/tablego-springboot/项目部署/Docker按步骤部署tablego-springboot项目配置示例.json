@@ -28,26 +28,42 @@
   "stepBatchConfig" : {
     "step1" : {
       "enable" : true,
+      "remark" : "上传脚本文件",
+      "batchConfig" : [ {
+        "fileUploads" : [ {
+          "fromPath" : [ "${scriptPath}\\ClearDockerBakImage.sh" ],
+          "toPath" : "${serverProjectPath}",
+          "enable" : true
+        } ]
+      }, {
+        "commands" : [ {
+          "command" : "cd ${serverProjectPath}"
+        }, {
+          "command" : "sed -i 's/\\r$//' ClearDockerBakImage.sh",
+          "enable" : true
+        }, {
+          "command" : "sudo chmod +x ClearDockerBakImage.sh",
+          "enable" : false
+        } ]
+      } ]
+    },
+    "step2" : {
+      "enable" : true,
       "remark" : "更新Git代码并打包",
       "batchConfig" : [ {
         "runtimeExec" : [ {
           "command" : "${scriptPath}\\git-update-project.bat ${projectPath}",
           "enable" : false
         }, {
-          "command" : "${scriptPath}\\maven-lifecycle.bat clean ${projectPath}",
+          "command" : "${scriptPath}\\maven-lifecycle.bat \"clean package\" ${projectPath}",
           "enable" : true
         } ]
       } ]
     },
-    "step2" : {
+    "step3" : {
       "enable" : true,
       "remark" : "部署 tablego-admin 工程",
       "batchConfig" : [ {
-        "runtimeExec" : [ {
-          "command" : "${scriptPath}\\maven-lifecycle.bat package ${projectPath}\\tablego-admin",
-          "enable" : true
-        } ]
-      }, {
         "fileUploads" : [ {
           "fromPath" : [ "${projectPath}\\tablego-admin\\target\\tablego-admin.jar", "${projectPath}\\tablego-admin\\Dockerfile" ],
           "toPath" : "${serverProjectPath}/tablego-admin",
@@ -59,6 +75,10 @@
         }, {
           "command" : "docker tag tablego-admin tablego-admin_`date +%Y%m%d%H%M%S`",
           "sleepSeconds" : 2,
+          "enable" : true
+        }, {
+          "command" : "sh ../ClearDockerBakImage.sh -p tablego-admin_",
+          "waitSeconds" : 2,
           "enable" : true
         }, {
           "command" : "docker rm -f tablego-admin",
@@ -81,15 +101,10 @@
         } ]
       } ]
     },
-    "step3" : {
+    "step4" : {
       "enable" : true,
       "remark" : "部署 tablego-basic 工程",
       "batchConfig" : [ {
-        "runtimeExec" : [ {
-          "command" : "${scriptPath}\\maven-lifecycle.bat package ${projectPath}\\tablego-basic",
-          "enable" : true
-        } ]
-      }, {
         "fileUploads" : [ {
           "fromPath" : [ "${projectPath}\\tablego-basic\\target\\tablego-basic.jar", "${projectPath}\\tablego-basic\\Dockerfile" ],
           "toPath" : "${serverProjectPath}/tablego-basic",
@@ -101,6 +116,10 @@
         }, {
           "command" : "docker tag tablego-basic tablego-basic_`date +%Y%m%d%H%M%S`",
           "sleepSeconds" : 2,
+          "enable" : true
+        }, {
+          "command" : "sh ../ClearDockerBakImage.sh -p tablego-basic_",
+          "waitSeconds" : 2,
           "enable" : true
         }, {
           "command" : "docker rm -f tablego-basic",
@@ -123,15 +142,10 @@
         } ]
       } ]
     },
-    "step4" : {
+    "step5" : {
       "enable" : true,
       "remark" : "部署 tablego-iam 工程",
       "batchConfig" : [ {
-        "runtimeExec" : [ {
-          "command" : "${scriptPath}\\maven-lifecycle.bat \"clean package\" ${projectPath}\\tablego-iam",
-          "enable" : true
-        } ]
-      }, {
         "fileUploads" : [ {
           "fromPath" : [ "${projectPath}\\tablego-iam\\target\\tablego-iam.jar", "${projectPath}\\tablego-iam\\Dockerfile" ],
           "toPath" : "${serverProjectPath}/tablego-iam",
@@ -143,6 +157,10 @@
         }, {
           "command" : "docker tag tablego-iam tablego-iam_`date +%Y%m%d%H%M%S`",
           "sleepSeconds" : 2,
+          "enable" : true
+        }, {
+          "command" : "sh ../ClearDockerBakImage.sh -p tablego-iam_",
+          "waitSeconds" : 2,
           "enable" : true
         }, {
           "command" : "docker rm -f tablego-iam",
@@ -165,7 +183,7 @@
         } ]
       } ]
     },
-    "step5" : {
+    "step6" : {
       "enable" : true,
       "remark" : "清理Docker虚悬镜像",
       "batchConfig" : [ {

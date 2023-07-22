@@ -1,5 +1,7 @@
 <#-- 初始化表的查询字段 -->
 <#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields) />
+<#-- 初始化表的批量查询字段 -->
+<#assign batchSearchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.batchSearchFields) />
 package ${jsonParam.packagePath}
 
 <#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFields, "Date")>
@@ -19,7 +21,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
     </#if>
 </#if>
-<#if searchFields?has_content>
+<#if batchSearchFields?has_content>
+import java.util.List;
+</#if>
+<#if searchFields?has_content || batchSearchFields?has_content>
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 </#if>
@@ -39,7 +44,7 @@ import ${jsonParam.basePackagePath}.common.model.BaseCondition;
 @Setter
 @Getter
 @Builder
-<#if searchFields?has_content>
+<#if searchFields?has_content || batchSearchFields?has_content>
 @NoArgsConstructor
 @AllArgsConstructor
 </#if>
@@ -76,6 +81,20 @@ public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
         </#if>
     private ${fieldInfo.javaType} ${fieldInfo.proName};
     </#if>
+            </#if>
+        </#list>
+    </#list>
+</#if>
+<#if batchSearchFields?has_content>
+    <#list tableInfo.fieldInfos as fieldInfo>
+        <#list batchSearchFields as fieldName>
+            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+
+    /** ${fieldInfo.simpleRemark}列表 */
+        <#if jsonParam.enableSwagger>
+    @ApiModelProperty(value = "${fieldInfo.simpleRemark}列表")
+        </#if>
+    private List<${fieldInfo.javaType}> ${fieldInfo.proName}List;
             </#if>
         </#list>
     </#list>

@@ -47,8 +47,8 @@ public class ${tableInfo.upperCamelCase}<#if StringUtils.isNotBlank(tableInfo.ex
     @Id
     </#if>
     <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>
-    @JsonFormat(timezone = "GMT+8", pattern = <#if fieldInfo.isDateType>DatePattern.NORM_DATE_PATTERN<#else>DatePattern.NORM_DATETIME_PATTERN</#if>)
-    @Field(type = FieldType.Date, format = DateFormat.custom, pattern = <#if fieldInfo.isDateType>DatePattern.NORM_DATE_PATTERN<#else>DatePattern.NORM_DATETIME_PATTERN</#if>)
+    @JsonFormat(timezone = "GMT+8", pattern = <#if fieldInfo.isDateTimeType>DatePattern.NORM_DATETIME_PATTERN<#else>DatePattern.NORM_DATE_PATTERN</#if>)
+    @Field(type = FieldType.Date, format = DateFormat.custom, pattern = <#if fieldInfo.isDateTimeType>DatePattern.NORM_DATETIME_PATTERN<#else>DatePattern.NORM_DATE_PATTERN</#if>)
     <#elseif fieldInfo.javaType == "Long">
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     </#if>

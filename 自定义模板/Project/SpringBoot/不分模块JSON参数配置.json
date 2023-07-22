@@ -138,8 +138,15 @@
     "T_AREA" : [ "AREA_NAME", "AREA_CODE", "PARENT_CODE" ],
     "T_ROLE" : [ "ROLE_NAME", "ROLE_CODE" ]
   },
+  "batchSearchFields" : {
+    "T_USER" : [ "ID" ],
+    "T_DICTIONARY" : [ "DICT_TYPE_CODE" ],
+    "T_PROVINCE" : [ "PROVINCE_CODE" ],
+    "T_CITY" : [ "CITY_CODE" ],
+    "T_AREA" : [ "AREA_CODE" ]
+  },
   "checkValueExistedFields" : {
-    "T_USER" : [ "USERNAME" ],
+    "T_USER" : [ "USERNAME", "ID_CARD", "MOBILE_PHONE" ],
     "T_SYS_PARAM" : [ "PARAM_CODE" ],
     "T_DEPARTMENT" : [ "DEPT_CODE" ],
     "T_DICT_TYPE" : [ "TYPE_CODE" ],
@@ -194,7 +201,7 @@
   } ],
   "projectConfig" : {
     "dbDriverClassName" : "com.mysql.cj.jdbc.Driver",
-    "dbUrl" : "jdbc:mysql://127.0.0.1:3306/test?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useUnicode=true&useSSL=false&nullNamePatternMatchesAll=true&allowPublicKeyRetrieval=true",
+    "dbUrl" : "jdbc:mysql://127.0.0.1:3306/test?serverTimezone=GMT%2B8&characterEncoding=utf8&useUnicode=true&useSSL=false&nullNamePatternMatchesAll=true&allowPublicKeyRetrieval=true",
     "dbUsername" : "root",
     "dbPassword" : "root",
     "redisHost" : "127.0.0.1",
@@ -204,16 +211,16 @@
   },
   "version" : {
     "java" : "1.8",
-    "springBootStarterParent" : "2.7.6",
+    "springBootStarterParent" : "2.7.9",
     "mysqlConnectorJava" : "8.0.31",
-    "mybatisPlusBootStarter" : "3.5.2",
+    "mybatisPlusBootStarter" : "3.5.3.1",
     "swaggerSpringBootStarter" : "1.9.1.RELEASE",
     "hibernateValidator" : "6.2.5.Final",
     "commonsLang3" : "3.12.0",
     "knife4j" : "3.0.3",
     "snakeyaml" : "1.33",
-    "lombok" : "1.18.24",
-    "hutoolAll" : "5.8.10",
+    "lombok" : "1.18.26",
+    "hutoolAll" : "5.8.16",
     "redisson" : "3.18.1",
     "mavenCompilerPlugin" : "3.8.1",
     "mavenSourcePlugin" : "3.2.1",

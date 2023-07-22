@@ -1,6 +1,8 @@
 <#-- 用于生成Condition查询条件的自定义模板 -->
 <#-- 初始化表的查询字段 -->
 <#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields) />
+<#-- 初始化表的批量查询字段 -->
+<#assign batchSearchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.batchSearchFields) />
 package ${jsonParam.packagePath}
 
 <#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFields, "Date")>
@@ -14,7 +16,10 @@ import java.math.BigDecimal;
 <#if FtlUtils.fieldTypeExisted(tableInfo, "BigInteger")>
 import java.math.BigInteger;
 </#if>
-<#if searchFields?has_content>
+<#if batchSearchFields?has_content>
+import java.util.List;
+</#if>
+<#if searchFields?has_content || batchSearchFields?has_content>
 import io.swagger.annotations.ApiModelProperty;
 </#if>
 import io.swagger.annotations.ApiModel;
@@ -30,6 +35,11 @@ import ${jsonParam.basePackagePath}.common.BaseCondition;
 public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
     /** 版本号 */
     private static final long serialVersionUID = ${tableInfo.serialVersionUID!'1'}L;
+
+    /** 创建${tableInfo.simpleRemark}实例对象 */
+    public static ${tableInfo.upperCamelCase} newInstance() {
+        return new ${tableInfo.upperCamelCase}();
+    }
 <#if searchFields?has_content>
     <#list tableInfo.fieldInfos as fieldInfo>
         <#list searchFields as fieldName>
@@ -50,11 +60,23 @@ public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
             </#if>
         </#list>
     </#list>
+    <#if batchSearchFields?has_content>
+        <#list tableInfo.fieldInfos as fieldInfo>
+            <#list batchSearchFields as fieldName>
+                <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+
+        /** ${fieldInfo.simpleRemark}列表 */
+        @ApiModelProperty(value = "${fieldInfo.simpleRemark}列表")
+        private List<${fieldInfo.javaType}> ${fieldInfo.proName}List;
+                </#if>
+            </#list>
+        </#list>
+    </#if>
     <#list tableInfo.fieldInfos as fieldInfo>
         <#list searchFields as fieldName>
             <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
 
-    <#if fieldInfo.javaType == "Date">
+                <#if fieldInfo.javaType == "Date">
     /**
      * 获取${fieldInfo.simpleRemark!fieldInfo.proName}(开始)
      * 
@@ -90,7 +112,7 @@ public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
     public void set${fieldInfo.upperCamelCase}End(${fieldInfo.javaType} ${fieldInfo.proName}End) {
         this.${fieldInfo.proName}End = ${fieldInfo.proName}End;
     }
-    <#else>
+                <#else>
     /**
      * 获取${fieldInfo.remark!fieldInfo.proName}
      * 
@@ -105,12 +127,40 @@ public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
      * 
      * @param ${fieldInfo.proName}<#if StringUtils.isNotBlank(fieldInfo.simpleRemark)> ${fieldInfo.simpleRemark}</#if>
      */
-    public void set${fieldInfo.upperCamelCase}(${fieldInfo.javaType} ${fieldInfo.proName}) {
+    public ${tableInfo.upperCamelCase} set${fieldInfo.upperCamelCase}(${fieldInfo.javaType} ${fieldInfo.proName}) {
         this.${fieldInfo.proName} = ${fieldInfo.proName};
+        return this;
     }
-    </#if>
+                </#if>
             </#if>
         </#list>
     </#list>
+    <#if batchSearchFields?has_content>
+        <#list tableInfo.fieldInfos as fieldInfo>
+            <#list batchSearchFields as fieldName>
+                <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+
+    /**
+     * 获取${fieldInfo.simpleRemark}列表
+     * 
+     * @return ${fieldInfo.simpleRemark}列表
+     */
+    public List<${fieldInfo.javaType}> get${fieldInfo.upperCamelCase}List() {
+        return this.${fieldInfo.proName}List;
+    }
+
+    /**
+     * 设置${fieldInfo.simpleRemark}列表
+     * 
+     * @param ${fieldInfo.proName}List ${fieldInfo.simpleRemark}列表
+     */
+    public ${tableInfo.upperCamelCase} set${fieldInfo.upperCamelCase}List(List<${fieldInfo.javaType}> ${fieldInfo.proName}List) {
+        this.${fieldInfo.proName}List = ${fieldInfo.proName}List;
+        return this;
+    }
+                </#if>
+            </#list>
+        </#list>
+    </#if>
 </#if>
 }

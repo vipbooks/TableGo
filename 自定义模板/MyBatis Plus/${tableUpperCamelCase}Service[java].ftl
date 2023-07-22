@@ -71,23 +71,14 @@ public interface ${tableInfo.upperCamelCase}Service extends IService<${tableInfo
     Map<${tableInfo.pkJavaType}, ${tableInfo.upperCamelCase}> map${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList);
 </#if>
 <#if checkValueExistedFields?has_content>
-    <#list tableInfo.fieldInfos as fieldInfo>
-        <#list checkValueExistedFields as fieldName>
-            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
 
     /**
-     * 检查${fieldInfo.simpleRemark!fieldInfo.colName}是否存在
+     * 检查${tableInfo.simpleRemark}是否存在
      *
-     * @param ${fieldInfo.proName} ${fieldInfo.simpleRemark}
-                <#if tableInfo.pkLowerCamelName?has_content>
-     * @param ${tableInfo.pkLowerCamelName} ${tableInfo.pkRemark}(排除)
-                </#if>
+     * @param ${tableInfo.lowerCamelCase} ${tableInfo.simpleRemark}
      * @return 是否存在
      */
-    Boolean check${fieldInfo.upperCamelCase}Existed(${fieldInfo.javaType} ${fieldInfo.proName}<#if tableInfo.pkLowerCamelName?has_content>, ${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}</#if>);
-            </#if>
-        </#list>
-    </#list>
+    Boolean check${tableInfo.upperCamelCase}Existed(${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase});
 </#if>
 
     /**

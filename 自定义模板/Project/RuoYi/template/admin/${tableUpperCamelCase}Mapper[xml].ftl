@@ -1,6 +1,8 @@
 <#-- 用于生成Mapper.xml配置的自定义模板 -->
 <#-- 初始化表的查询字段 -->
 <#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields) />
+<#-- 初始化表的批量查询字段 -->
+<#assign batchSearchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.batchSearchFields) />
 <#-- 如果配置的查询字段为空则取表字段的前几个字段 -->
 <#if !searchFields?has_content><#assign searchFields = FtlUtils.subListContainsFilter(tableInfo.fieldNameList, 0, 2, "ID") /></#if>
 <#-- 初始化需要生成检查字段值是否已存在的接口的字段 -->
@@ -63,6 +65,23 @@
             </#list>
         </#list>
     </#if>
+    <#if batchSearchFields?has_content>
+        <#list tableInfo.fieldInfos as fieldInfo>
+            <#list batchSearchFields as fieldName>
+                <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+        <if test="${fieldInfo.proName}List != null and ${fieldInfo.proName}List.size > 0">
+            AND <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName} IN
+            <foreach collection="${fieldInfo.proName}List" index="index" item="${fieldInfo.proName}" open="(" separator="," close=")">
+                ${"#"}{${fieldInfo.proName}}
+            </foreach>
+        </if>
+                </#if>
+            </#list>
+        </#list>
+    </#if>
+    <#if FtlUtils.fieldExisted(tableInfo, "CREATE_TIME")>
+        ORDER BY <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>CREATE_TIME DESC
+    </#if>
     </select>
 
     <!-- 查询${tableInfo.simpleRemark} -->
@@ -93,13 +112,7 @@
     </#list>
         </trim>
     </insert>
-    <#if paramConfig.showMergeUpdateMark>
-    <!-- ${String.format(paramConfig.mergeFileMarkEnd, 2)} -->
-    </#if>
 
-    <#if paramConfig.showMergeUpdateMark>
-    <!-- ${String.format(paramConfig.mergeFileMarkBegin, 3)} -->
-    </#if>
     <!-- 修改${tableInfo.simpleRemark} -->
     <update id="update${tableInfo.upperCamelCase}">
         UPDATE ${tableInfo.tableName}
@@ -113,7 +126,7 @@
         WHERE ${tableInfo.pkColName} = ${"#"}{${tableInfo.pkLowerCamelName}}
     </update>
     <#if paramConfig.showMergeUpdateMark>
-    <!-- ${String.format(paramConfig.mergeFileMarkEnd, 3)} -->
+    <!-- ${String.format(paramConfig.mergeFileMarkEnd, 2)} -->
     </#if>
 
     <!-- 删除${tableInfo.simpleRemark} -->

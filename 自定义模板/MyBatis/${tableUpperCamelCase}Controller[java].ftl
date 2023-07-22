@@ -2,6 +2,7 @@
 package ${jsonParam.packagePath}
 
 import java.util.List;
+import javax.validation.Valid;
 import com.github.pagehelper.PageInfo;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -69,7 +70,7 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     @ApiOperation(value = "新增${tableInfo.simpleRemark}")
     @ApiImplicitParam(name = "${tableInfo.lowerCamelCase}", value = "${tableInfo.simpleRemark}", required = true, dataType = "${tableInfo.upperCamelCase}", paramType = "body")
     @PostMapping("/add")
-    public Result<${tableInfo.upperCamelCase}> add(@RequestBody ${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
+    public Result<${tableInfo.upperCamelCase}> add(@RequestBody @Valid ${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
         Boolean bool = ${tableInfo.lowerCamelCase}Service.add${tableInfo.upperCamelCase}(${tableInfo.lowerCamelCase});
         if (bool) {
             return Result.ok(${tableInfo.lowerCamelCase});
@@ -81,6 +82,13 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     @ApiImplicitParam(name = "${tableInfo.lowerCamelCase}", value = "${tableInfo.simpleRemark}", required = true, dataType = "${tableInfo.upperCamelCase}", paramType = "body")
     @PutMapping(value = "/update")
     public Result<Boolean> update(@RequestBody ${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
+        <#if tableInfo.pkUpperCamelName?has_content>
+            <#if tableInfo.pkIsStringType>
+        Assert.isNotBlank(${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}(), "请选择需要修改的数据！");
+            <#else>
+        Assert.isNotNull(${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}(), "请选择需要修改的数据！");
+            </#if>
+        </#if>
         Boolean bool = ${tableInfo.lowerCamelCase}Service.update${tableInfo.upperCamelCase}(${tableInfo.lowerCamelCase});
         return Result.okOrFailed(bool);
     }

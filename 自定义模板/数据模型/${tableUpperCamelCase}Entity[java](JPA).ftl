@@ -79,7 +79,7 @@ public class ${tableInfo.upperCamelCase}Entity<#if StringUtils.isNotBlank(tableI
         </#if>
     </#if>
     <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>
-    @JsonFormat(timezone = "GMT+8", pattern = <#if fieldInfo.isDateType>"yyyy-MM-dd"<#else>"yyyy-MM-dd HH:mm:ss"</#if>)
+    @JsonFormat(timezone = "GMT+8", pattern = <#if fieldInfo.isDateTimeType>"yyyy-MM-dd HH:mm:ss"<#else>"yyyy-MM-dd"</#if>)
     <#elseif fieldInfo.javaType == "Long">
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     </#if>

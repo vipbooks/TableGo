@@ -35,7 +35,7 @@
       "command" : "mkdir -p ${serverProjectPath}/bak",
       "enable" : true
     }, {
-      "command" : "cp -vf tablego-admin.jar ./bak/tablego-admin_`date +%Y%m%d%H%M%S`.jar",
+      "command" : "cp -vf tablego-admin.jar ./bak/tablego-admin/tablego-admin_`date +%Y%m%d%H%M%S`.jar",
       "containsStr" : ".jar",
       "enable" : true
     } ],
@@ -58,7 +58,7 @@
       "command" : "sudo chmod +x AppService.sh ClearBakFile.sh",
       "enable" : false
     }, {
-      "command" : "sh ClearBakFile.sh -d ${serverProjectPath}/bak -e jar",
+      "command" : "sh ClearBakFile.sh -d ${serverProjectPath}/bak/tablego-admin -e jar",
       "waitSeconds" : 2,
       "enable" : true
     }, {

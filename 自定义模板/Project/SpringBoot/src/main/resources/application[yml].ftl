@@ -12,7 +12,7 @@ server:
     max-http-form-post-size: 50MB
 spring:
   profiles:
-    active: dev
+    active: "@profiles.active@"
   application:
     name: ${jsonParam.appName}
   main:

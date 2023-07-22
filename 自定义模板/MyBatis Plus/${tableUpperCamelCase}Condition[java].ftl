@@ -1,6 +1,8 @@
 <#-- 用于生成Condition查询条件的自定义模板 -->
 <#-- 初始化表的查询字段 -->
 <#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields) />
+<#-- 初始化表的批量查询字段 -->
+<#assign batchSearchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.batchSearchFields) />
 package ${jsonParam.packagePath}
 
 <#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFields, "Date")>
@@ -14,10 +16,21 @@ import java.math.BigDecimal;
 <#if FtlUtils.fieldTypeExisted(tableInfo, "BigInteger")>
 import java.math.BigInteger;
 </#if>
-<#if searchFields?has_content>
+<#if batchSearchFields?has_content>
+import java.util.List;
+</#if>
+<#if searchFields?has_content || batchSearchFields?has_content>
 import io.swagger.annotations.ApiModelProperty;
 </#if>
 import io.swagger.annotations.ApiModel;
+<#if searchFields?has_content || batchSearchFields?has_content>
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+</#if>
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import ${jsonParam.basePackagePath}.common.model.BaseCondition;
 
@@ -27,6 +40,14 @@ import ${jsonParam.basePackagePath}.common.model.BaseCondition;
  * @author ${paramConfig.author}
  * @version 1.0.0 ${today}
  */
+@Setter
+@Getter
+@Builder
+<#if searchFields?has_content || batchSearchFields?has_content>
+@NoArgsConstructor
+@AllArgsConstructor
+</#if>
+@Accessors(chain = true)
 @ApiModel(description = "${tableInfo.simpleRemark!tableInfo.tableName}查询条件")
 public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
     /** 版本号 */
@@ -51,65 +72,17 @@ public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
             </#if>
         </#list>
     </#list>
+</#if>
+<#if batchSearchFields?has_content>
     <#list tableInfo.fieldInfos as fieldInfo>
-        <#list searchFields as fieldName>
+        <#list batchSearchFields as fieldName>
             <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
 
-    <#if fieldInfo.javaType == "Date">
-    /**
-     * 获取${fieldInfo.simpleRemark!fieldInfo.proName}(开始)
-     * 
-     * @return ${fieldInfo.simpleRemark!fieldInfo.proName}(开始)
-     */
-    public ${fieldInfo.javaType} get${fieldInfo.upperCamelCase}Begin() {
-        return this.${fieldInfo.proName}Begin;
-    }
-
-    /**
-     * 设置${fieldInfo.simpleRemark!fieldInfo.proName}(开始)
-     * 
-     * @param ${fieldInfo.proName}Begin<#if StringUtils.isNotBlank(fieldInfo.simpleRemark)> ${fieldInfo.simpleRemark}(开始)</#if>
-     */
-    public void set${fieldInfo.upperCamelCase}Begin(${fieldInfo.javaType} ${fieldInfo.proName}Begin) {
-        this.${fieldInfo.proName}Begin = ${fieldInfo.proName}Begin;
-    }
-
-    /**
-     * 获取${fieldInfo.simpleRemark!fieldInfo.proName}(结束)
-     * 
-     * @return ${fieldInfo.simpleRemark!fieldInfo.proName}(结束)
-     */
-    public ${fieldInfo.javaType} get${fieldInfo.upperCamelCase}End() {
-        return this.${fieldInfo.proName}End;
-    }
-
-    /**
-     * 设置${fieldInfo.simpleRemark!fieldInfo.proName}(结束)
-     * 
-     * @param ${fieldInfo.proName}End<#if StringUtils.isNotBlank(fieldInfo.simpleRemark)> ${fieldInfo.simpleRemark}(结束)</#if>
-     */
-    public void set${fieldInfo.upperCamelCase}End(${fieldInfo.javaType} ${fieldInfo.proName}End) {
-        this.${fieldInfo.proName}End = ${fieldInfo.proName}End;
-    }
-    <#else>
-    /**
-     * 获取${fieldInfo.remark!fieldInfo.proName}
-     * 
-     * @return ${fieldInfo.simpleRemark!fieldInfo.proName}
-     */
-    public ${fieldInfo.javaType} get${fieldInfo.upperCamelCase}() {
-        return this.${fieldInfo.proName};
-    }
-
-    /**
-     * 设置${fieldInfo.remark!fieldInfo.proName}
-     * 
-     * @param ${fieldInfo.proName}<#if StringUtils.isNotBlank(fieldInfo.simpleRemark)> ${fieldInfo.simpleRemark}</#if>
-     */
-    public void set${fieldInfo.upperCamelCase}(${fieldInfo.javaType} ${fieldInfo.proName}) {
-        this.${fieldInfo.proName} = ${fieldInfo.proName};
-    }
-    </#if>
+    /** ${fieldInfo.simpleRemark}列表 */
+        <#if jsonParam.enableSwagger>
+    @ApiModelProperty(value = "${fieldInfo.simpleRemark}列表")
+        </#if>
+    private List<${fieldInfo.javaType}> ${fieldInfo.proName}List;
             </#if>
         </#list>
     </#list>

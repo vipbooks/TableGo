@@ -18,7 +18,7 @@
   },
   "batchConfig" : [ {
     "runtimeExec" : [ {
-      "command" : "${scriptPath}\\git-update-project ${projectPath}",
+      "command" : "${scriptPath}\\git-update-project.bat ${projectPath}",
       "enable" : false
     }, {
       "command" : "${scriptPath}\\vue-package.bat ${script} ${projectPath}",

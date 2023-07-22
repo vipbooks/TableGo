@@ -6,7 +6,10 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
+
+import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +49,14 @@ public class AliyunOssService {
     @Autowired
     private AliyunOssConfig aliyunOssConfig;
 
+    /** OSS服务器的URL */
+    private String ossServerUrl;
+
+    @PostConstruct
+    public void init() {
+        this.ossServerUrl = StrUtil.builder(HTTPS, aliyunOssConfig.getBucketName(), StrPool.DOT, aliyunOssConfig.getEndpoint(), StrPool.SLASH).toString();
+    }
+
     /**
      * 批量上传文件
      *
@@ -71,11 +82,6 @@ public class AliyunOssService {
                 PutObjectRequest putObjectRequest = new PutObjectRequest(aliyunOssConfig.getBucketName(), filePath, is);
                 ossClient.putObject(putObjectRequest);
                 is.close();
-
-                String ossServerUrl = StrUtil.builder(HTTPS, aliyunOssConfig.getBucketName(), StrPool.DOT, aliyunOssConfig.getEndpoint(), StrPool.SLASH).toString();
-
-                URL url = ossClient.generatePresignedUrl(aliyunOssConfig.getBucketName(), filePath, DateUtil.offsetDay(DateUtil.date(), 2));
-                System.out.println("url: " + url);
 
                 OssUploadResult result = OssUploadResult.builder()
                         .ossServerUrl(ossServerUrl)
@@ -128,8 +134,6 @@ public class AliyunOssService {
                 PutObjectRequest putObjectRequest = new PutObjectRequest(aliyunOssConfig.getBucketName(), filePath, bais);
                 ossClient.putObject(putObjectRequest);
 
-                String ossServerUrl = StrUtil.builder(HTTPS, aliyunOssConfig.getBucketName(), StrPool.DOT, aliyunOssConfig.getEndpoint(), StrPool.SLASH).toString();
-
                 OssUploadResult result = OssUploadResult.builder()
                         .ossServerUrl(ossServerUrl)
                         .filePath(filePath)
@@ -177,6 +181,24 @@ public class AliyunOssService {
             ossClient.shutdown();
         }
         return true;
+    }
+
+    /**
+     * 生成以GET方法访问文件的签名URL，可以直接通过浏览器访问相关内容
+     *
+     * @param filePath   文件路径
+     * @param expiration URL的过期时间
+     * @return 签名URL
+     */
+    public URL generatePresignedUrl(String filePath, Date expiration) {
+        OSS ossClient = buildOssClient();
+        try {
+            return ossClient.generatePresignedUrl(aliyunOssConfig.getBucketName(), filePath, expiration);
+        } catch (Exception e) {
+            throw BizException.newInstance(e.getMessage(), e);
+        } finally {
+            ossClient.shutdown();
+        }
     }
 
     /**

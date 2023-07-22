@@ -24,11 +24,6 @@ import java.math.BigInteger;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.SqlCondition;
 </#if>
-<#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.commonFields)>
-import ${jsonParam.basePackagePath}.common.model.BaseBean;
-<#else>
-import ${jsonParam.basePackagePath}.common.model.OverrideBeanMethods;
-</#if>
 <#assign importNotBlank = false />
 <#assign importNotNull = false />
 <#if tableInfo.fieldInfos?has_content>
@@ -50,12 +45,35 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+<#if tableInfo.fieldInfos?has_content>
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+</#if>
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
+<#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.commonFields)>
+import ${jsonParam.basePackagePath}.common.model.BaseBean;
+<#else>
+import ${jsonParam.basePackagePath}.common.model.OverrideBeanMethods;
+</#if>
+
 /**
  * <#if StringUtils.isNotBlank(tableInfo.remark)>${tableInfo.remark}(${tableInfo.tableName})<#else>${tableInfo.tableName}</#if>
  *
  * @author ${paramConfig.author}
  * @version 1.0.0 ${today}
  */
+@Setter
+@Getter
+@Builder
+<#if tableInfo.fieldInfos?has_content>
+@NoArgsConstructor
+@AllArgsConstructor
+</#if>
+@Accessors(chain = true)
 @ApiModel(description = "${tableInfo.simpleRemark!tableInfo.tableName}")
 @TableName("${tableInfo.tableName}")
 public class ${tableInfo.upperCamelCase} extends <#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.commonFields)>BaseBean<#else>OverrideBeanMethods</#if> {
@@ -81,7 +99,7 @@ public class ${tableInfo.upperCamelCase} extends <#if FtlUtils.fieldAllExisted(t
     @TableId
     </#if>
     <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>
-    @JsonFormat(timezone = "GMT+8", pattern = <#if fieldInfo.isDateType>DatePattern.NORM_DATE_PATTERN<#else>DatePattern.NORM_DATETIME_PATTERN</#if>)
+    @JsonFormat(timezone = "GMT+8", pattern = <#if fieldInfo.isDateTimeType>DatePattern.NORM_DATETIME_PATTERN<#else>DatePattern.NORM_DATE_PATTERN</#if>)
     <#elseif fieldInfo.javaType == "Long">
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     </#if>
@@ -93,34 +111,6 @@ public class ${tableInfo.upperCamelCase} extends <#if FtlUtils.fieldAllExisted(t
     <#if paramConfig.showMergeUpdateMark>
 
     /* ${String.format(paramConfig.mergeFileMarkEnd, 1)} */
-    </#if>
-    <#if paramConfig.showMergeUpdateMark>
-
-    /* ${String.format(paramConfig.mergeFileMarkBegin, 2)} */
-    </#if>
-    <#list tableInfo.fieldInfos as fieldInfo>
-
-    /**
-     * 获取${fieldInfo.remark!fieldInfo.proName}
-     * 
-     * @return ${fieldInfo.simpleRemark!fieldInfo.proName}
-     */
-    public ${fieldInfo.javaType} get${fieldInfo.upperCamelCase}() {
-        return this.${fieldInfo.proName};
-    }
-
-    /**
-     * 设置${fieldInfo.remark!fieldInfo.proName}
-     * 
-     * @param ${fieldInfo.proName}<#if StringUtils.isNotBlank(fieldInfo.simpleRemark)> ${fieldInfo.simpleRemark}</#if>
-     */
-    public void set${fieldInfo.upperCamelCase}(${fieldInfo.javaType} ${fieldInfo.proName}) {
-        this.${fieldInfo.proName} = ${fieldInfo.proName};
-    }
-    </#list>
-    <#if paramConfig.showMergeUpdateMark>
-
-    /* ${String.format(paramConfig.mergeFileMarkEnd, 2)} */
     </#if>
 </#if>
 }

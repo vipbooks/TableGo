@@ -98,6 +98,11 @@
     "T_CITY" : [ "CITY_NAME", "CITY_CODE" ],
     "T_AREA" : [ "AREA_NAME", "AREA_CODE" ]
   },
+  "batchSearchFields" : {
+    "T_PROVINCE" : [ "PROVINCE_CODE" ],
+    "T_CITY" : [ "CITY_CODE" ],
+    "T_AREA" : [ "AREA_CODE" ]
+  },
   "checkValueExistedFields" : {
     "T_SYS_PARAM" : [ "PARAM_CODE" ],
     "T_PROVINCE" : [ "PROVINCE_CODE" ],

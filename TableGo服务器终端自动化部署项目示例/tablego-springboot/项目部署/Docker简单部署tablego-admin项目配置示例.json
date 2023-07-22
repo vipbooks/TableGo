@@ -32,6 +32,20 @@
       "fromPath" : [ "${projectPath}\\tablego-admin\\target\\tablego-admin.jar", "${projectPath}\\tablego-admin\\Dockerfile" ],
       "toPath" : "${serverProjectPath}/tablego-admin",
       "enable" : true
+    }, {
+      "fromPath" : [ "${scriptPath}\\ClearDockerBakImage.sh" ],
+      "toPath" : "${serverProjectPath}",
+      "enable" : true
+    } ]
+  }, {
+    "commands" : [ {
+      "command" : "cd ${serverProjectPath}"
+    }, {
+      "command" : "sed -i 's/\\r$//' ClearDockerBakImage.sh",
+      "enable" : true
+    }, {
+      "command" : "sudo chmod +x ClearDockerBakImage.sh",
+      "enable" : false
     } ]
   }, {
     "commands" : [ {
@@ -39,6 +53,10 @@
     }, {
       "command" : "docker tag tablego-admin tablego-admin_`date +%Y%m%d%H%M%S`",
       "sleepSeconds" : 2,
+      "enable" : true
+    }, {
+      "command" : "sh ../ClearDockerBakImage.sh -p tablego-admin_",
+      "waitSeconds" : 2,
       "enable" : true
     }, {
       "command" : "docker rm -f tablego-admin",

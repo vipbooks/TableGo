@@ -8,20 +8,23 @@
 <#assign isUseCacheTable = FtlUtils.tableExisted(tableInfo, jsonParam.useCacheTables) />
 package ${jsonParam.packagePath}
 
-<#if isNoSqlTable>
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-<#else>
-import cn.hutool.core.collection.CollUtil;
-</#if>
 <#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFields, "Date")>
 import cn.hutool.core.date.DateUtil;
 </#if>
-<#if checkValueExistedFields?has_content>
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.BooleanUtil;
+<#if checkValueExistedFields?has_content || tableInfo.pkLowerCamelName?has_content>
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+</#if>
+<#if checkValueExistedFields?has_content>
+import cn.hutool.core.util.BooleanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import ${jsonParam.basePackagePath}.common.util.Assert;
+</#if>
+<#if tableInfo.pkLowerCamelName?has_content>
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.Collections;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 </#if>
 <#if isUseCacheTable && (jsonParam.enableEhCache || jsonParam.enableRedis)>
 import org.springframework.cache.annotation.CacheConfig;
@@ -30,6 +33,8 @@ import org.springframework.cache.annotation.Cacheable;
 </#if>
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.collection.CollUtil;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -133,16 +138,28 @@ public class ${tableInfo.upperCamelCase}Service extends ServiceImpl<${tableInfo.
     @Cacheable
 </#if>
     public ${tableInfo.upperCamelCase} get${tableInfo.upperCamelCase}(${tableInfo.upperCamelCase}Condition condition) {
-    <#if isNoSqlTable>
-        LambdaQueryWrapper<${tableInfo.upperCamelCase}> queryWrapper = condition.buildLambdaQueryWrapper(${tableInfo.upperCamelCase}.class);
+<#if isNoSqlTable>
+        LambdaQueryWrapper<${tableInfo.upperCamelCase}> queryWrapper = condition.buildLambdaQueryWrapper();
+    <#if searchFields?has_content>
+        <#list tableInfo.fieldInfos as fieldInfo>
+            <#list searchFields as fieldName>
+                <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+        queryWrapper.eq(<#if fieldInfo.isStringType>StrUtil.isNotBlank(condition.get${fieldInfo.upperCamelCase}())<#else>condition.get${fieldInfo.upperCamelCase}() != null</#if>, ${tableInfo.upperCamelCase}::get${fieldInfo.upperCamelCase}, condition.get${fieldInfo.upperCamelCase}());
+                </#if>
+            </#list>
+        </#list>
+    </#if>
         return this.getOne(queryWrapper, false);
-    <#else>
+<#else>
         List<${tableInfo.upperCamelCase}> list = this.baseMapper.get${tableInfo.upperCamelCase}(condition);
         if (CollUtil.isNotEmpty(list)) {
+            if (list.size() > 1) {
+                log.warn("Expected one result (or null) to be returned by get${tableInfo.upperCamelCase}(), but found: {}", list.size());
+            }
             return list.get(0);
         }
         return null;
-    </#if>
+</#if>
     }
 <#if tableInfo.pkLowerCamelName?has_content>
 
@@ -152,50 +169,73 @@ public class ${tableInfo.upperCamelCase}Service extends ServiceImpl<${tableInfo.
      * @param ${tableInfo.pkLowerCamelName} ${tableInfo.pkRemark}
      * @return ${tableInfo.simpleRemark}
      */
-<#if isUseCacheTable && (jsonParam.enableEhCache || jsonParam.enableRedis)>
+    <#if isUseCacheTable && (jsonParam.enableEhCache || jsonParam.enableRedis)>
     @Cacheable
-</#if>
+    </#if>
     public ${tableInfo.upperCamelCase} get${tableInfo.upperCamelCase}ById(${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}) {
         return this.getById(${tableInfo.pkLowerCamelName});
     }
-</#if>
-<#if checkValueExistedFields?has_content>
-    <#list tableInfo.fieldInfos as fieldInfo>
-        <#list checkValueExistedFields as fieldName>
-            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
 
     /**
-     * 检查${fieldInfo.simpleRemark!fieldInfo.colName}是否存在
+     * 根据主键ID列表查询${tableInfo.simpleRemark}列表
      *
-     * @param ${fieldInfo.proName} ${fieldInfo.simpleRemark}
-                <#if tableInfo.pkLowerCamelName?has_content>
-     * @param ${tableInfo.pkLowerCamelName} ${tableInfo.pkRemark}(排除)
-                </#if>
+     * @param idList ${tableInfo.pkSimpleRemark}列表
+     * @return 列表数据
+     */
+    <#if isUseCacheTable && (jsonParam.enableEhCache || jsonParam.enableRedis)>
+    @Cacheable
+    </#if>
+    public List<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList) {
+        if (CollUtil.isEmpty(idList)) {
+            return Collections.emptyList();
+        }
+        LambdaQueryWrapper<${tableInfo.upperCamelCase}> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.in(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, idList.stream().filter(StrUtil::isNotBlank).distinct().collect(Collectors.toList()));
+        return this.list(queryWrapper);
+    }
+
+    /**
+     * 查询主键ID列表对应的${tableInfo.simpleRemark}集合
+     *
+     * @param idList ${tableInfo.pkSimpleRemark}列表
+     * @return Map<${tableInfo.pkSimpleRemark}, ${tableInfo.simpleRemark}>
+     */
+    <#if isUseCacheTable && (jsonParam.enableEhCache || jsonParam.enableRedis)>
+    @Cacheable
+    </#if>
+    public Map<${tableInfo.pkJavaType}, ${tableInfo.upperCamelCase}> map${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList) {
+        List<${tableInfo.upperCamelCase}> list = find${tableInfo.upperCamelCase}ByIds(idList);
+        return Optional.ofNullable(list).orElse(CollUtil.toList()).stream().collect(Collectors.toMap(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, ${tableInfo.upperCamelCase} -> ${tableInfo.upperCamelCase}));
+    }
+</#if>
+<#if checkValueExistedFields?has_content>
+
+    /**
+     * 检查${tableInfo.simpleRemark}是否存在
+     *
+     * @param ${tableInfo.lowerCamelCase} ${tableInfo.simpleRemark}
      * @return 是否存在
      */
 <#if isUseCacheTable && (jsonParam.enableEhCache || jsonParam.enableRedis)>
     @Cacheable
 </#if>
-    public Boolean check${fieldInfo.upperCamelCase}Existed(${fieldInfo.javaType} ${fieldInfo.proName}<#if tableInfo.pkLowerCamelName?has_content>, ${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}</#if>) {
-                <#if !fieldInfo.isNotNull>
-        if (<#if fieldInfo.javaType == "String">StrUtil.isBlank(${fieldInfo.proName})<#else>${fieldInfo.proName} == null</#if>) {
-            return false;
-        }
-                </#if>
+    public Boolean check${tableInfo.upperCamelCase}Existed(${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
         QueryWrapper<${tableInfo.upperCamelCase}> queryWrapper = Wrappers.query();
-        queryWrapper.select("1").lambda().eq(${tableInfo.upperCamelCase}::get${fieldInfo.upperCamelCase}, ${fieldInfo.proName});
-        <#if tableInfo.pkLowerCamelName?has_content>
-        if (<#if fieldInfo.javaType == "String">StrUtil.isNotBlank(${fieldInfo.proName})<#else>${fieldInfo.proName} != null</#if>) {
-            queryWrapper.lambda().ne(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, ${tableInfo.pkLowerCamelName});
-        }
+        queryWrapper.select("1").lambda()
+    <#list checkValueExistedFields as fieldName>
+        <#list tableInfo.fieldInfos as fieldInfo>
+            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+                .eq(<#if fieldInfo.isStringType>StrUtil.isNotBlank(${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}())<#else>${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}() != null</#if>, ${tableInfo.upperCamelCase}::get${fieldInfo.upperCamelCase}, ${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}())<#if !fieldName_has_next>;</#if>
+            </#if>
+        </#list>
+    </#list>
+        <#if tableInfo.pkUpperCamelName?has_content>
+        queryWrapper.lambda().ne(<#if tableInfo.pkIsStringType>StrUtil.isNotBlank(${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}())<#else>${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}() != null</#if>, ${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, ${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}());
         </#if>
         queryWrapper.last("LIMIT 1");
 
         return BooleanUtil.toBoolean(this.getObj(queryWrapper, Object::toString));
     }
-            </#if>
-        </#list>
-    </#list>
 </#if>
 
     /**
@@ -272,8 +312,11 @@ public class ${tableInfo.upperCamelCase}Service extends ServiceImpl<${tableInfo.
     <#list tableInfo.fieldInfos as fieldInfo>
         <#list checkValueExistedFields as fieldName>
             <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
-        Boolean ${fieldInfo.proName}Existed = check${fieldInfo.upperCamelCase}Existed(${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}()<#if tableInfo.pkLowerCamelName?has_content>, ${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}()</#if>);
-        Assert.isFalse(${fieldInfo.proName}Existed, "${fieldInfo.simpleRemark}已存在，请重新输入！");
+        ${fieldInfo.javaType} ${fieldInfo.proName} = ${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}();
+        if (<#if fieldInfo.isStringType>StrUtil.isNotBlank(${fieldInfo.proName})<#else>${fieldInfo.proName} != null</#if>) {
+            Boolean ${fieldInfo.proName}Existed = check${tableInfo.upperCamelCase}Existed(${tableInfo.upperCamelCase}.builder()<#if tableInfo.pkLowerCamelName?has_content>.${tableInfo.pkLowerCamelName}(${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}())</#if>.${fieldInfo.proName}(${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}()).build());
+            Assert.isFalse(${fieldInfo.proName}Existed, "${fieldInfo.simpleRemark}已存在，请重新输入！");
+        }
             </#if>
         </#list>
     </#list>

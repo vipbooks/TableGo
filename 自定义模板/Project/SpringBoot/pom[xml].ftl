@@ -241,4 +241,36 @@
 </#if>
 		</plugins>
 	</build>
+
+    <profiles>
+        <!-- 每次在Maven窗口中切换不同的环境时都要手动刷新一下Maven，不然 @profiles.active@ 变量可能取不到值报错 -->
+        <!-- 打包开发环境：mvn clean package -Dmaven.test.skip=true -P dev -->
+        <!-- 开发环境 -->
+        <profile>
+            <id>dev</id>
+            <properties>
+                <profiles.active>dev</profiles.active>
+            </properties>
+            <!-- 默认激活 -->
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+
+        <!-- 测试环境 -->
+        <profile>
+            <id>test</id>
+            <properties>
+                <profiles.active>test</profiles.active>
+            </properties>
+        </profile>
+
+        <!-- 生产环境 -->
+        <profile>
+            <id>prod</id>
+            <properties>
+                <profiles.active>prod</profiles.active>
+            </properties>
+        </profile>
+    </profiles>
 </project>

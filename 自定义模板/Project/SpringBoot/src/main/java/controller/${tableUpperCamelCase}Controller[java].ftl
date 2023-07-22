@@ -131,6 +131,13 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
 </#if>
     @PutMapping(value = "/update${tableInfo.upperCamelCase}")
     public Result<Boolean> update${tableInfo.upperCamelCase}(@RequestBody ${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
+        <#if tableInfo.pkUpperCamelName?has_content>
+            <#if tableInfo.pkIsStringType>
+        Assert.isNotBlank(${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}(), "请选择需要修改的数据！");
+            <#else>
+        Assert.isNotNull(${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}(), "请选择需要修改的数据！");
+            </#if>
+        </#if>
         Boolean bool = ${tableInfo.lowerCamelCase}Service.update${tableInfo.upperCamelCase}(${tableInfo.lowerCamelCase});
         return Result.okOrFailed(bool);
     }

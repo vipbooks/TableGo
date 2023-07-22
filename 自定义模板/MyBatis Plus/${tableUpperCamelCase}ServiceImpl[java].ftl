@@ -16,7 +16,6 @@ import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 </#if>
 <#if checkValueExistedFields?has_content>
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.BooleanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import ${jsonParam.basePackagePath}.common.util.Assert;
@@ -24,14 +23,13 @@ import ${jsonParam.basePackagePath}.common.util.Assert;
 <#if tableInfo.pkLowerCamelName?has_content>
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.Collections;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 </#if>
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.collection.CollUtil;
 
 import org.springframework.stereotype.Service;
@@ -51,11 +49,10 @@ import ${jsonParam.basePackagePath}.service.${tableInfo.upperCamelCase}Service;
  * @author ${paramConfig.author}
  * @version 1.0.0 ${today}
  */
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class ${tableInfo.upperCamelCase}ServiceImpl extends ServiceImpl<${tableInfo.upperCamelCase}Mapper, ${tableInfo.upperCamelCase}> implements ${tableInfo.upperCamelCase}Service {
-    private static final Logger logger = LoggerFactory.getLogger(${tableInfo.upperCamelCase}Service.class);
-
     @Override
     public IPage<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}Page(${tableInfo.upperCamelCase}Condition condition) {
         IPage<${tableInfo.upperCamelCase}> page = condition.buildPage();
@@ -109,16 +106,17 @@ public class ${tableInfo.upperCamelCase}ServiceImpl extends ServiceImpl<${tableI
 
     @Override
     public ${tableInfo.upperCamelCase} get${tableInfo.upperCamelCase}(${tableInfo.upperCamelCase}Condition condition) {
-    <#if isNoSqlTable>
-        LambdaQueryWrapper<${tableInfo.upperCamelCase}> queryWrapper = condition.buildLambdaQueryWrapper(${tableInfo.upperCamelCase}.class);
+        LambdaQueryWrapper<${tableInfo.upperCamelCase}> queryWrapper = condition.buildLambdaQueryWrapper();
+        <#if searchFields?has_content>
+            <#list tableInfo.fieldInfos as fieldInfo>
+                <#list searchFields as fieldName>
+                    <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+        queryWrapper.eq(<#if fieldInfo.isStringType>StrUtil.isNotBlank(condition.get${fieldInfo.upperCamelCase}())<#else>condition.get${fieldInfo.upperCamelCase}() != null</#if>, ${tableInfo.upperCamelCase}::get${fieldInfo.upperCamelCase}, condition.get${fieldInfo.upperCamelCase}());
+                    </#if>
+                </#list>
+            </#list>
+        </#if>
         return this.getOne(queryWrapper, false);
-    <#else>
-        List<${tableInfo.upperCamelCase}> list = this.baseMapper.get${tableInfo.upperCamelCase}(condition);
-        if (CollUtil.isNotEmpty(list)) {
-            return list.get(0);
-        }
-        return null;
-    </#if>
     }
 <#if tableInfo.pkLowerCamelName?has_content>
 
@@ -132,43 +130,37 @@ public class ${tableInfo.upperCamelCase}ServiceImpl extends ServiceImpl<${tableI
         if (CollUtil.isEmpty(idList)) {
             return Collections.emptyList();
         }
-        LambdaQueryWrapper<${tableInfo.upperCamelCase}> queryWrapper = Wrappers.lambdaQuery(${tableInfo.upperCamelCase}.class);
-        queryWrapper.in(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, idList);
+        LambdaQueryWrapper<${tableInfo.upperCamelCase}> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.in(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, idList.stream().filter(StrUtil::isNotBlank).distinct().collect(Collectors.toList()));
         return this.list(queryWrapper);
     }
 
     @Override
     public Map<${tableInfo.pkJavaType}, ${tableInfo.upperCamelCase}> map${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList) {
         List<${tableInfo.upperCamelCase}> list = find${tableInfo.upperCamelCase}ByIds(idList);
-        return Optional.ofNullable(list).orElse(CollUtil.toList()).stream().collect(Collectors.toMap(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, Function.identity()));
+        return Optional.ofNullable(list).orElse(CollUtil.toList()).stream().collect(Collectors.toMap(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, ${tableInfo.upperCamelCase} -> ${tableInfo.upperCamelCase}));
     }
 </#if>
 <#if checkValueExistedFields?has_content>
-    <#list tableInfo.fieldInfos as fieldInfo>
-        <#list checkValueExistedFields as fieldName>
-            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
 
     @Override
-    public Boolean check${fieldInfo.upperCamelCase}Existed(${fieldInfo.javaType} ${fieldInfo.proName}<#if tableInfo.pkLowerCamelName?has_content>, ${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}</#if>) {
-                <#if !fieldInfo.isNotNull>
-        if (<#if fieldInfo.javaType == "String">StrUtil.isBlank(${fieldInfo.proName})<#else>${fieldInfo.proName} == null</#if>) {
-            return false;
-        }
-                </#if>
+    public Boolean check${tableInfo.upperCamelCase}Existed(${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
         QueryWrapper<${tableInfo.upperCamelCase}> queryWrapper = Wrappers.query();
-        queryWrapper.select("1").lambda().eq(${tableInfo.upperCamelCase}::get${fieldInfo.upperCamelCase}, ${fieldInfo.proName});
-        <#if tableInfo.pkLowerCamelName?has_content>
-        if (<#if fieldInfo.javaType == "String">StrUtil.isNotBlank(${fieldInfo.proName})<#else>${fieldInfo.proName} != null</#if>) {
-            queryWrapper.lambda().ne(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, ${tableInfo.pkLowerCamelName});
-        }
+        queryWrapper.select("1").lambda()
+    <#list checkValueExistedFields as fieldName>
+        <#list tableInfo.fieldInfos as fieldInfo>
+            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+                .eq(<#if fieldInfo.isStringType>StrUtil.isNotBlank(${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}())<#else>${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}() != null</#if>, ${tableInfo.upperCamelCase}::get${fieldInfo.upperCamelCase}, ${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}())<#if !fieldName_has_next>;</#if>
+            </#if>
+        </#list>
+    </#list>
+        <#if tableInfo.pkUpperCamelName?has_content>
+        queryWrapper.lambda().ne(<#if tableInfo.pkIsStringType>StrUtil.isNotBlank(${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}())<#else>${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}() != null</#if>, ${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, ${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}());
         </#if>
         queryWrapper.last("LIMIT 1");
 
         return BooleanUtil.toBoolean(this.getObj(queryWrapper, Object::toString));
     }
-            </#if>
-        </#list>
-    </#list>
 </#if>
 
     @Transactional(rollbackFor = Exception.class)
@@ -213,8 +205,12 @@ public class ${tableInfo.upperCamelCase}ServiceImpl extends ServiceImpl<${tableI
     <#list tableInfo.fieldInfos as fieldInfo>
         <#list checkValueExistedFields as fieldName>
             <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
-        Boolean ${fieldInfo.proName}Existed = check${fieldInfo.upperCamelCase}Existed(${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}()<#if tableInfo.pkLowerCamelName?has_content>, ${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}()</#if>);
-        Assert.isFalse(${fieldInfo.proName}Existed, "${fieldInfo.simpleRemark}已存在，请重新输入！");
+        ${fieldInfo.javaType} ${fieldInfo.proName} = ${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}();
+        if (<#if fieldInfo.isStringType>StrUtil.isNotBlank(${fieldInfo.proName})<#else>${fieldInfo.proName} != null</#if>) {
+            ${tableInfo.upperCamelCase} condition = ${tableInfo.upperCamelCase}.builder()<#if tableInfo.pkUpperCamelName?has_content>.${tableInfo.pkLowerCamelName}(${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}())</#if>.${fieldInfo.proName}(${fieldInfo.proName}).build();
+            Boolean ${fieldInfo.proName}Existed = check${tableInfo.upperCamelCase}Existed(condition);
+            Assert.isFalse(${fieldInfo.proName}Existed, "${fieldInfo.simpleRemark}已存在，请重新输入！");
+        }
             </#if>
         </#list>
     </#list>

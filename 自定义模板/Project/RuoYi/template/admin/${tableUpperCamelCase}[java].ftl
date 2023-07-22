@@ -1,4 +1,6 @@
 <#-- 用于生成MyBatis数据模型的自定义模板 -->
+<#-- 初始化表的批量查询字段 -->
+<#assign batchSearchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.batchSearchFields) />
 <#-- 初始化全局忽略验证的字段 -->
 <#assign globalIgnoreValidFields = jsonParam.globalIgnoreValidFields />
 <#-- 初始化需要导出Excel的字段 -->
@@ -24,6 +26,9 @@ import java.io.Serializable;
 </#if>
 <#if FtlUtils.fieldAtListExisted(tableInfo, exportFields)>
 import com.ruoyi.common.annotation.Excel;
+</#if>
+<#if batchSearchFields?has_content>
+import java.util.List;
 </#if>
 <#assign importNotBlank = false />
 <#assign importNotNull = false />
@@ -77,7 +82,7 @@ public class ${tableInfo.upperCamelCase} <#if FtlUtils.fieldAllExisted(tableInfo
         </#if>
     </#if>
     <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>
-    @JsonFormat(timezone = "GMT+8", pattern = <#if fieldInfo.isDateType>"yyyy-MM-dd"<#else>"yyyy-MM-dd HH:mm:ss"</#if>)
+    @JsonFormat(timezone = "GMT+8", pattern = <#if fieldInfo.isDateTimeType>"yyyy-MM-dd HH:mm:ss"<#else>"yyyy-MM-dd"</#if>)
     <#elseif fieldInfo.javaType == "Long">
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     </#if>
@@ -86,6 +91,43 @@ public class ${tableInfo.upperCamelCase} <#if FtlUtils.fieldAllExisted(tableInfo
     <#if paramConfig.showMergeUpdateMark>
 
     /* ${String.format(paramConfig.mergeFileMarkEnd, 1)} */
+    </#if>
+    <#if batchSearchFields?has_content>
+        <#list tableInfo.fieldInfos as fieldInfo>
+            <#list batchSearchFields as fieldName>
+                <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+
+    /** ${fieldInfo.simpleRemark}列表 */
+    @ApiModelProperty(value = "${fieldInfo.simpleRemark}列表")
+    private List<${fieldInfo.javaType}> ${fieldInfo.proName}List;
+                </#if>
+            </#list>
+        </#list>
+        <#list tableInfo.fieldInfos as fieldInfo>
+            <#list batchSearchFields as fieldName>
+                <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+
+    /**
+     * 获取${fieldInfo.simpleRemark}列表
+     * 
+     * @return ${fieldInfo.simpleRemark}列表
+     */
+    public List<${fieldInfo.javaType}> get${fieldInfo.upperCamelCase}List() {
+        return this.${fieldInfo.proName}List;
+    }
+
+    /**
+     * 设置${fieldInfo.simpleRemark}列表
+     * 
+     * @param ${fieldInfo.proName}List ${fieldInfo.simpleRemark}列表
+     */
+    public ${tableInfo.upperCamelCase} set${fieldInfo.upperCamelCase}List(List<${fieldInfo.javaType}> ${fieldInfo.proName}List) {
+        this.${fieldInfo.proName}List = ${fieldInfo.proName}List;
+        return this;
+    }
+                </#if>
+            </#list>
+        </#list>
     </#if>
     <#if paramConfig.showMergeUpdateMark>
 

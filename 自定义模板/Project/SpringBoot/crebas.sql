@@ -203,11 +203,11 @@ ALTER TABLE T_USER COMMENT '用户';
 /*==============================================================*/
 CREATE TABLE T_USER_EXT_INFO
 (
-   ID                   VARCHAR(36) NOT NULL COMMENT '主键ID',
+   ID                   VARCHAR(36) NOT NULL COMMENT '主键ID，与用户表ID一致',
    SEX                  SMALLINT DEFAULT 1 COMMENT '性别，字典数据，例如：女：0、1：男',
    BIRTHDAY             DATE COMMENT '出生日期',
-   CITY_CODE            VARCHAR(36) COMMENT '市区编码',
    PROVINCE_CODE        VARCHAR(36) COMMENT '省份编码',
+   CITY_CODE            VARCHAR(36) COMMENT '市区编码',
    AREA_CODE            VARCHAR(36) COMMENT '地区编码',
    ADDRESS              VARCHAR(500) COMMENT '所在地址',
    REMARK               VARCHAR(1000) COMMENT '备注',

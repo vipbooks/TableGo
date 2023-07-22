@@ -37,7 +37,7 @@ public class ${tableInfo.upperCamelCase}<#if StringUtils.isNotBlank(tableInfo.ex
     @ApiModelProperty(value = "${fieldInfo.remark}", position = ${fieldInfo_index + 1})
     @JsonProperty(index = ${fieldInfo_index + 1})
     <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>
-    @JsonFormat(timezone = "GMT+8", pattern = <#if fieldInfo.isDateType>"yyyy-MM-dd"<#else>"yyyy-MM-dd HH:mm:ss"</#if>)
+    @JsonFormat(timezone = "GMT+8", pattern = <#if fieldInfo.isDateTimeType>"yyyy-MM-dd HH:mm:ss"<#else>"yyyy-MM-dd"</#if>)
     <#elseif fieldInfo.javaType == "Long">
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     </#if>

@@ -8,7 +8,6 @@
 package ${jsonParam.packagePath}
 
 <#if checkValueExistedFields?has_content>
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.BooleanUtil;
 import ${jsonParam.basePackagePath}.common.util.Assert;
 </#if>
@@ -18,11 +17,11 @@ import cn.hutool.core.date.DateUtil;
 <#if tableInfo.pkLowerCamelName?has_content>
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.Collections;
 </#if>
 import java.util.List;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.collection.CollUtil;
 
 import com.github.pagehelper.PageHelper;
@@ -80,6 +79,9 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements ${tableInfo.upper
     public ${tableInfo.upperCamelCase} get${tableInfo.upperCamelCase}(${tableInfo.upperCamelCase}Condition condition) {
         List<${tableInfo.upperCamelCase}> list = ${tableInfo.lowerCamelCase}Mapper.get${tableInfo.upperCamelCase}(condition);
         if (CollUtil.isNotEmpty(list)) {
+            if (list.size() > 1) {
+                logger.warn("Expected one result (or null) to be returned by get${tableInfo.upperCamelCase}(), but found: {}", list.size());
+            }
             return list.get(0);
         }
         return null;
@@ -96,32 +98,21 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements ${tableInfo.upper
         if (CollUtil.isEmpty(idList)) {
             return Collections.emptyList();
         }
-        return ${tableInfo.lowerCamelCase}Mapper.find${tableInfo.upperCamelCase}ByIds(idList);
+        return ${tableInfo.lowerCamelCase}Mapper.find${tableInfo.upperCamelCase}ByIds(idList.stream().filter(StrUtil::isNotBlank).distinct().collect(Collectors.toList()));
     }
 
     @Override
     public Map<${tableInfo.pkJavaType}, ${tableInfo.upperCamelCase}> map${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList) {
         List<${tableInfo.upperCamelCase}> list = find${tableInfo.upperCamelCase}ByIds(idList);
-        return Optional.ofNullable(list).orElse(CollUtil.toList()).stream().collect(Collectors.toMap(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, Function.identity()));
+        return Optional.ofNullable(list).orElse(CollUtil.toList()).stream().collect(Collectors.toMap(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, ${tableInfo.upperCamelCase} -> ${tableInfo.upperCamelCase}));
     }
 </#if>
 <#if checkValueExistedFields?has_content>
-    <#list tableInfo.fieldInfos as fieldInfo>
-        <#list checkValueExistedFields as fieldName>
-            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
 
     @Override
-    public Boolean check${fieldInfo.upperCamelCase}Existed(${fieldInfo.javaType} ${fieldInfo.proName}<#if tableInfo.pkLowerCamelName?has_content>, ${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}</#if>) {
-                <#if !fieldInfo.isNotNull>
-        if (<#if fieldInfo.javaType == "String">StrUtil.isBlank(${fieldInfo.proName})<#else>${fieldInfo.proName} == null</#if>) {
-            return false;
-        }
-                </#if>
-        return BooleanUtil.toBoolean(this.baseMapper.check${fieldInfo.upperCamelCase}Existed(${fieldInfo.proName}<#if tableInfo.pkLowerCamelName?has_content>, ${tableInfo.pkLowerCamelName}</#if>));
+    public Boolean check${tableInfo.upperCamelCase}Existed(${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
+        return BooleanUtil.toBoolean(this.${tableInfo.lowerCamelCase}Mapper.check${tableInfo.upperCamelCase}Existed(${tableInfo.lowerCamelCase}));
     }
-            </#if>
-        </#list>
-    </#list>
 </#if>
 
     @Transactional(rollbackFor = Exception.class)
@@ -175,8 +166,11 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements ${tableInfo.upper
     <#list tableInfo.fieldInfos as fieldInfo>
         <#list checkValueExistedFields as fieldName>
             <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
-        Boolean ${fieldInfo.proName}Existed = check${fieldInfo.upperCamelCase}Existed(${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}()<#if tableInfo.pkLowerCamelName?has_content>, ${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}()</#if>);
-        Assert.isFalse(${fieldInfo.proName}Existed, "${fieldInfo.simpleRemark}已存在，请重新输入！");
+        ${fieldInfo.javaType} ${fieldInfo.proName} = ${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}();
+        if (<#if fieldInfo.isStringType>StrUtil.isNotBlank(${fieldInfo.proName})<#else>${fieldInfo.proName} != null</#if>) {
+            Boolean ${fieldInfo.proName}Existed = check${tableInfo.upperCamelCase}Existed(${tableInfo.upperCamelCase}.newInstance()<#if tableInfo.pkUpperCamelName?has_content>.set${tableInfo.pkUpperCamelName}(${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}())</#if>.set${fieldInfo.upperCamelCase}(${fieldInfo.proName}).build());
+            Assert.isFalse(${fieldInfo.proName}Existed, "${fieldInfo.simpleRemark}已存在，请重新输入！");
+        }
             </#if>
         </#list>
     </#list>

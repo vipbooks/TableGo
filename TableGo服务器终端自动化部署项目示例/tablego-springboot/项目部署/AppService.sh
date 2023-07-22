@@ -3,7 +3,7 @@
 
 #Welcome to use the TableGo tools
 #把Window中编辑产生的 \r 替换成空白：sed -i 's/\r$//' AppService.sh
-#给文件夹添加最高权限：chmod -R 777 项目目录
+#给文件夹添加权限：sudo chmod -R 755 目标目录   或   sudo chmod -R 777 目标目录
 #添加可执行权限：sudo chmod +x AppService.sh
 #使用nohup启动项目：nohup java -jar ${appName}.jar --spring.profiles.active=test > ${appName}.log 2>&1 &
 #使用setsid启动项目：setsid java -jar ${appName}.jar --spring.profiles.active=test > ${appName}.log 2>&1 &

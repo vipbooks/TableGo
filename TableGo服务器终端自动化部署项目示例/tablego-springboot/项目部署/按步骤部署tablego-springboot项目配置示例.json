@@ -55,7 +55,7 @@
           "command" : "${scriptPath}\\svn-update-project.bat ${projectPath}",
           "enable" : false
         }, {
-          "command" : "${scriptPath}\\maven-lifecycle.bat clean ${projectPath}",
+          "command" : "${scriptPath}\\maven-lifecycle.bat \"clean package\" ${projectPath}",
           "enable" : true
         } ]
       } ]
@@ -64,11 +64,6 @@
       "enable" : true,
       "remark" : "部署 tablego-admin 工程",
       "batchConfig" : [ {
-        "runtimeExec" : [ {
-          "command" : "${scriptPath}\\maven-lifecycle.bat package ${projectPath}\\tablego-admin",
-          "enable" : true
-        } ]
-      }, {
         "commands" : [ {
           "command" : "cd ${serverProjectPath}",
           "enable" : true
@@ -106,11 +101,6 @@
       "enable" : true,
       "remark" : "部署 tablego-basic 工程",
       "batchConfig" : [ {
-        "runtimeExec" : [ {
-          "command" : "${scriptPath}\\maven-lifecycle.bat package ${projectPath}\\tablego-basic",
-          "enable" : true
-        } ]
-      }, {
         "commands" : [ {
           "command" : "cd ${serverProjectPath}",
           "enable" : true
@@ -148,11 +138,6 @@
       "enable" : true,
       "remark" : "部署 tablego-iam 工程",
       "batchConfig" : [ {
-        "runtimeExec" : [ {
-          "command" : "${scriptPath}\\maven-lifecycle.bat package ${projectPath}\\tablego-iam",
-          "enable" : true
-        } ]
-      }, {
         "commands" : [ {
           "command" : "cd ${serverProjectPath}",
           "enable" : true

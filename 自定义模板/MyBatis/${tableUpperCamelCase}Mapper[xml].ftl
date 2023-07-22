@@ -1,6 +1,8 @@
 <#-- 用于生成Mapper.xml配置的自定义模板 -->
 <#-- 初始化表的查询字段 -->
 <#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields) />
+<#-- 初始化表的批量查询字段 -->
+<#assign batchSearchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.batchSearchFields) />
 <#-- 初始化需要生成检查字段值是否已存在的接口的字段 -->
 <#assign checkValueExistedFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.checkValueExistedFields) />
 <?xml version="1.0" encoding="UTF-8"?>
@@ -54,10 +56,24 @@
             AND <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName} &lt; ${"#"}{condition.${fieldInfo.proName}End}
         </if>
                     <#else>
-        <if test="condition.${fieldInfo.proName} != null<#if fieldInfo.javaType == "String"> and condition.${fieldInfo.proName} != ''</#if>">
-            AND <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName}<#if fieldInfo.javaType == "String" && fieldInfo.lowerColName?index_of("_id") == -1 && !fieldInfo.isDictType> LIKE CONCAT('%', ${"#"}{condition.${fieldInfo.proName}}, '%')<#else> = ${"#"}{condition.${fieldInfo.proName}}</#if>
+        <if test="condition.${fieldInfo.proName} != null<#if fieldInfo.isStringType> and condition.${fieldInfo.proName} != ''</#if>">
+            AND <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName}<#if fieldInfo.isStringType && fieldInfo.lowerColName?index_of("_id") == -1 && !fieldInfo.isDictType> LIKE CONCAT('%', ${"#"}{condition.${fieldInfo.proName}}, '%')<#else> = ${"#"}{condition.${fieldInfo.proName}}</#if>
         </if>
                     </#if>
+                </#if>
+            </#list>
+        </#list>
+    </#if>
+    <#if batchSearchFields?has_content>
+        <#list tableInfo.fieldInfos as fieldInfo>
+            <#list batchSearchFields as fieldName>
+                <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+        <if test="condition.${fieldInfo.proName}List != null and condition.${fieldInfo.proName}List.size > 0">
+            AND <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName} IN
+            <foreach collection="condition.${fieldInfo.proName}List" index="index" item="${fieldInfo.proName}" open="(" separator="," close=")">
+                ${"#"}{${fieldInfo.proName}}
+            </foreach>
+        </if>
                 </#if>
             </#list>
         </#list>
@@ -80,7 +96,7 @@
         <#list tableInfo.fieldInfos as fieldInfo>
             <#list searchFields as fieldName>
                 <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
-        <if test="condition.${fieldInfo.proName} != null<#if fieldInfo.javaType == "String"> and condition.${fieldInfo.proName} != ''</#if>">
+        <if test="condition.${fieldInfo.proName} != null<#if fieldInfo.isStringType> and condition.${fieldInfo.proName} != ''</#if>">
             AND <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName} = ${"#"}{condition.${fieldInfo.proName}}
         </if>
                 </#if>
@@ -116,26 +132,31 @@
     </select>
 </#if>
 <#if checkValueExistedFields?has_content>
+
+    <!-- 检查${tableInfo.simpleRemark}是否存在 -->
+    <select id="check${tableInfo.upperCamelCase}Existed" resultType="string">
+        SELECT 1 FROM ${tableInfo.tableName}
+        <where>
+        <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")>
+            AND DELETE_FLAG = '1'
+        </#if>
     <#list tableInfo.fieldInfos as fieldInfo>
         <#list checkValueExistedFields as fieldName>
             <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
-
-    <!-- 检查${fieldInfo.simpleRemark!fieldInfo.colName}是否存在 -->
-    <select id="check${fieldInfo.upperCamelCase}Existed" resultType="string">
-                <#if tableInfo.pkLowerCamelName?has_content>
-        SELECT 1 FROM ${tableInfo.tableName} WHERE<#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")> DELETE_FLAG = '1'</#if>
-            <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")>AND </#if>${fieldInfo.colName} = ${"#"}{${fieldInfo.proName}}
-            <if test="${tableInfo.pkLowerCamelName} != null<#if tableInfo.pkJavaType == "String"> and ${tableInfo.pkLowerCamelName} != ''</#if>">
-                AND ${tableInfo.pkColName} != ${"#"}{${tableInfo.pkLowerCamelName}}
+            <if test="${fieldInfo.proName} != null<#if fieldInfo.isStringType> and ${fieldInfo.proName} != ''</#if>">
+                AND ${fieldInfo.colName} = ${"#"}{${fieldInfo.proName}}
             </if>
-        LIMIT 1
-                <#else>
-        SELECT 1 FROM ${tableInfo.tableName} WHERE<#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")> DELETE_FLAG = '1' AND</#if> ${fieldInfo.colName} = ${"#"}{${fieldInfo.proName}} LIMIT 1
-                </#if>
-    </select>
             </#if>
         </#list>
     </#list>
+    <#if tableInfo.pkLowerCamelName?has_content>
+            <if test="${tableInfo.pkLowerCamelName} != null<#if tableInfo.pkIsStringType> and ${tableInfo.pkLowerCamelName} != ''</#if>">
+                AND ${tableInfo.pkColName} != ${"#"}{${tableInfo.pkLowerCamelName}}
+            </if>
+    </#if>
+        </where>
+        LIMIT 1
+    </select>
 </#if>
 
     <#if paramConfig.showMergeUpdateMark>
