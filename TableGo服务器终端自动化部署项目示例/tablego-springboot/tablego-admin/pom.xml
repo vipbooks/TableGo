@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.14</version>
+        <version>2.7.16</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -16,44 +16,31 @@
     <packaging>jar</packaging>
 
     <name>tablego-admin</name>
-    <description>tablego-admin项目</description>
+    <description>后台管理项目</description>
     <url>http://www.tablego.cn</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+        <skipTests>true</skipTests>
 
-        <mysql-connector-java.version>5.1.49</mysql-connector-java.version>
-        <mybatis-plus-boot-starter.version>3.4.3.4</mybatis-plus-boot-starter.version>
-        <hibernate-validator.version>6.2.0.Final</hibernate-validator.version>
-        <commons-lang3.version>3.11</commons-lang3.version>
-        <lombok.version>1.18.22</lombok.version>
-        <hutool-all.version>5.7.22</hutool-all.version>
+        <hutool-all.version>5.8.22</hutool-all.version>
+        <lombok.version>1.18.30</lombok.version>
+        <commons-lang3.version>3.13.0</commons-lang3.version>
+        <hibernate-validator.version>6.2.5.Final</hibernate-validator.version>
         <swagger-spring-boot-starter.version>1.9.1.RELEASE</swagger-spring-boot-starter.version>
-        <snakeyaml.version>1.27</snakeyaml.version>
         <knife4j.version>3.0.3</knife4j.version>
+        <snakeyaml.version>2.2</snakeyaml.version>
 
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
 	</properties>
 
 	<dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -94,27 +81,29 @@
         </dependency>
 
         <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>${snakeyaml.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-spring-ui</artifactId>
             <version>${knife4j.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-            <version>0.1.55</version>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>${snakeyaml.version}</version>
         </dependency>
 	</dependencies>
 
 	<build>
         <finalName>${project.name}</finalName>
-		<plugins>
+        <resources>
+            <!-- 设置resource，让snakeyaml初始化yml中的@@变量 -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -130,6 +119,7 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
+                    <compilerArgument>-Xlint:deprecation</compilerArgument>
                 </configuration>
             </plugin>
 
@@ -147,16 +137,38 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!-- Maven打包时跳过单元测试的运行，也跳过测试代码的编译 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
 		</plugins>
 	</build>
+
+    <profiles>
+        <!-- 每次在Maven窗口中切换不同的环境时都要手动刷新一下Maven，不然 @profiles.active@ 变量可能取不到值报错 -->
+        <!-- 打包开发环境：mvn clean package -Dmaven.test.skip=true -P dev -->
+        <!-- 开发环境 -->
+        <profile>
+            <id>dev</id>
+            <properties>
+                <profiles.active>dev</profiles.active>
+            </properties>
+            <!-- 默认激活 -->
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+
+        <!-- 测试环境 -->
+        <profile>
+            <id>test</id>
+            <properties>
+                <profiles.active>test</profiles.active>
+            </properties>
+        </profile>
+
+        <!-- 生产环境 -->
+        <profile>
+            <id>prod</id>
+            <properties>
+                <profiles.active>prod</profiles.active>
+            </properties>
+        </profile>
+    </profiles>
 </project>

@@ -9,6 +9,22 @@ tableInfo: ${JsonUtils.objToJson(tableInfo)}
 
 swaggerApiData: ${JsonUtils.objToJson(swaggerApiData)}
 
+tempParamMap: ${JsonUtils.objToJson(tempParamMap)}
+
+tempParamList: ${JsonUtils.objToJson(tempParamList)}
+
+sqlQueryData: ${JsonUtils.objToJson(sqlQueryData)}
+<#if sqlQueryData?has_content && sqlQueryData.dictList?has_content>
+
+dictList: ${JsonUtils.objToJson(sqlQueryData.dictList)}
+
+dictTypeGroup: ${FtlUtils.listGroup(sqlQueryData.dictList, "DICT_TYPE_CODE")}
+
+dictStrMap: ${FtlUtils.listToStrMap(sqlQueryData.dictList, "DICT_CODE", "DICT_NAME")}
+
+dictObjMap: ${FtlUtils.listToObjMap(sqlQueryData.dictList, "DICT_CODE")}
+</#if>
+
 <#if tableInfoList?has_content>
 tableInfoList: ${JsonUtils.objToJson(tableInfoList)}
 

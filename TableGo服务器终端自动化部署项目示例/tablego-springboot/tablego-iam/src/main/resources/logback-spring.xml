@@ -20,7 +20,7 @@
     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_HOME}/${FILE_NAME}.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_HOME}/%d{yyyy-MM, aux}/${FILE_NAME}_%d{yyyyMMdd}_%i.log.zip</fileNamePattern>
+            <fileNamePattern>${LOG_HOME}/%d{yyyy-MM, aux}/${FILE_NAME}_%d{yyyyMMdd}_%i.log.gz</fileNamePattern>
             <maxFileSize>50MB</maxFileSize>
             <maxHistory>20</maxHistory>
         </rollingPolicy>

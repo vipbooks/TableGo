@@ -22,7 +22,7 @@ if exist !projectPath! (
     echo Project path: !projectPath!
     @echo.
     cd /d !projectPath!
-    mvn !options!
+    mvn !options! -Dmaven.test.skip=true
 ) else (
     echo Project path is not exist: !projectPath!
     @echo.

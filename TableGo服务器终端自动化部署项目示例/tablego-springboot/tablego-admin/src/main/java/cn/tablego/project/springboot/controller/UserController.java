@@ -2,6 +2,7 @@ package cn.tablego.project.springboot.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 用户服务
- * 
+ *
  * @author bianj
  * @version 1.0.0 2021-09-26
  */
@@ -31,11 +32,13 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/user")
 public class UserController extends BaseController {
+    @Value(value = "${spring.application.name}")
+    private String appName;
 
     @ApiOperation(value = "分页查询用户列表")
     @PostMapping("/findUserPage")
     public Paging<User> findUserPage() {
-        log.info("分页查询用户列表");
+        log.info("[{}] [{}] 分页查询用户列表", getServerHost(), appName);
         return new Paging<>();
     }
 
@@ -43,7 +46,7 @@ public class UserController extends BaseController {
     @ApiImplicitParam(name = "id", value = "主键ID", required = true)
     @GetMapping(value = "/getUserById/{id}")
     public Result<User> getUserById(@PathVariable String id) {
-        log.info("根据主键ID查询用户: {}", id);
+        log.info("[{}] [{}] 根据主键ID查询用户: {}", getServerHost(), appName, id);
         User user = User.newInstance().setId(id);
         return Result.ok(user);
     }
@@ -52,7 +55,7 @@ public class UserController extends BaseController {
     @ApiImplicitParam(name = "user", value = "用户", required = true, dataType = "User", paramType = "body")
     @PostMapping("/addUser")
     public Result<User> addUser(@RequestBody @Valid User user) {
-        log.info("新增用户: {}", user);
+        log.info("[{}] [{}] 新增用户: {}", getServerHost(), appName, user);
         return Result.ok(user);
     }
 
@@ -60,7 +63,7 @@ public class UserController extends BaseController {
     @ApiImplicitParam(name = "user", value = "用户", required = true, dataType = "User", paramType = "body")
     @PutMapping(value = "/updateUser")
     public Result<Boolean> updateUser(@RequestBody User user) {
-        log.info("修改用户: {}", user);
+        log.info("[{}] [{}] 修改用户: {}", getServerHost(), appName, user);
         return Result.ok();
     }
 
@@ -68,7 +71,7 @@ public class UserController extends BaseController {
     @ApiImplicitParam(name = "id", value = "主键ID", required = true)
     @DeleteMapping(value = "/deleteUserById/{id}")
     public Result<Boolean> deleteUserById(@PathVariable String id) {
-        log.info("根据主键ID删除用户: {}", id);
+        log.info("[{}] [{}] 根据主键ID删除用户: {}", getServerHost(), appName, id);
         return Result.ok();
     }
 }
