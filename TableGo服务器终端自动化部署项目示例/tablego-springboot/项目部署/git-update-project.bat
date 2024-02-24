@@ -11,19 +11,19 @@ setlocal enabledelayedexpansion
 set projectPath=%1
 
 if not defined projectPath (
-    echo Project path cannot be empty.
+    echo Git project path cannot be empty.
     @echo.
     goto error
 )
 
 if exist !projectPath! (
-    echo Project path: !projectPath!
+    echo Git project path: !projectPath!
     @echo.
     cd /d !projectPath!
     git pull
     exit 0
 ) else (
-    echo Project path is not exist: !projectPath!
+    echo Git project path is not exist: !projectPath!
     @echo.
     goto error
 )

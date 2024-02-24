@@ -1,9 +1,10 @@
 package cn.tablego.project.springboot.common.model;
 
 import org.springframework.http.HttpStatus;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import cn.hutool.core.exceptions.ExceptionUtil;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import cn.hutool.core.exceptions.ExceptionUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -11,7 +12,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 响应参数
  * 
  * @author bianj
- * @version 1.0.0 2021-09-26
+ * @version 1.0.0 2022-09-26
  */
 @ApiModel(description = "响应参数")
 public class Result<T> extends OverrideBeanMethods {

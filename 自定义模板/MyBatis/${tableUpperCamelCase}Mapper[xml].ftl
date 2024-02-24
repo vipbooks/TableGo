@@ -1,14 +1,14 @@
 <#-- 用于生成Mapper.xml配置的自定义模板 -->
 <#-- 初始化表的查询字段 -->
-<#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields) />
+<#assign searchFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.searchFields) />
 <#-- 初始化表的批量查询字段 -->
-<#assign batchSearchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.batchSearchFields) />
+<#assign batchSearchFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.batchSearchFields) />
 <#-- 初始化需要生成检查字段值是否已存在的接口的字段 -->
-<#assign checkValueExistedFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.checkValueExistedFields) />
+<#assign checkValueExistedFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.checkValueExistedFields) />
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<!-- <#if StringUtils.isNotBlank(tableInfo.simpleRemark)>${tableInfo.simpleRemark}(${tableInfo.tableName})<#else>${tableInfo.tableName}</#if> -->
+<!-- ${FtlUtils.emptyToDefault(tableInfo.remark, "${tableInfo.remark}(${tableInfo.tableName})", tableInfo.tableName)} -->
 <mapper namespace="${jsonParam.basePackagePath}.mapper.${tableInfo.upperCamelCase}Mapper">
     <!-- 字段映射 -->
     <resultMap id="${tableInfo.lowerCamelCase}Map" type="${jsonParam.basePackagePath}.model.${tableInfo.upperCamelCase}"/>
@@ -25,7 +25,7 @@
     <#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.commonFields)>
     <!-- 表主要字段 -->
     <sql id="mainColumns">
-        <#assign pagingFieldInfoList = FtlUtils.tableFieldIgnore(tableInfo.fieldInfos, jsonParam.commonFields, paramConfig.customColumnThreshold)>
+        <#assign pagingFieldInfoList = FtlUtils.tableFieldIgnore(tableInfo.fieldInfos, jsonParam.commonFields, paramConfig.fieldGroup)>
         <#list pagingFieldInfoList as pagingFieldList>
         <#list pagingFieldList as fieldInfo><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName}<#if fieldInfo_has_next>, </#if></#list><#if pagingFieldList_has_next>,</#if>
         </#list>
@@ -45,41 +45,33 @@
     </#if>
         FROM ${tableInfo.tableName} <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias} </#if>WHERE <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>DELETE_FLAG = '1'<#else>1 = 1</#if>
     <#if searchFields?has_content>
-        <#list tableInfo.fieldInfos as fieldInfo>
-            <#list searchFields as fieldName>
-                <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
-                    <#if fieldInfo.javaType == "Date">
+        <#list searchFields as fieldInfo>
+            <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>
         <if test="condition.${fieldInfo.proName}Begin != null">
             AND <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName} &gt;= ${"#"}{condition.${fieldInfo.proName}Begin}
         </if>
         <if test="condition.${fieldInfo.proName}End != null">
             AND <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName} &lt; ${"#"}{condition.${fieldInfo.proName}End}
         </if>
-                    <#else>
+            <#else>
         <if test="condition.${fieldInfo.proName} != null<#if fieldInfo.isStringType> and condition.${fieldInfo.proName} != ''</#if>">
             AND <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName}<#if fieldInfo.isStringType && fieldInfo.lowerColName?index_of("_id") == -1 && !fieldInfo.isDictType> LIKE CONCAT('%', ${"#"}{condition.${fieldInfo.proName}}, '%')<#else> = ${"#"}{condition.${fieldInfo.proName}}</#if>
         </if>
-                    </#if>
-                </#if>
-            </#list>
+            </#if>
         </#list>
     </#if>
     <#if batchSearchFields?has_content>
-        <#list tableInfo.fieldInfos as fieldInfo>
-            <#list batchSearchFields as fieldName>
-                <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+        <#list batchSearchFields as fieldInfo>
         <if test="condition.${fieldInfo.proName}List != null and condition.${fieldInfo.proName}List.size > 0">
             AND <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName} IN
             <foreach collection="condition.${fieldInfo.proName}List" index="index" item="${fieldInfo.proName}" open="(" separator="," close=")">
                 ${"#"}{${fieldInfo.proName}}
             </foreach>
         </if>
-                </#if>
-            </#list>
         </#list>
     </#if>
-    <#if FtlUtils.fieldExisted(tableInfo, "CREATION_DATE")>
-        ORDER BY <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>CREATION_DATE DESC
+    <#if FtlUtils.fieldExisted(tableInfo, "CREATED_TIME")>
+        ORDER BY <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>CREATED_TIME DESC
     </#if>
     </select>
 
@@ -93,14 +85,12 @@
     </#if>
         FROM ${tableInfo.tableName} <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias} </#if>WHERE <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>DELETE_FLAG = '1'<#else>1 = 1</#if>
     <#if searchFields?has_content>
-        <#list tableInfo.fieldInfos as fieldInfo>
-            <#list searchFields as fieldName>
-                <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+        <#list searchFields as fieldInfo>
+            <#if !fieldInfo.isDateType>
         <if test="condition.${fieldInfo.proName} != null<#if fieldInfo.isStringType> and condition.${fieldInfo.proName} != ''</#if>">
             AND <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName} = ${"#"}{condition.${fieldInfo.proName}}
         </if>
-                </#if>
-            </#list>
+            </#if>
         </#list>
     </#if>
     </select>
@@ -117,7 +107,7 @@
         FROM ${tableInfo.tableName} <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias} </#if>WHERE <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${tableInfo.pkColName} = ${"#"}{${tableInfo.pkLowerCamelName}}<#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")> AND <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>DELETE_FLAG = '1'</#if>
     </select>
 
-    <!-- 根据主键ID列表查询${tableInfo.simpleRemark}列表 -->
+    <!-- 根据主键ID列表批量查询${tableInfo.simpleRemark} -->
     <select id="find${tableInfo.upperCamelCase}ByIds" resultMap="${tableInfo.lowerCamelCase}Map">
         SELECT
     <#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.commonFields)>
@@ -140,14 +130,10 @@
         <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")>
             AND DELETE_FLAG = '1'
         </#if>
-    <#list tableInfo.fieldInfos as fieldInfo>
-        <#list checkValueExistedFields as fieldName>
-            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+    <#list checkValueExistedFields as fieldInfo>
             <if test="${fieldInfo.proName} != null<#if fieldInfo.isStringType> and ${fieldInfo.proName} != ''</#if>">
                 AND ${fieldInfo.colName} = ${"#"}{${fieldInfo.proName}}
             </if>
-            </#if>
-        </#list>
     </#list>
     <#if tableInfo.pkLowerCamelName?has_content>
             <if test="${tableInfo.pkLowerCamelName} != null<#if tableInfo.pkIsStringType> and ${tableInfo.pkLowerCamelName} != ''</#if>">
@@ -217,8 +203,8 @@
         UPDATE ${tableInfo.tableName}
         <set>
             DELETE_FLAG = '0',
-            LAST_UPDATE_DATE = NOW(),
-            <if test="userId != null">LAST_UPDATED_BY = ${"#"}{userId}</if>
+            LAST_UPDATED_TIME = NOW(),
+            <if test="userId != null and userId != ''">LAST_UPDATED_BY = ${"#"}{userId}</if>
         </set>
         WHERE DELETE_FLAG = '1' AND ${tableInfo.pkColName} IN
         <foreach collection="idList" index="index" item="${tableInfo.pkLowerCamelName}" open="(" separator="," close=")">

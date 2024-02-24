@@ -13,7 +13,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import cn.hutool.core.lang.Console;
 import ${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase};
-import ${jsonParam.basePackagePath}.model.condition.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Condition;
+import ${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>condition.${tableInfo.upperCamelCase}Condition;
 import ${jsonParam.basePackagePath}.service.<#if jsonParam.moduleName??>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Service;
 
 <#if tableInfo.pkIsNumericType>
@@ -27,7 +27,7 @@ import ${jsonParam.basePackagePath}.service.<#if jsonParam.moduleName??>${jsonPa
     <#if tableInfo.pkJavaType == "Long">
         <#assign id = id + "L" />
     </#if>
-<#elseif tableInfo.pkJavaType == "String">
+<#elseif tableInfo.pkIsStringType>
     <#if tableInfo.pkColumnSize &gt; 6>
         <#assign id = StringUtils.join("\"", FtlUtils.getRandomStringAz(6), "\"") />
     <#elseif tableInfo.pkColumnSize &gt; 1>

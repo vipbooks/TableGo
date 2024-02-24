@@ -1,13 +1,13 @@
 <#-- 用于生成编辑页面的自定义模板 -->
 <#-- 初始化Form表单字段 -->
-<#assign formFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.formFields) />
+<#assign formFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.formFields) />
 <#-- 如果配置的表单字段为空则取表字段的前几个字段 -->
-<#if !formFields?has_content><#assign formFields = FtlUtils.subListContainsFilter(tableInfo.fieldNameList, 0, 4, "ID") /></#if>
+<#if !formFields?has_content><#assign formFields = FtlUtils.subFieldInfosFilter(tableInfo.fieldInfos, 0, 4, "ID") /></#if>
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:include="include :: header('修改${tableInfo.simpleRemark}')" />
-<#if FtlUtils.fieldTypeExisted(tableInfo, "isMultiLineType")>
+<#if FtlUtils.fieldTypeExisted(tableInfo, "isRichTextType")>
     <th:block th:include="include :: summernote-css" />
 </#if>
 </head>
@@ -16,14 +16,12 @@
         <form class="form-horizontal m" id="form-${tableInfo.lowerCamelCase}-edit" th:object="${"$"}{${tableInfo.lowerCamelCase}}">
             <input type="hidden" id="${tableInfo.pkLowerCamelName}Edit" name="${tableInfo.pkLowerCamelName}" th:field="*{${tableInfo.pkLowerCamelName}}"/>
         <#if formFields?has_content>
-            <#list tableInfo.fieldInfos as fieldInfo>
-                <#list formFields as fieldName>
-                    <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+            <#list formFields as fieldInfo>
             <div class="form-group">
                 <label class="col-sm-3 control-label<#if fieldInfo.isNotNull> is-required</#if>">${fieldInfo.simpleRemark}：</label>
                 <div class="col-sm-8">
                         <#if fieldInfo.isDictType>
-                    <select id="${fieldInfo.proName}Edit" name="${fieldInfo.proName}" th:with="type=${"$"}{@dict.getType('${fieldInfo.proName}')}" class="form-control m-b"<#if fieldInfo.isNotNull> required</#if>>
+                    <select id="${fieldInfo.proName}Edit" name="${fieldInfo.proName}" th:with="type=${"$"}{@dict.getType('${fieldInfo.lowerColName}')}" class="form-control m-b"<#if fieldInfo.isNotNull> required</#if>>
                         <option value="">请选择</option>
                         <option th:each="dict : ${"$"}{type}" th:text="${"$"}{dict.dictLabel}" th:value="${"$"}{dict.dictValue}" th:field="*{${fieldInfo.proName}}"></option>
                     </select>
@@ -32,8 +30,10 @@
                         <#elseif fieldInfo.isNumericType>
                     <input type="number" id="${fieldInfo.proName}Edit" name="${fieldInfo.proName}" th:field="*{${fieldInfo.proName}}" placeholder="${fieldInfo.simpleRemark}" class="form-control"/>
                         <#elseif fieldInfo.isMultiLineType>
-                            <#assign hasMultiLineType = true />
-                            <#assign multiLineField = fieldInfo.proName />
+                    <textarea id="${fieldInfo.proName}Edit" name="${fieldInfo.proName}" maxlength="${fieldInfo.length}" th:field="*{${fieldInfo.proName}}" placeholder="${fieldInfo.simpleRemark}" class="form-control" rows="3"></textarea>
+                        <#elseif fieldInfo.isRichTextType>
+                            <#assign hasRichTextType = true />
+                            <#assign richTextField = fieldInfo.proName />
                     <input type="hidden" id="${fieldInfo.proName}Edit" name="${fieldInfo.proName}" th:field="*{${fieldInfo.proName}}"/>
                     <div id="${fieldInfo.proName}Editor" class="summernote"></div>
                         <#else>
@@ -41,21 +41,19 @@
                     </#if>
                 </div>
             </div>
-                    </#if>
-                </#list>
             </#list>
         </#if>
         </form>
     </div>
     <th:block th:include="include :: footer" />
-<#if hasMultiLineType??>
+<#if hasRichTextType??>
     <th:block th:include="include :: summernote-js" />
 </#if>
 
     <script type="text/javascript">
         var prefix = ctx + "${jsonParam.moduleName}/${tableInfo.lowerCamelCase}";
 
-<#if hasMultiLineType??>
+<#if hasRichTextType??>
         $(function () {
             $('#form-${tableInfo.lowerCamelCase}-edit').validate({
                 focusCleanup: true
@@ -73,7 +71,7 @@
                     }
                 }
             });
-			var content = $("#${multiLineField}Edit").val();
+			var content = $("#${richTextField}Edit").val();
 		    $('.summernote').summernote('code', content);
         });
 
@@ -104,9 +102,9 @@
 </#if>
         function submitHandler() {
             if ($.validate.form()) {
-<#if hasMultiLineType??>
+<#if hasRichTextType??>
                 var content = $('.summernote').summernote('code');
-                $('#${multiLineField}Edit').val(content);
+                $('#${richTextField}Edit').val(content);
 </#if>
                 $.operate.save(prefix + '/edit', $('#form-${tableInfo.lowerCamelCase}-edit').serialize());
             }

@@ -1,17 +1,17 @@
 <#-- 用于生成Service接口实现的自定义模板 -->
 <#-- 初始化表的查询字段 -->
-<#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields) />
+<#assign searchFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.searchFields) />
 <#-- 初始化查询字段中的日期字段 -->
-<#assign dateFieldInfo = FtlUtils.getFieldByFieldTypeAtList(tableInfo, searchFields, "Date") />
+<#assign dateFieldInfo = FtlUtils.getFieldInfoByType(searchFields, "Date") />
 <#-- 初始化需要生成检查字段值是否已存在的接口的字段 -->
-<#assign checkValueExistedFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.checkValueExistedFields) />
+<#assign checkValueExistedFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.checkValueExistedFields) />
 package ${jsonParam.packagePath}
 
 <#if checkValueExistedFields?has_content>
 import cn.hutool.core.util.BooleanUtil;
 import ${jsonParam.basePackagePath}.common.util.Assert;
 </#if>
-<#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFields, "Date")>
+<#if FtlUtils.fieldTypeExisted(searchFields, "Date")>
 import cn.hutool.core.date.DateUtil;
 </#if>
 <#if tableInfo.pkLowerCamelName?has_content>
@@ -40,10 +40,10 @@ import ${jsonParam.basePackagePath}.mapper.${tableInfo.upperCamelCase}Mapper;
 import ${jsonParam.basePackagePath}.service.${tableInfo.upperCamelCase}Service;
 
 /**
- * ${tableInfo.simpleRemark}Service接口实现
+ * ${FtlUtils.emptyToDefault(tableInfo.simpleRemark, "${tableInfo.tableName}表")}Service接口实现
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 @Service
 @Transactional(readOnly = true)
@@ -58,11 +58,10 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements ${tableInfo.upper
         Page<${tableInfo.upperCamelCase}> page = condition.buildPage();
     <#if dateFieldInfo?has_content>
 
-        if (condition.get${fieldInfo.upperCamelCase}End() != null) {
-            condition.set${fieldInfo.upperCamelCase}End(DateUtil.endOfDay(condition.get${fieldInfo.upperCamelCase}End()));
+        if (condition.get${dateFieldInfo.upperCamelCase}End() != null) {
+            condition.set${dateFieldInfo.upperCamelCase}End(DateUtil.endOfDay(condition.get${dateFieldInfo.upperCamelCase}End()));
         }
     </#if>
-
         PageHelper.startPage(page.getPageNum(), page.getPageSize());
         List<${tableInfo.upperCamelCase}> list = ${tableInfo.lowerCamelCase}Mapper.find${tableInfo.upperCamelCase}List(condition);
         PageInfo<${tableInfo.upperCamelCase}> pageInfo = new PageInfo<>(list);
@@ -142,7 +141,7 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements ${tableInfo.upper
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Boolean delete${tableInfo.upperCamelCase}ByIds(List<String> idList) {
+    public Boolean delete${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList) {
         return ${tableInfo.upperCamelCase}Mapper.delete${tableInfo.upperCamelCase}ByIds(idList);
     }
     <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")>
@@ -163,16 +162,12 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements ${tableInfo.upper
      * @param ${tableInfo.lowerCamelCase} ${tableInfo.simpleRemark}
      */
     private void check${tableInfo.upperCamelCase}Valid(${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
-    <#list tableInfo.fieldInfos as fieldInfo>
-        <#list checkValueExistedFields as fieldName>
-            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+    <#list checkValueExistedFields as fieldInfo>
         ${fieldInfo.javaType} ${fieldInfo.proName} = ${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}();
         if (<#if fieldInfo.isStringType>StrUtil.isNotBlank(${fieldInfo.proName})<#else>${fieldInfo.proName} != null</#if>) {
-            Boolean ${fieldInfo.proName}Existed = check${tableInfo.upperCamelCase}Existed(${tableInfo.upperCamelCase}.newInstance()<#if tableInfo.pkUpperCamelName?has_content>.set${tableInfo.pkUpperCamelName}(${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}())</#if>.set${fieldInfo.upperCamelCase}(${fieldInfo.proName}).build());
+            Boolean ${fieldInfo.proName}Existed = check${tableInfo.upperCamelCase}Existed(${tableInfo.upperCamelCase}.newInstance()<#if tableInfo.pkUpperCamelName?has_content>.set${tableInfo.pkUpperCamelName}(${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}())</#if>.set${fieldInfo.upperCamelCase}(${fieldInfo.proName}));
             Assert.isFalse(${fieldInfo.proName}Existed, "${fieldInfo.simpleRemark}已存在，请重新输入！");
         }
-            </#if>
-        </#list>
     </#list>
     }
 </#if>

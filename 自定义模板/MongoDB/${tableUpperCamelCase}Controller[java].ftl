@@ -1,7 +1,7 @@
 <#-- 用于生成Controller的自定义模板 -->
 package ${jsonParam.packagePath}
 
-<#if FtlUtils.fieldSpecifyType(tableInfo, tableInfo.pkLowerCamelName, "String")>
+<#if tableInfo.pkIsStringType>
 import org.apache.commons.lang3.StringUtils;
 </#if>
 import java.util.List;
@@ -41,7 +41,7 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     @ApiOperation(value = "分页查询${tableInfo.simpleRemark}列表")
     @ApiImplicitParam(name = "condition", value = "${tableInfo.simpleRemark}查询条件", required = true, dataType = "${tableInfo.upperCamelCase}Condition", paramType = "body")
     @PostMapping("/list${tableInfo.upperCamelCase}Page")
-    public PageQueryResult<${tableInfo.upperCamelCase}> list${tableInfo.upperCamelCase}Page(@RequestBody ${tableInfo.upperCamelCase}Condition condition) {
+    public Paging<${tableInfo.upperCamelCase}> list${tableInfo.upperCamelCase}Page(@RequestBody ${tableInfo.upperCamelCase}Condition condition) {
         Page<${tableInfo.upperCamelCase}> page = ${tableInfo.lowerCamelCase}Service.list${tableInfo.upperCamelCase}Page(condition);
         return new Paging<>(condition.getPageSize(), condition.getPage(), page.getTotalElements(), page.getTotalPages(), page.getContent());
     }
@@ -50,7 +50,7 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     @ApiImplicitParam(name = "${tableInfo.pkLowerCamelName}", value = "${tableInfo.pkRemark}", required = true, dataType = "${tableInfo.pkJavaType?uncap_first}", paramType = "query")
     @PostMapping("/get${tableInfo.upperCamelCase}ById")
     public ${tableInfo.upperCamelCase} get${tableInfo.upperCamelCase}ById(${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}) {
-        if (<#if tableInfo.pkJavaType == "String">StringUtils.isBlank(${tableInfo.pkLowerCamelName})<#else>${tableInfo.pkLowerCamelName} == null</#if>) {
+        if (<#if tableInfo.pkIsStringType>StringUtils.isBlank(${tableInfo.pkLowerCamelName})<#else>${tableInfo.pkLowerCamelName} == null</#if>) {
             return null;
         }
         return ${tableInfo.lowerCamelCase}Service.get${tableInfo.upperCamelCase}ById(${tableInfo.pkLowerCamelName});
@@ -74,7 +74,7 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     @ApiImplicitParam(name = "${tableInfo.pkLowerCamelName}", value = "${tableInfo.pkRemark}", required = true, dataType = "${tableInfo.pkJavaType?uncap_first}", paramType = "query")
     @PostMapping("/delete${tableInfo.upperCamelCase}ById")
     public Boolean delete${tableInfo.upperCamelCase}ById(${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}) {
-        if (<#if tableInfo.pkJavaType == "String">StringUtils.isBlank(${tableInfo.pkLowerCamelName})<#else>${tableInfo.pkLowerCamelName} == null</#if>) {
+        if (<#if tableInfo.pkIsStringType>StringUtils.isBlank(${tableInfo.pkLowerCamelName})<#else>${tableInfo.pkLowerCamelName} == null</#if>) {
             return false;
         }
         return ${tableInfo.lowerCamelCase}Service.delete${tableInfo.upperCamelCase}ById(${tableInfo.pkLowerCamelName});

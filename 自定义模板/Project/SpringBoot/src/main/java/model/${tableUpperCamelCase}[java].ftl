@@ -24,10 +24,10 @@ import com.baomidou.mybatisplus.annotation.SqlCondition;
 <#if tableInfo.fieldInfos?has_content>
     <#list tableInfo.fieldInfos as fieldInfo>
         <#if !fieldInfo.primaryKey && fieldInfo.isNotNull>
-            <#if !importNotBlank && fieldInfo.javaType == "String">
+            <#if !importNotBlank && fieldInfo.isStringType>
                 <#assign importNotBlank = true />
 import javax.validation.constraints.NotBlank;
-            <#elseif !importNotNull && fieldInfo.javaType != "String">
+            <#elseif !importNotNull && !fieldInfo.isStringType>
                 <#assign importNotNull = true />
 import javax.validation.constraints.NotNull;
             </#if>
@@ -40,7 +40,6 @@ import io.swagger.annotations.ApiModelProperty;
 </#if>
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 <#if tableInfo.fieldInfos?has_content>
 import lombok.AllArgsConstructor;
@@ -87,14 +86,13 @@ public class ${tableInfo.upperCamelCase} extends <#if FtlUtils.fieldAllExisted(t
 
     /** ${fieldInfo.remark} */
         <#if jsonParam.enableSwagger>
-    @ApiModelProperty(value = "${fieldInfo.remark}", position = ${fieldInfo_index + 1})
+    @ApiModelProperty(value = "${fieldInfo.remark}")
         </#if>
-    @JsonProperty(index = ${fieldInfo_index + 1})
     <#if !fieldInfo.primaryKey && fieldInfo.isNotNull>
-        <#if fieldInfo.javaType == "String">
-    @NotBlank(message = "${fieldInfo.simpleRemark!fieldInfo.proName}不能为空！")
+        <#if fieldInfo.isStringType>
+    @NotBlank(message = "${fieldInfo.simpleRemark!fieldInfo.proName}不能为空")
         <#else>
-    @NotNull(message = "${fieldInfo.simpleRemark!fieldInfo.proName}不能为空！")
+    @NotNull(message = "${fieldInfo.simpleRemark!fieldInfo.proName}不能为空")
         </#if>
     </#if>
     <#if fieldInfo.primaryKey>

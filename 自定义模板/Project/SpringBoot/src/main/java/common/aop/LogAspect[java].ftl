@@ -13,8 +13,8 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,12 +28,17 @@ import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentInfo;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 <#if jsonParam.enableSwagger>
 import io.swagger.annotations.ApiOperation;
 </#if>
 
-import ${jsonParam.basePackagePath}.common.model.UserRequestInfo;
 import ${jsonParam.basePackagePath}.common.util.RequestUtils;
+import ${jsonParam.basePackagePath}.common.exception.BizException;
+import ${jsonParam.basePackagePath}.common.model.UserRequestInfo;
+import ${jsonParam.basePackagePath}.common.model.Result;
 
 /**
  * 日志切面拦截器
@@ -156,22 +161,44 @@ public class LogAspect {
 
         Instant begin = Instant.now();
         try {
-           // 执行目标方法并获取返回结果
-           Object result = joinPoint.proceed();
-
-            Instant end = Instant.now();
-            Long timeCost = Duration.between(begin, end).toMillis();
-            userRequestInfo.setTimeCost(timeCost);
-
-            logger.info("UserRequestInfo: {}", JSONUtil.toJsonStr(userRequestInfo));
+            // 执行目标方法并获取响应数据
+            Object result = joinPoint.proceed();
+            outUserRequestInfo(userRequestInfo, begin, result, null);
             return result;
-        } catch (Exception e) {
-            Instant end = Instant.now();
-            Long timeCost = Duration.between(begin, end).toMillis();
-            userRequestInfo.setTimeCost(timeCost).setErrorMsg(e.getMessage());
+        } catch (Throwable t) {
+            outUserRequestInfo(userRequestInfo, begin, null, t);
+            throw t;
+        }
+    }
 
-            logger.error("UserRequestInfo: {}", JSONUtil.toJsonStr(userRequestInfo));
-            throw e;
+    /**
+     * 输出用户请求信息
+     *
+     * @param userRequestInfo 用户请求信息
+     * @param begin           开始时间
+     * @param result          响应数据
+     * @param t               Throwable
+     */
+    private void outUserRequestInfo(UserRequestInfo userRequestInfo, Instant begin, Object result, Throwable t) {
+        Instant end = Instant.now();
+        Long timeCost = Duration.between(begin, end).toMillis();
+        userRequestInfo.setTimeCost(timeCost);
+        if (t != null) {
+            if (t instanceof BizException) {
+                userRequestInfo.setStatus(HttpStatus.PRECONDITION_FAILED.value()).setErrorMsg(t.getMessage());
+                logger.warn("UserRequestInfo: {}", JSONUtil.toJsonStr(userRequestInfo));
+            } else {
+                userRequestInfo.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value()).setErrorMsg(t.getMessage());
+                logger.error("UserRequestInfo: {}", JSONUtil.toJsonStr(userRequestInfo));
+            }
+        } else {
+            if (result instanceof Result) {
+                userRequestInfo.setStatus(((Result<?>) result).getCode());
+            }
+            if (userRequestInfo.getStatus() == null) {
+                userRequestInfo.setStatus(HttpStatus.OK.value());
+            }
+            logger.info("UserRequestInfo: {}", JSONUtil.toJsonStr(userRequestInfo));
         }
     }
 }

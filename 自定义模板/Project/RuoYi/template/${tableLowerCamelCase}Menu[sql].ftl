@@ -1,6 +1,6 @@
 <#-- 用于生成菜单和按钮SQL的自定义模板 -->
-<#-- 初始化需要导出Excel的字段 -->
-<#assign exportFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.exportFields) />
+<#-- 初始化需要导入导出Excel的字段 -->
+<#assign importAndExportFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.importAndExportFields) />
 -- <#if StringUtils.isNotBlank(tableInfo.remark)>${tableInfo.remark}(${tableInfo.tableName})<#else>${tableInfo.tableName}</#if>菜单和按钮 SQL
 
 -- 菜单 SQL
@@ -22,8 +22,11 @@ values('${tableInfo.simpleRemark!tableInfo.tableName}修改', @parentId, '3', '#
 
 insert into sys_menu (menu_name, parent_id, order_num, url, menu_type, visible, perms, icon, create_by, create_time, update_by, update_time, remark)
 values('${tableInfo.simpleRemark!tableInfo.tableName}删除', @parentId, '4', '#', 'F', '0', '${jsonParam.moduleName}:${tableInfo.lowerCamelCase}:remove', '#', 'admin', sysdate(), null, null, null);
-<#if FtlUtils.fieldAtListExisted(tableInfo, exportFields)>
+<#if FtlUtils.fieldAtListExisted(tableInfo, importAndExportFields)>
 
 insert into sys_menu (menu_name, parent_id, order_num, url, menu_type, visible, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('${tableInfo.simpleRemark!tableInfo.tableName}导出', @parentId, '5',  '#',  'F', '0', '${jsonParam.moduleName}:${tableInfo.lowerCamelCase}:export', '#', 'admin', sysdate(), null, null, null);
+values('${tableInfo.simpleRemark!tableInfo.tableName}导入', @parentId, '5',  '#',  'F', '0', '${jsonParam.moduleName}:${tableInfo.lowerCamelCase}:import', '#', 'admin', sysdate(), null, null, null);
+
+insert into sys_menu (menu_name, parent_id, order_num, url, menu_type, visible, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('${tableInfo.simpleRemark!tableInfo.tableName}导出', @parentId, '6',  '#',  'F', '0', '${jsonParam.moduleName}:${tableInfo.lowerCamelCase}:export', '#', 'admin', sysdate(), null, null, null);
 </#if>

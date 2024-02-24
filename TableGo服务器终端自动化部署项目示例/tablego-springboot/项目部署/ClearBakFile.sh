@@ -1,5 +1,5 @@
 #!/bin/bash
-#按参数自动清除旧备份文件的脚本(按备份时间保留最新的几个文件)
+#按参数自动清理旧备份文件的脚本(按备份时间保留最新的几个文件)
 
 #Welcome to use the TableGo tools
 #把Window中编辑产生的 \r 替换成空白：sed -i 's/\r$//' ClearBakFiles.sh
@@ -10,8 +10,9 @@ bakDir=/bak
 fileExt=jar
 saveFileNum=10
 
-#删除旧的备份文件
+#清理旧备份文件
 delBakFile() {
+    echo 自动清理旧备份文件开始
     #检查 bakDir 目录是否存在
     if [ ! -d ${bakDir} ]; then
         echo "${bakDir} 目录不存在"
@@ -36,6 +37,7 @@ delBakFile() {
     else
         echo 已有备份文件数未超过保存备份文件数量不予清理
     fi
+    echo 自动清理旧备份文件结束
 }
 
 #使用说明，用来提示输入参数
@@ -76,5 +78,5 @@ while getopts ":d:e:n:" OPT; do
           ;;
     esac
 done
-#删除旧的备份文件
+#清理旧备份文件
 delBakFile

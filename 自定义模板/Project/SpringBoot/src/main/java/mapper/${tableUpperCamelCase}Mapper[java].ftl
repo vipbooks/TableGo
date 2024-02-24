@@ -6,7 +6,7 @@ package ${jsonParam.packagePath}
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import ${jsonParam.basePackagePath}.model.condition.<#if jsonParam.moduleName?has_content>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Condition;
+import ${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName?has_content>${jsonParam.moduleName}.</#if>condition.${tableInfo.upperCamelCase}Condition;
 </#if>
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 

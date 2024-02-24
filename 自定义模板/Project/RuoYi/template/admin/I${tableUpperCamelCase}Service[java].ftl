@@ -4,13 +4,14 @@
 package ${jsonParam.packagePath}
 
 import java.util.List;
+import java.util.Map;
 import ${jsonParam.basePackagePath}.${jsonParam.moduleName}.domain.${tableInfo.upperCamelCase};
 
 /**
- * ${tableInfo.simpleRemark}Service接口
+ * ${FtlUtils.emptyToDefault(tableInfo.simpleRemark, "${tableInfo.tableName}表")}Service接口
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 public interface I${tableInfo.upperCamelCase}Service {
     /**
@@ -28,6 +29,32 @@ public interface I${tableInfo.upperCamelCase}Service {
      * @return ${tableInfo.simpleRemark}
      */
     ${tableInfo.upperCamelCase} select${tableInfo.upperCamelCase}ById(${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName});
+
+    /**
+     * 根据主键ID列表查询${tableInfo.simpleRemark}列表
+     *
+     * @param idList ${tableInfo.pkSimpleRemark}列表
+     * @return 列表数据
+     */
+    List<${tableInfo.upperCamelCase}> select${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList);
+
+    /**
+     * 根据主键ID列表查询${tableInfo.simpleRemark}集合
+     *
+     * @param idList ${tableInfo.pkSimpleRemark}列表
+     * @return Map<${tableInfo.pkSimpleRemark}, ${tableInfo.simpleRemark}>
+     */
+    Map<${tableInfo.pkJavaType}, ${tableInfo.upperCamelCase}> map${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList);
+<#if checkValueExistedFields?has_content>
+
+    /**
+     * 检查${tableInfo.simpleRemark}是否存在
+     *
+     * @param ${tableInfo.lowerCamelCase} ${tableInfo.simpleRemark}
+     * @return 是否存在
+     */
+    Boolean check${tableInfo.upperCamelCase}Existed(${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase});
+</#if>
 
     /**
      * 新增${tableInfo.simpleRemark}
@@ -56,27 +83,18 @@ public interface I${tableInfo.upperCamelCase}Service {
     /**
      * 批量删除${tableInfo.simpleRemark}
      *
-     * @param ids ${tableInfo.pkRemark}，多个用英文逗号分隔
+     * @param idList ${tableInfo.pkRemark}列表
      * @return 结果数据
      */
-    int delete${tableInfo.upperCamelCase}ByIds(String ids);
-<#if checkValueExistedFields?has_content>
-    <#list tableInfo.fieldInfos as fieldInfo>
-        <#list checkValueExistedFields as fieldName>
-            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+    int delete${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList);
+    <#if FtlUtils.fieldExisted(tableInfo, "DEL_FLAG")>
 
     /**
-     * 检查${fieldInfo.simpleRemark!fieldInfo.colName}是否存在
+     * 批量逻辑删除${tableInfo.simpleRemark}
      *
-     * @param ${fieldInfo.proName} ${fieldInfo.simpleRemark}
-                <#if tableInfo.pkLowerCamelName?has_content>
-     * @param ${tableInfo.pkLowerCamelName} ${tableInfo.pkRemark}(排除)
-                </#if>
-     * @return 是否存在
+     * @param idList ${tableInfo.pkRemark}列表
+     * @return 结果数据
      */
-    Boolean check${fieldInfo.upperCamelCase}Existed(${fieldInfo.javaType} ${fieldInfo.proName}<#if tableInfo.pkLowerCamelName?has_content>, ${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}</#if>);
-            </#if>
-        </#list>
-    </#list>
-</#if>
+    int delete${tableInfo.upperCamelCase}LogicByIds(List<${tableInfo.pkJavaType}> idList);
+    </#if>
 }

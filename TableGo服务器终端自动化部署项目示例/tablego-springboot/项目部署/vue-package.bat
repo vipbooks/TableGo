@@ -8,23 +8,24 @@ set options=%~1
 set projectPath=%~2
 
 if not defined options (
-    echo Maven options cannot be empty.
+    echo NPM options cannot be empty.
     @echo.
     goto error
 )
 if not defined projectPath (
-    echo Project path cannot be empty.
+    echo Vue project path cannot be empty.
     @echo.
     goto error
 )
 
 if exist !projectPath! (
-    echo Project path: !projectPath!
+    echo NPM options: ${options}
+    echo Vue project path: !projectPath!
     @echo.
     cd /d !projectPath!
     npm run !options!
 ) else (
-    echo Project path is not exist: !projectPath!
+    echo Vue project path is not exist: !projectPath!
     @echo.
     goto error
 )

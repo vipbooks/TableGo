@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cn.tablego.project.springboot.common.controller.BaseController;
 import cn.tablego.project.springboot.common.model.Paging;
+import cn.tablego.project.springboot.common.model.PagingCondition;
 import cn.tablego.project.springboot.common.model.Result;
 import cn.tablego.project.springboot.model.SysParam;
 import io.swagger.annotations.Api;
@@ -25,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
  * 系统参数服务
  *
  * @author bianj
- * @version 1.0.0 2021-07-18
+ * @version 1.0.0 2022-08-18
  */
 @Slf4j
 @Api(tags = "系统参数服务")
@@ -36,9 +37,10 @@ public class SysParamController extends BaseController {
     private String appName;
 
     @ApiOperation(value = "分页查询系统参数列表")
+    @ApiImplicitParam(name = "condition", value = "分页查询请求参数", required = true, dataType = "PagingCondition", paramType = "body")
     @PostMapping("/findSysParamPage")
-    public Paging<SysParam> findSysParamPage() {
-        log.info("[{}] [{}] 分页查询系统参数列表", getServerHost(), appName);
+    public Paging<SysParam> findSysParamPage(@RequestBody PagingCondition condition) {
+        log.info("[{}] [{}] 分页查询系统参数列表: {}", getServerHost(), appName, condition);
         return new Paging<>();
     }
 

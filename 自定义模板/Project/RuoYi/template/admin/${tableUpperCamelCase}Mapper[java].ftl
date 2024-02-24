@@ -8,10 +8,10 @@ import org.apache.ibatis.annotations.Param;
 import ${jsonParam.basePackagePath}.${jsonParam.moduleName}.domain.${tableInfo.upperCamelCase};
 
 /**
- * ${tableInfo.simpleRemark}Mapper接口
+ * ${FtlUtils.emptyToDefault(tableInfo.simpleRemark, "${tableInfo.tableName}表")}Mapper接口
  * 
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 public interface ${tableInfo.upperCamelCase}Mapper {
     /**
@@ -23,12 +23,30 @@ public interface ${tableInfo.upperCamelCase}Mapper {
     List<${tableInfo.upperCamelCase}> select${tableInfo.upperCamelCase}List(${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase});
 
     /**
-     * 查询${tableInfo.simpleRemark}
+     * 根据主键ID查询${tableInfo.simpleRemark}
      *
      * @param ${tableInfo.pkLowerCamelName} ${tableInfo.pkRemark}
      * @return ${tableInfo.simpleRemark}
      */
     ${tableInfo.upperCamelCase} select${tableInfo.upperCamelCase}ById(@Param("${tableInfo.pkLowerCamelName}") ${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName});
+
+    /**
+     * 根据主键ID列表查询${tableInfo.simpleRemark}列表
+     *
+     * @param idList ${tableInfo.pkRemark}列表
+     * @return 列表数据
+     */
+    List<${tableInfo.upperCamelCase}> select${tableInfo.upperCamelCase}ByIds(@Param("idList") List<${tableInfo.pkJavaType}> idList);
+<#if checkValueExistedFields?has_content>
+
+    /**
+     * 检查${tableInfo.simpleRemark}是否存在
+     *
+     * @param ${tableInfo.lowerCamelCase} ${tableInfo.simpleRemark}
+     * @return 是否存在
+     */
+    String check${tableInfo.upperCamelCase}Existed(${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase});
+</#if>
 
     /**
      * 新增${tableInfo.simpleRemark}
@@ -57,27 +75,17 @@ public interface ${tableInfo.upperCamelCase}Mapper {
     /**
      * 批量删除${tableInfo.simpleRemark}
      *
-     * @param ids ${tableInfo.pkRemark}数组
+     * @param idList ${tableInfo.pkRemark}列表
      * @return 结果数据
      */
-    int delete${tableInfo.upperCamelCase}ByIds(String[] ids);
-<#if checkValueExistedFields?has_content>
-    <#list tableInfo.fieldInfos as fieldInfo>
-        <#list checkValueExistedFields as fieldName>
-            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+    int delete${tableInfo.upperCamelCase}ByIds(@Param("idList") List<${tableInfo.pkJavaType}> idList);
 
     /**
-     * 检查${fieldInfo.simpleRemark!fieldInfo.colName}是否存在
+     * 批量逻辑删除${tableInfo.simpleRemark}
      *
-     * @param ${fieldInfo.proName} ${fieldInfo.simpleRemark}
-                <#if tableInfo.pkLowerCamelName?has_content>
-     * @param ${tableInfo.pkLowerCamelName} ${tableInfo.pkRemark}(排除)
-                </#if>
-     * @return 是否存在
+     * @param idList ${tableInfo.pkRemark}列表
+     * @param loginName 登录用户名
+     * @return 结果数据
      */
-    String check${fieldInfo.upperCamelCase}Existed(@Param("${fieldInfo.proName}") ${fieldInfo.javaType} ${fieldInfo.proName}<#if tableInfo.pkLowerCamelName?has_content>, @Param("${tableInfo.pkLowerCamelName}") ${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}</#if>);
-            </#if>
-        </#list>
-    </#list>
-</#if>
+    int delete${tableInfo.upperCamelCase}LogicByIds(@Param("idList") List<${tableInfo.pkJavaType}> idList, @Param("loginName") String loginName);
 }

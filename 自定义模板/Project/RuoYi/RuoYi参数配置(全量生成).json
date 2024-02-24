@@ -5,14 +5,15 @@
   "moduleName" : "business",
   "modulePath" : "/ruoyi-business",
   "webPath" : "/ruoyi-admin",
-  "description" : "业务系统",
-  "ruoyiVersion" : "4.7.6",
+  "description" : "业务模块",
+  "ruoyiVersion" : "4.7.8",
   "templatePath" : "/template",
   "srcPath" : "/src/main/java",
   "resourcesPath" : "/src/main/resources",
   "commonFields" : "CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME",
-  "remarkMatchDict" : "类型, 类别, 状态, 是否",
+  "remarkMatchDict" : "类型, 类别, 分类, 状态, 是否",
   "remarkMatchMulti" : "备注, 说明, 描述",
+  "remarkMatchRich" : "",
   "zipFileList" : [ {
     "zipFile" : "${currentFtlDir}/RuoYi.zip",
     "unzipPath" : "D:\\",
@@ -59,20 +60,17 @@
     "templateName" : "${tableLowerCamelCase}[html].ftl",
     "ftlRelativeDir" : "${templatePath}/web",
     "relativePath" : "${resourcesPath}/templates/${moduleName}/${tableLowerCamelCase}",
-    "projectSubDir" : "${webPath}",
-    "excludeFields" : "${commonFields}"
+    "projectSubDir" : "${webPath}"
   }, {
     "templateName" : "add[html].ftl",
     "ftlRelativeDir" : "${templatePath}/web",
     "relativePath" : "${resourcesPath}/templates/${moduleName}/${tableLowerCamelCase}",
-    "projectSubDir" : "${webPath}",
-    "excludeFields" : "${commonFields}"
+    "projectSubDir" : "${webPath}"
   }, {
     "templateName" : "edit[html].ftl",
     "ftlRelativeDir" : "${templatePath}/web",
     "relativePath" : "${resourcesPath}/templates/${moduleName}/${tableLowerCamelCase}",
-    "projectSubDir" : "${webPath}",
-    "excludeFields" : "${commonFields}"
+    "projectSubDir" : "${webPath}"
   }, {
     "templateName" : "pom[xml].ftl",
     "ftlRelativeDir" : "${templatePath}",
@@ -106,12 +104,13 @@
   },
   "globalIgnoreValidFields" : [ "CREATE_BY", "CREATE_TIME", "UPDATE_BY", "UPDATE_TIME", "DEL_FLAG" ],
   "searchFields" : {
-    "T_SYS_PARAM" : [ "PARAM_NAME", "PARAM_CODE", "PARAM_TYPE" ],
+    "T_SYS_PARAM" : [ "PARAM_NAME", "PARAM_CODE", "PARAM_TYPE", "CREATE_TIME" ],
     "T_PROVINCE" : [ "PROVINCE_NAME", "PROVINCE_CODE" ],
     "T_CITY" : [ "CITY_NAME", "CITY_CODE" ],
     "T_AREA" : [ "AREA_NAME", "AREA_CODE" ]
   },
   "batchSearchFields" : {
+    "T_SYS_PARAM" : [ "PARAM_CODE" ],
     "T_PROVINCE" : [ "PROVINCE_CODE" ],
     "T_CITY" : [ "CITY_CODE" ],
     "T_AREA" : [ "AREA_CODE" ]
@@ -134,7 +133,7 @@
     "T_CITY" : [ "CITY_NAME", "CITY_CODE", "PARENT_CODE" ],
     "T_AREA" : [ "AREA_NAME", "AREA_CODE", "PARENT_CODE" ]
   },
-  "exportFields" : {
-    "T_SYS_PARAM" : [ "PARAM_NAME", "PARAM_CODE", "PARAM_TYPE", "PARAM_VALUE" ]
+  "importAndExportFields" : {
+    "T_SYS_PARAM" : [ "PARAM_NAME", "PARAM_CODE", "PARAM_TYPE", "PARAM_VALUE", "CREATE_TIME" ]
   }
 }

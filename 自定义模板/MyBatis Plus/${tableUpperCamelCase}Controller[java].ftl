@@ -2,6 +2,7 @@
 package ${jsonParam.packagePath}
 
 import java.util.List;
+import javax.validation.Valid;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,12 +29,12 @@ import ${jsonParam.basePackagePath}.model.condition.${tableInfo.upperCamelCase}C
 import ${jsonParam.basePackagePath}.service.${tableInfo.upperCamelCase}Service;
 
 /**
- * ${tableInfo.simpleRemark!tableInfo.tableName}Controller
+ * ${FtlUtils.emptyToDefault(tableInfo.simpleRemark, "${tableInfo.tableName}表")}Controller
  * 
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
-@Api(tags = "${tableInfo.simpleRemark!tableInfo.tableName}")
+@Api(tags = "${FtlUtils.emptyToDefault(tableInfo.simpleRemark, "${tableInfo.tableName}")}")
 @RestController
 @RequestMapping("/${tableInfo.lowerCamelCase}")
 public class ${tableInfo.upperCamelCase}Controller extends BaseController {
@@ -69,7 +70,7 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     @ApiOperation(value = "新增${tableInfo.simpleRemark}")
     @ApiImplicitParam(name = "${tableInfo.lowerCamelCase}", value = "${tableInfo.simpleRemark}", required = true, dataType = "${tableInfo.upperCamelCase}", paramType = "body")
     @PostMapping("/add")
-    public Result<${tableInfo.upperCamelCase}> add(@RequestBody ${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
+    public Result<${tableInfo.upperCamelCase}> add(@RequestBody @Valid ${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
         Boolean bool = ${tableInfo.lowerCamelCase}Service.add${tableInfo.upperCamelCase}(${tableInfo.lowerCamelCase});
         if (bool) {
             return Result.ok(${tableInfo.lowerCamelCase});

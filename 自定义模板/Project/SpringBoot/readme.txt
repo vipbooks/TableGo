@@ -1,10 +1,10 @@
-1¡¢²»·ÖÄ£¿éJSON²ÎÊýÅäÖÃÎÄ¼þ£¬ËùÓÐÄ£¿éµÄ´úÂë¶¼·ÅÍ¬Ò»Àà°üÄ¿Â¼ÏÂ
-2¡¢·ÖÄ£¿éJSON²ÎÊýÅäÖÃÎÄ¼þ£¬ÅäÖÃÄ¬ÈÏÄ£¿émoduleNameºÍmoduleList¾Í¿ÉÒÔ°Ñ²»Í¬±íÉú³ÉµÄÀà·Åµ½ÏàÓ¦Ä£¿é°üÏÂ
-3¡¢²»·ÖÄ£¿éÔöÁ¿¸üÐÂJSON²ÎÊýÅäÖÃÎÄ¼þ£¬Ö»Éú³É${tableUpperCamelCase}[java].ftl, ${tableUpperCamelCase}Mapper[xml].ftlÁ½¸öÄ£°å£¬ÓÃÓÚ±í½á¹¹±ä¸üµÄÔöÁ¿¸üÐÂ
-4¡¢JSON²ÎÊýÅäÖÃÎÄ¼þÖÐµÄlikeFieldsÓÃÓÚÔÚÊµÌå×Ö¶ÎÉÏÌí¼ÓSqlCondition.LIKE×¢½â£¬ÓÃÓÚÄ£ºý²éÑ¯£»
-   searchFieldsÓÃÓÚÔÚConditionÀàÖÐÌí¼Ó²éÑ¯Ìõ¼þ£»
-   noSqlTablesÓÃÓÚÅäÖÃ²»ÐèÒªÔÚMapperÀàºÍMapper.xmlÖÐÉú³É²éÑ¯½Ó¿ÚµÄ±í£¬´¿µ¥±í²Ù×÷
-5¡¢crebas.sqlÊÇÊý¾Ý¿âµÄDDL£¬ÓÃÓÚ³õÊ¼»¯Éú³ÉÏîÄ¿ÐèÒªµÄÊý¾Ý¿â±í½á¹¹
-6¡¢ÏîÄ¿¹¤³ÌÉú³É±£´æµÄ´ÅÅÌÂ·¾¶¡¢°üÂ·¾¶¡¢Maven×ø±ê¡¢¶Ë¿Ú¡¢ÉÏÏÂÎÄÂ·¾¶¡¢Ó¦ÓÃÃûµÈµÈ²ÎÊý¶¼¿ÉÒÔÔÚJSON²ÎÊýÅäÖÃÎÄ¼þÖÐÐÞ¸Ä
-7¡¢Éú³É´úÂëÒÔºó¿ÉÒÔÖ±½Ó·ÃÎÊSwagger2²âÊÔ¸÷Ä£¿éÔöÉ¾²é¸ÄµÄ½Ó¿Ú£¬Swagger2·ÃÎÊµØÖ·ÔÚÖ÷Æô¶¯ÀàÖÐ£¬¸÷Ä£¿éµÄ²âÊÔÓÃÀýÉú³ÉÔÚtest°üÏÂ
-8¡¢Èç¹ûÆô¶¯ÏîÄ¿´ò¿ªSwagger¿´µ½ÏîÄ¿¼ò½éÄÇÀïÏÔÊ¾µÄÊÇ¡°@project.description@APIÎÄµµ¡±ÕâÑùµÄ±äÁ¿²ÎÊýÊ±£¬Ö»ÐèÒªË¢ÐÂÒ»ÏÂÏîÄ¿µÄMavenÔÙÖØÆôÏîÄ¿¼´¿É£¬¡°@project.description@¡±±äÁ¿ÊÇÈ¡µÄpom.xmlÅäÖÃÎÄ¼þÖÐµÄ¡°project.description¡±²ÎÊý¡£
+1ã€ä¸åˆ†æ¨¡å—JSONå‚æ•°é…ç½®æ–‡ä»¶ï¼Œæ‰€æœ‰æ¨¡å—çš„ä»£ç éƒ½æ”¾åŒä¸€ç±»åŒ…ç›®å½•ä¸‹
+2ã€åˆ†æ¨¡å—JSONå‚æ•°é…ç½®æ–‡ä»¶ï¼Œé…ç½®é»˜è®¤æ¨¡å—moduleNameå’ŒmoduleListå°±å¯ä»¥æŠŠä¸åŒè¡¨ç”Ÿæˆçš„ç±»æ”¾åˆ°ç›¸åº”æ¨¡å—åŒ…ä¸‹
+3ã€ä¸åˆ†æ¨¡å—å¢žé‡æ›´æ–°JSONå‚æ•°é…ç½®æ–‡ä»¶ï¼Œåªç”Ÿæˆ${tableUpperCamelCase}[java].ftl, ${tableUpperCamelCase}Mapper[xml].ftlä¸¤ä¸ªæ¨¡æ¿ï¼Œç”¨äºŽè¡¨ç»“æž„å˜æ›´çš„å¢žé‡æ›´æ–°
+4ã€JSONå‚æ•°é…ç½®æ–‡ä»¶ä¸­çš„likeFieldsç”¨äºŽåœ¨å®žä½“å­—æ®µä¸Šæ·»åŠ SqlCondition.LIKEæ³¨è§£ï¼Œç”¨äºŽæ¨¡ç³ŠæŸ¥è¯¢ï¼›
+   searchFieldsç”¨äºŽåœ¨Conditionç±»ä¸­æ·»åŠ æŸ¥è¯¢æ¡ä»¶ï¼›
+   noSqlTablesç”¨äºŽé…ç½®ä¸éœ€è¦åœ¨Mapperç±»å’ŒMapper.xmlä¸­ç”ŸæˆæŸ¥è¯¢æŽ¥å£çš„è¡¨ï¼Œçº¯å•è¡¨æ“ä½œ
+5ã€crebas.sqlæ˜¯æ•°æ®åº“çš„DDLï¼Œç”¨äºŽåˆå§‹åŒ–ç”Ÿæˆé¡¹ç›®éœ€è¦çš„æ•°æ®åº“è¡¨ç»“æž„
+6ã€é¡¹ç›®å·¥ç¨‹ç”Ÿæˆä¿å­˜çš„ç£ç›˜è·¯å¾„ã€åŒ…è·¯å¾„ã€Mavenåæ ‡ã€ç«¯å£ã€ä¸Šä¸‹æ–‡è·¯å¾„ã€åº”ç”¨åç­‰ç­‰å‚æ•°éƒ½å¯ä»¥åœ¨JSONå‚æ•°é…ç½®æ–‡ä»¶ä¸­ä¿®æ”¹
+7ã€ç”Ÿæˆä»£ç ä»¥åŽå¯ä»¥ç›´æŽ¥è®¿é—®Swagger2æµ‹è¯•å„æ¨¡å—å¢žåˆ æŸ¥æ”¹çš„æŽ¥å£ï¼ŒSwagger2è®¿é—®åœ°å€åœ¨ä¸»å¯åŠ¨ç±»ä¸­ï¼Œå„æ¨¡å—çš„æµ‹è¯•ç”¨ä¾‹ç”Ÿæˆåœ¨teståŒ…ä¸‹
+8ã€å¦‚æžœå¯åŠ¨é¡¹ç›®æ‰“å¼€Swaggerçœ‹åˆ°é¡¹ç›®ç®€ä»‹é‚£é‡Œæ˜¾ç¤ºçš„æ˜¯â€œ@project.description@APIæ–‡æ¡£â€è¿™æ ·çš„å˜é‡å‚æ•°æ—¶ï¼Œåªéœ€è¦åˆ·æ–°ä¸€ä¸‹é¡¹ç›®çš„Mavenå†é‡å¯é¡¹ç›®å³å¯ï¼Œâ€œ@project.description@â€å˜é‡æ˜¯å–çš„pom.xmlé…ç½®æ–‡ä»¶ä¸­çš„â€œproject.descriptionâ€å‚æ•°ã€‚

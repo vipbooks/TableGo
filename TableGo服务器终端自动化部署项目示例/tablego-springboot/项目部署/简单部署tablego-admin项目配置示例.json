@@ -28,27 +28,12 @@
       "enable" : true
     } ]
   }, {
-    "commands" : [ {
-      "command" : "cd ${serverProjectPath}",
-      "enable" : true
-    }, {
-      "command" : "mkdir -p ${serverProjectPath}/bak",
-      "enable" : true
-    }, {
-      "command" : "cp -vf tablego-admin.jar ./bak/tablego-admin/tablego-admin_`date +%Y%m%d%H%M%S`.jar",
-      "containsStr" : ".jar",
-      "enable" : true
-    } ],
+    "enable" : true,
     "fileUploads" : [ {
       "fromPath" : [ "${scriptPath}\\AppService.sh", "${scriptPath}\\ClearBakFile.sh" ],
       "toPath" : "${serverProjectPath}",
       "enable" : true
-    }, {
-      "fromPath" : [ "${projectPath}\\tablego-admin\\target\\tablego-admin.jar" ],
-      "toPath" : "${serverProjectPath}",
-      "enable" : true
-    } ]
-  }, {
+    } ],
     "commands" : [ {
       "command" : "cd ${serverProjectPath}"
     }, {
@@ -56,18 +41,38 @@
       "enable" : true
     }, {
       "command" : "sudo chmod +x AppService.sh ClearBakFile.sh",
-      "enable" : false
+      "enable" : true
+    } ]
+  }, {
+    "commands" : [ {
+      "command" : "cd ${serverProjectPath}"
+    }, {
+      "command" : "mkdir -p ${serverProjectPath}/bak/tablego-admin",
+      "enable" : true
+    }, {
+      "command" : "cp -vf tablego-admin.jar ./bak/tablego-admin/tablego-admin_`date +%Y%m%d%H%M%S`.jar",
+      "containsStr" : ".jar",
+      "enable" : true
     }, {
       "command" : "sh ClearBakFile.sh -d ${serverProjectPath}/bak/tablego-admin -e jar",
       "waitSeconds" : 2,
       "enable" : true
-    }, {
+    } ],
+    "fileUploads" : [ {
+      "fromPath" : [ "${projectPath}\\tablego-admin\\target\\tablego-admin.jar" ],
+      "toPath" : "${serverProjectPath}",
+      "enable" : true
+    } ]
+  }, {
+    "commands" : [ {
       "command" : "sh AppService.sh restart tablego-admin ${profile} ${port}"
     }, {
       "command" : "touch tablego-admin.log && tail -f tablego-admin.log",
       "containsStrSigquit" : "Started AdminApplication"
-    }, {
-      "command" : "ls"
+    } ],
+    "runtimeExec" : [ {
+      "command" : "${scriptPath}\\maven-lifecycle.bat clean ${projectPath}\\tablego-admin",
+      "enable" : true
     } ]
   }, {
     "fileDownloads" : [ {

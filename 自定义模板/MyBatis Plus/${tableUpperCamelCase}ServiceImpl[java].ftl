@@ -1,15 +1,15 @@
 <#-- 用于生成Service接口实现的自定义模板 -->
 <#-- 初始化表的查询字段 -->
-<#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields) />
+<#assign searchFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.searchFields) />
 <#-- 初始化查询字段中的日期字段 -->
-<#assign dateFieldInfo = FtlUtils.getFieldByFieldTypeAtList(tableInfo, searchFields, "Date") />
+<#assign dateFieldInfo = FtlUtils.getFieldInfoByType(searchFields, "Date") />
 <#-- 初始化需要生成检查字段值是否已存在的接口的字段 -->
-<#assign checkValueExistedFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.checkValueExistedFields) />
+<#assign checkValueExistedFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.checkValueExistedFields) />
 <#-- 初始化是否不生成SQL查询的接口 -->
 <#assign isNoSqlTable = FtlUtils.tableExisted(tableInfo, jsonParam.noSqlTables) />
 package ${jsonParam.packagePath}
 
-<#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFields, "Date")>
+<#if FtlUtils.fieldTypeExisted(searchFields, "Date")>
 import cn.hutool.core.date.DateUtil;
 </#if>
 <#if checkValueExistedFields?has_content || tableInfo.pkLowerCamelName?has_content>
@@ -26,6 +26,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.Collections;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+</#if>
+<#if !tableInfo.pkIsStringType>
+import java.util.Objects;
 </#if>
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -44,10 +47,10 @@ import ${jsonParam.basePackagePath}.mapper.${tableInfo.upperCamelCase}Mapper;
 import ${jsonParam.basePackagePath}.service.${tableInfo.upperCamelCase}Service;
 
 /**
- * ${tableInfo.simpleRemark}Service接口实现
+ * ${FtlUtils.emptyToDefault(tableInfo.simpleRemark, "${tableInfo.tableName}表")}Service接口实现
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 @Slf4j
 @Service
@@ -65,14 +68,14 @@ public class ${tableInfo.upperCamelCase}ServiceImpl extends ServiceImpl<${tableI
             queryWrapper.lt(${tableInfo.upperCamelCase}::get${dateFieldInfo.upperCamelCase}, DateUtil.endOfDay(condition.get${dateFieldInfo.upperCamelCase}End()));
         }
     </#if>
-    <#if FtlUtils.fieldExisted(tableInfo, "CREATION_DATE")>
-        queryWrapper.orderByDesc(${tableInfo.upperCamelCase}::getCreationDate);
+    <#if FtlUtils.fieldExisted(tableInfo, "CREATED_TIME")>
+        queryWrapper.orderByDesc(${tableInfo.upperCamelCase}::getCreatedDate);
     </#if>
         return this.page(page, queryWrapper);
 <#else>
     <#if dateFieldInfo?has_content>
-        if (condition.get${fieldInfo.upperCamelCase}End() != null) {
-            condition.set${fieldInfo.upperCamelCase}End(DateUtil.endOfDay(condition.get${fieldInfo.upperCamelCase}End()));
+        if (condition.get${dateFieldInfo.upperCamelCase}End() != null) {
+            condition.set${dateFieldInfo.upperCamelCase}End(DateUtil.endOfDay(condition.get${dateFieldInfo.upperCamelCase}End()));
         }
     </#if>
         return this.baseMapper.find${tableInfo.upperCamelCase}List(page, condition);
@@ -90,14 +93,14 @@ public class ${tableInfo.upperCamelCase}ServiceImpl extends ServiceImpl<${tableI
             queryWrapper.lt(${tableInfo.upperCamelCase}::get${dateFieldInfo.upperCamelCase}, DateUtil.endOfDay(condition.get${dateFieldInfo.upperCamelCase}End()));
         }
     </#if>
-    <#if FtlUtils.fieldExisted(tableInfo, "CREATION_DATE")>
-        queryWrapper.orderByDesc(${tableInfo.upperCamelCase}::getCreationDate);
+    <#if FtlUtils.fieldExisted(tableInfo, "CREATED_TIME")>
+        queryWrapper.orderByDesc(${tableInfo.upperCamelCase}::getCreatedDate);
     </#if>
         return this.list(queryWrapper);
 <#else>
     <#if dateFieldInfo?has_content>
-        if (condition.get${fieldInfo.upperCamelCase}End() != null) {
-            condition.set${fieldInfo.upperCamelCase}End(DateUtil.endOfDay(condition.get${fieldInfo.upperCamelCase}End()));
+        if (condition.get${dateFieldInfo.upperCamelCase}End() != null) {
+            condition.set${dateFieldInfo.upperCamelCase}End(DateUtil.endOfDay(condition.get${dateFieldInfo.upperCamelCase}End()));
         }
     </#if>
         return this.baseMapper.find${tableInfo.upperCamelCase}List(condition);
@@ -108,12 +111,10 @@ public class ${tableInfo.upperCamelCase}ServiceImpl extends ServiceImpl<${tableI
     public ${tableInfo.upperCamelCase} get${tableInfo.upperCamelCase}(${tableInfo.upperCamelCase}Condition condition) {
         LambdaQueryWrapper<${tableInfo.upperCamelCase}> queryWrapper = condition.buildLambdaQueryWrapper();
         <#if searchFields?has_content>
-            <#list tableInfo.fieldInfos as fieldInfo>
-                <#list searchFields as fieldName>
-                    <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+            <#list searchFields as fieldInfo>
+                <#if !fieldInfo.isDateType>
         queryWrapper.eq(<#if fieldInfo.isStringType>StrUtil.isNotBlank(condition.get${fieldInfo.upperCamelCase}())<#else>condition.get${fieldInfo.upperCamelCase}() != null</#if>, ${tableInfo.upperCamelCase}::get${fieldInfo.upperCamelCase}, condition.get${fieldInfo.upperCamelCase}());
-                    </#if>
-                </#list>
+                </#if>
             </#list>
         </#if>
         return this.getOne(queryWrapper, false);
@@ -131,7 +132,7 @@ public class ${tableInfo.upperCamelCase}ServiceImpl extends ServiceImpl<${tableI
             return Collections.emptyList();
         }
         LambdaQueryWrapper<${tableInfo.upperCamelCase}> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.in(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, idList.stream().filter(StrUtil::isNotBlank).distinct().collect(Collectors.toList()));
+        queryWrapper.in(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, idList.stream().filter(<#if tableInfo.pkIsStringType>StrUtil::isNotBlank<#else>Objects::nonNull</#if>).distinct().collect(Collectors.toList()));
         return this.list(queryWrapper);
     }
 
@@ -147,16 +148,12 @@ public class ${tableInfo.upperCamelCase}ServiceImpl extends ServiceImpl<${tableI
     public Boolean check${tableInfo.upperCamelCase}Existed(${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
         QueryWrapper<${tableInfo.upperCamelCase}> queryWrapper = Wrappers.query();
         queryWrapper.select("1").lambda()
-    <#list checkValueExistedFields as fieldName>
-        <#list tableInfo.fieldInfos as fieldInfo>
-            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
-                .eq(<#if fieldInfo.isStringType>StrUtil.isNotBlank(${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}())<#else>${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}() != null</#if>, ${tableInfo.upperCamelCase}::get${fieldInfo.upperCamelCase}, ${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}())<#if !fieldName_has_next>;</#if>
-            </#if>
-        </#list>
+    <#list checkValueExistedFields as fieldInfo>
+                .eq(<#if fieldInfo.isStringType>StrUtil.isNotBlank(${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}())<#else>${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}() != null</#if>, ${tableInfo.upperCamelCase}::get${fieldInfo.upperCamelCase}, ${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}())<#if !fieldInfo_has_next>;</#if>
     </#list>
-        <#if tableInfo.pkUpperCamelName?has_content>
+    <#if tableInfo.pkUpperCamelName?has_content>
         queryWrapper.lambda().ne(<#if tableInfo.pkIsStringType>StrUtil.isNotBlank(${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}())<#else>${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}() != null</#if>, ${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, ${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}());
-        </#if>
+    </#if>
         queryWrapper.last("LIMIT 1");
 
         return BooleanUtil.toBoolean(this.getObj(queryWrapper, Object::toString));
@@ -202,17 +199,13 @@ public class ${tableInfo.upperCamelCase}ServiceImpl extends ServiceImpl<${tableI
      * @param ${tableInfo.lowerCamelCase} ${tableInfo.simpleRemark}
      */
     private void check${tableInfo.upperCamelCase}Valid(${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
-    <#list tableInfo.fieldInfos as fieldInfo>
-        <#list checkValueExistedFields as fieldName>
-            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+    <#list checkValueExistedFields as fieldInfo>
         ${fieldInfo.javaType} ${fieldInfo.proName} = ${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}();
         if (<#if fieldInfo.isStringType>StrUtil.isNotBlank(${fieldInfo.proName})<#else>${fieldInfo.proName} != null</#if>) {
             ${tableInfo.upperCamelCase} condition = ${tableInfo.upperCamelCase}.builder()<#if tableInfo.pkUpperCamelName?has_content>.${tableInfo.pkLowerCamelName}(${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}())</#if>.${fieldInfo.proName}(${fieldInfo.proName}).build();
             Boolean ${fieldInfo.proName}Existed = check${tableInfo.upperCamelCase}Existed(condition);
             Assert.isFalse(${fieldInfo.proName}Existed, "${fieldInfo.simpleRemark}已存在，请重新输入！");
         }
-            </#if>
-        </#list>
     </#list>
     }
 </#if>

@@ -29,12 +29,12 @@ import ${jsonParam.basePackagePath}.model.condition.${tableInfo.upperCamelCase}C
 import ${jsonParam.basePackagePath}.service.${tableInfo.upperCamelCase}Service;
 
 /**
- * ${tableInfo.simpleRemark!tableInfo.tableName}Controller
+ * ${FtlUtils.emptyToDefault(tableInfo.simpleRemark, "${tableInfo.tableName}表")}Controller
  * 
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
-@Api(tags = "${tableInfo.simpleRemark!tableInfo.tableName}")
+@Api(tags = "${FtlUtils.emptyToDefault(tableInfo.simpleRemark, "${tableInfo.tableName}")}")
 @RestController
 @RequestMapping("/${tableInfo.lowerCamelCase}")
 public class ${tableInfo.upperCamelCase}Controller extends BaseController {

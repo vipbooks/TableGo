@@ -18,7 +18,7 @@ public abstract class BaseCondition extends BasePagingCondition {
 
     /**
      * 创建查询条件构造器，将对象或Map转Bean对象，
-     * 并把对象或Map中的值拷贝给Bean对象，拷贝进来的这些值会自动产生查询条件
+     * 并把对象或Map中的值拷贝给Bean对象，拷贝进来的这些值会自动生成查询条件
      *
      * @param clazz 目标的Bean类型
      * @return 查询条件构造器
@@ -29,7 +29,7 @@ public abstract class BaseCondition extends BasePagingCondition {
     }
 
     /**
-     * 创建查询条件构造器，不会自动产生查询条件
+     * 创建查询条件构造器，不会自动生成查询条件
      *
      * @return 查询条件构造器
      */
@@ -39,7 +39,7 @@ public abstract class BaseCondition extends BasePagingCondition {
 
     /**
      * 创建查询条件构造器，将对象或Map转Bean对象，
-     * 并把对象或Map中的值拷贝给Bean对象，拷贝进来的这些值会自动产生查询条件
+     * 并把对象或Map中的值拷贝给Bean对象，拷贝进来的这些值会自动生成查询条件
      *
      * @param clazz 目标的Bean类型
      * @return 查询条件构造器
@@ -50,7 +50,7 @@ public abstract class BaseCondition extends BasePagingCondition {
     }
 
     /**
-     * 创建查询条件构造器，不会自动产生查询条件
+     * 创建查询条件构造器，不会自动生成查询条件
      *
      * @return 查询条件构造器
      */

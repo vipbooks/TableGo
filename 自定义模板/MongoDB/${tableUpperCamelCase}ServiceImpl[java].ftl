@@ -1,9 +1,9 @@
 <#-- 用于生成Service接口实现的自定义模板 -->
 <#-- 初始化表的查询字段 -->
-<#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields)![] />
+<#assign searchFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.searchFields) />
 package ${jsonParam.packagePath}
 
-<#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFields, "Date")>
+<#if FtlUtils.fieldTypeExisted(searchFields, "Date")>
 import cn.hutool.core.date.DateUtil;
 </#if>
 import java.util.List;
@@ -44,10 +44,8 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements ${tableInfo.upper
         </#if>
     <#if searchFields?has_content>
 
-        <#list tableInfo.fieldInfos as fieldInfo>
-            <#list searchFields as fieldName>
-                <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
-                    <#if fieldInfo.javaType == "Date">
+        <#list searchFields as fieldInfo>
+            <#if fieldInfo.isDateType>
         if (condition.get${fieldInfo.upperCamelCase}Begin() != null && condition.get${fieldInfo.upperCamelCase}End() != null) {
             Criteria criteria = Criteria.where("${fieldInfo.colName}").gte(condition.get${fieldInfo.upperCamelCase}Begin()).lte(DateUtil.endOfDay(condition.get${fieldInfo.upperCamelCase}End()));
             query.addCriteria(criteria);
@@ -58,24 +56,22 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements ${tableInfo.upper
             Criteria criteria = Criteria.where("${fieldInfo.colName}").lte(DateUtil.endOfDay(condition.get${fieldInfo.upperCamelCase}End()));
             query.addCriteria(criteria);
         }
-                    <#elseif fieldInfo.javaType != "String">
+            <#elseif !fieldInfo.isStringType>
         if (condition.get${fieldInfo.upperCamelCase}() != null) {
             Criteria criteria = Criteria.where("${fieldInfo.colName}").is(condition.get${fieldInfo.upperCamelCase}());
             query.addCriteria(criteria);
         }
-                    <#elseif fieldInfo.primaryKey || fieldInfo.isDictType || fieldInfo.lowerColName?index_of("_id") != -1>
+            <#elseif fieldInfo.primaryKey || fieldInfo.isDictType || fieldInfo.lowerColName?index_of("_id") != -1>
         if (StrUtil.isNotBlank(condition.get${fieldInfo.upperCamelCase}())) {
             Criteria criteria = Criteria.where("${fieldInfo.colName}").is(condition.get${fieldInfo.upperCamelCase}());
             query.addCriteria(criteria);
         }
-                    <#else>
+            <#else>
         if (StrUtil.isNotBlank(condition.get${fieldInfo.upperCamelCase}())) {
             Criteria criteria = Criteria.where("${fieldInfo.colName}").regex(Pattern.compile("^.*" + condition.get${fieldInfo.upperCamelCase}() + ".*$", Pattern.CASE_INSENSITIVE));
             query.addCriteria(criteria);
         }
-                    </#if>
-                </#if>
-            </#list>
+            </#if>
         </#list>
     </#if>
 

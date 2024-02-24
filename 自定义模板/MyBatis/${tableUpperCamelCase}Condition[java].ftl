@@ -1,19 +1,19 @@
 <#-- 用于生成Condition查询条件的自定义模板 -->
 <#-- 初始化表的查询字段 -->
-<#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields) />
+<#assign searchFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.searchFields) />
 <#-- 初始化表的批量查询字段 -->
-<#assign batchSearchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.batchSearchFields) />
+<#assign batchSearchFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.batchSearchFields) />
 package ${jsonParam.packagePath}
 
-<#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFields, "Date")>
+<#if FtlUtils.fieldTypeExisted(searchFields, "Date")>
 import java.util.Date;
 import cn.hutool.core.date.DatePattern;
 import com.fasterxml.jackson.annotation.JsonFormat;
 </#if>
-<#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFields, "BigDecimal")>
+<#if FtlUtils.fieldTypeExisted(searchFields, "BigDecimal")>
 import java.math.BigDecimal;
 </#if>
-<#if FtlUtils.fieldTypeExisted(tableInfo, "BigInteger")>
+<#if FtlUtils.fieldTypeExisted(searchFields, "BigInteger")>
 import java.math.BigInteger;
 </#if>
 <#if batchSearchFields?has_content>
@@ -26,12 +26,12 @@ import io.swagger.annotations.ApiModel;
 import ${jsonParam.basePackagePath}.common.BaseCondition;
 
 /**
- * ${tableInfo.simpleRemark!tableInfo.tableName}查询条件
+ * ${FtlUtils.emptyToDefault(tableInfo.simpleRemark, "${tableInfo.tableName}表")}查询条件
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
-@ApiModel(description = "${tableInfo.simpleRemark!tableInfo.tableName}查询条件")
+@ApiModel(description = "${FtlUtils.emptyToDefault(tableInfo.simpleRemark, "${tableInfo.tableName}表")}查询条件")
 public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
     /** 版本号 */
     private static final long serialVersionUID = ${tableInfo.serialVersionUID!'1'}L;
@@ -41,11 +41,9 @@ public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
         return new ${tableInfo.upperCamelCase}();
     }
 <#if searchFields?has_content>
-    <#list tableInfo.fieldInfos as fieldInfo>
-        <#list searchFields as fieldName>
-            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+    <#list searchFields as fieldInfo>
 
-    <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>
+        <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>
     @ApiModelProperty(value = "${fieldInfo.remark}(开始)")
     @JsonFormat(timezone = "GMT+8", pattern = DatePattern.NORM_DATE_PATTERN)
     private ${fieldInfo.javaType} ${fieldInfo.proName}Begin;
@@ -53,30 +51,22 @@ public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
     @ApiModelProperty(value = "${fieldInfo.remark}(结束)")
     @JsonFormat(timezone = "GMT+8", pattern = DatePattern.NORM_DATE_PATTERN)
     private ${fieldInfo.javaType} ${fieldInfo.proName}End;
-    <#else>
+        <#else>
     @ApiModelProperty(value = "${fieldInfo.remark}")
     private ${fieldInfo.javaType} ${fieldInfo.proName};
-    </#if>
-            </#if>
-        </#list>
+        </#if>
     </#list>
     <#if batchSearchFields?has_content>
-        <#list tableInfo.fieldInfos as fieldInfo>
-            <#list batchSearchFields as fieldName>
-                <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+        <#list batchSearchFields as fieldInfo>
 
-        /** ${fieldInfo.simpleRemark}列表 */
-        @ApiModelProperty(value = "${fieldInfo.simpleRemark}列表")
-        private List<${fieldInfo.javaType}> ${fieldInfo.proName}List;
-                </#if>
-            </#list>
+    /** ${fieldInfo.simpleRemark}列表 */
+    @ApiModelProperty(value = "${fieldInfo.simpleRemark}列表")
+    private List<${fieldInfo.javaType}> ${fieldInfo.proName}List;
         </#list>
     </#if>
-    <#list tableInfo.fieldInfos as fieldInfo>
-        <#list searchFields as fieldName>
-            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+    <#list searchFields as fieldInfo>
 
-                <#if fieldInfo.javaType == "Date">
+        <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>
     /**
      * 获取${fieldInfo.simpleRemark!fieldInfo.proName}(开始)
      * 
@@ -112,7 +102,7 @@ public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
     public void set${fieldInfo.upperCamelCase}End(${fieldInfo.javaType} ${fieldInfo.proName}End) {
         this.${fieldInfo.proName}End = ${fieldInfo.proName}End;
     }
-                <#else>
+        <#else>
     /**
      * 获取${fieldInfo.remark!fieldInfo.proName}
      * 
@@ -131,14 +121,10 @@ public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
         this.${fieldInfo.proName} = ${fieldInfo.proName};
         return this;
     }
-                </#if>
-            </#if>
-        </#list>
+        </#if>
     </#list>
     <#if batchSearchFields?has_content>
-        <#list tableInfo.fieldInfos as fieldInfo>
-            <#list batchSearchFields as fieldName>
-                <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+        <#list batchSearchFields as fieldInfo>
 
     /**
      * 获取${fieldInfo.simpleRemark}列表
@@ -158,8 +144,6 @@ public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
         this.${fieldInfo.proName}List = ${fieldInfo.proName}List;
         return this;
     }
-                </#if>
-            </#list>
         </#list>
     </#if>
 </#if>

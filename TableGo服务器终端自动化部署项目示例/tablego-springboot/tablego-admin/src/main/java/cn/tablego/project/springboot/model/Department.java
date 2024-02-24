@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
  * 部门(t_department)
  *
  * @author bianj
- * @version 1.0.0 2021-07-18
+ * @version 1.0.0 2022-08-18
  */
 @Setter
 @Getter

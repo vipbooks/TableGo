@@ -11,7 +11,7 @@ import com.spring4all.swagger.EnableSwagger2Doc;
  *  Knife4j访问地址：http://127.0.0.1:8811/doc.html
  *
  * @author bianj
- * @version 1.0.0 2021-09-26
+ * @version 1.0.0 2022-09-26
  */
 @SpringBootApplication
 @EnableSwagger2Doc

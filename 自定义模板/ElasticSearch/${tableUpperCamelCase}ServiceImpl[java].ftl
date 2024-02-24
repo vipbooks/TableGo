@@ -1,9 +1,9 @@
 <#-- 用于生成Service接口实现的自定义模板 -->
 <#-- 初始化表的查询字段 -->
-<#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields) />
+<#assign searchFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.searchFields) />
 package ${jsonParam.packagePath}
 
-<#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFields, "Date")>
+<#if FtlUtils.fieldTypeExisted(searchFields, "Date")>
 import cn.hutool.core.date.DateUtil;
 </#if>
 import java.util.List;
@@ -46,10 +46,8 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements ${tableInfo.upper
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
     <#if searchFields?has_content>
 
-        <#list tableInfo.fieldInfos as fieldInfo>
-            <#list searchFields as fieldName>
-                <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
-                    <#if fieldInfo.javaType == "Date">
+        <#list searchFields as fieldInfo>
+            <#if fieldInfo.isDateType>
         if (condition.get${fieldInfo.upperCamelCase}Begin() != null && condition.get${fieldInfo.upperCamelCase}End() != null) {
             String ${fieldInfo.lowerCamelCase}BeginStr = DateUtil.format(condition.get${fieldInfo.upperCamelCase}Begin(), DatePattern.NORM_DATE_PATTERN);
             String ${fieldInfo.lowerCamelCase}EndStr = DateUtil.format(DateUtil.endOfDay(condition.get${fieldInfo.upperCamelCase}End()), DatePattern.NORM_DATETIME_FORMAT);
@@ -61,21 +59,19 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements ${tableInfo.upper
             String ${fieldInfo.lowerCamelCase}EndStr = DateUtil.format(DateUtil.endOfDay(condition.get${fieldInfo.upperCamelCase}End()), DatePattern.NORM_DATETIME_FORMAT);
             queryBuilder.must(QueryBuilders.rangeQuery("${fieldInfo.lowerCamelCase}").lte(${fieldInfo.lowerCamelCase}EndStr));
         }
-                    <#elseif fieldInfo.javaType != "String">
+            <#elseif !fieldInfo.isStringType>
         if (condition.get${fieldInfo.upperCamelCase}() != null) {
             queryBuilder.must(QueryBuilders.termQuery("${fieldInfo.lowerCamelCase}", condition.get${fieldInfo.upperCamelCase}()));
         }
-                    <#elseif fieldInfo.primaryKey || fieldInfo.isDictType || fieldInfo.lowerColName?index_of("_id") != -1>
+            <#elseif fieldInfo.primaryKey || fieldInfo.isDictType || fieldInfo.lowerColName?index_of("_id") != -1>
         if (StringUtils.isNotBlank(condition.get${fieldInfo.upperCamelCase}())) {
             queryBuilder.must(QueryBuilders.termQuery("${fieldInfo.lowerCamelCase}", condition.get${fieldInfo.upperCamelCase}()));
         }
-                    <#else>
+            <#else>
         if (StringUtils.isNotBlank(condition.get${fieldInfo.upperCamelCase}())) {
             queryBuilder.must(QueryBuilders.wildcardQuery("${fieldInfo.lowerCamelCase}", "*" + condition.get${fieldInfo.upperCamelCase}() + "*"));
         }
-                    </#if>
-                </#if>
-            </#list>
+            </#if>
         </#list>
     </#if>
         Pageable pageable = PageRequest.of(condition.getPage().intValue() - 1, condition.getRows().intValue(), Sort.by(Sort.Direction.DESC, "createTime"));

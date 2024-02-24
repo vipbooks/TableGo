@@ -12,10 +12,10 @@ import ${jsonParam.basePackagePath}.model.${tableInfo.upperCamelCase};
 import ${jsonParam.basePackagePath}.model.condition.${tableInfo.upperCamelCase}Condition;
 
 /**
- * ${tableInfo.simpleRemark}Mapper接口
+ * ${FtlUtils.emptyToDefault(tableInfo.simpleRemark, "${tableInfo.tableName}表")}Mapper接口
  * 
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 @Mapper
 public interface ${tableInfo.upperCamelCase}Mapper {
@@ -45,7 +45,7 @@ public interface ${tableInfo.upperCamelCase}Mapper {
     ${tableInfo.upperCamelCase} get${tableInfo.upperCamelCase}ById(@Param("${tableInfo.pkLowerCamelName}") ${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName});
 
     /**
-     * 根据主键ID列表查询${tableInfo.simpleRemark}列表
+     * 根据主键ID列表批量查询${tableInfo.simpleRemark}
      *
      * @param idList ${tableInfo.pkRemark}列表
      * @return 列表数据

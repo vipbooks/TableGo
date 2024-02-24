@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
  * 用户(t_user)
  *
  * @author bianj
- * @version 1.0.0 2021-09-26
+ * @version 1.0.0 2022-09-26
  */
 @Setter
 @Getter

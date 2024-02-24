@@ -1,7 +1,6 @@
 package ${jsonParam.packagePath}
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.fasterxml.jackson.annotation.JsonProperty;
 <#if jsonParam.enableSwagger>
 import io.swagger.annotations.ApiModelProperty;
 </#if>
@@ -18,31 +17,27 @@ public abstract class BasePagingCondition extends OverrideBeanMethods {
 
     /** 每页显示多少条记录 */
 <#if jsonParam.enableSwagger>
-    @ApiModelProperty(value = "每页显示多少条记录", example = "20", position = 1000)
+    @ApiModelProperty(value = "每页显示多少条记录", example = "20")
 </#if>
-    @JsonProperty(index = 1000)
-    private Long pageSize = 20L;
+    protected Long pageSize = 20L;
 
     /** 当前页 */
 <#if jsonParam.enableSwagger>
-    @ApiModelProperty(value = "当前页", example = "1", position = 1001)
+    @ApiModelProperty(value = "当前页", example = "1")
 </#if>
-    @JsonProperty(index = 1001)
-    private Long page = 1L;
+    protected Long page = 1L;
 
     /** 排序字段 */
 <#if jsonParam.enableSwagger>
-    @ApiModelProperty(value = "排序字段", position = 1002)
+    @ApiModelProperty(value = "排序字段")
 </#if>
-    @JsonProperty(index = 1002)
-    private String sortField;
+    protected String sortField;
 
     /** 排序方式，只能是ASC或DESC */
 <#if jsonParam.enableSwagger>
-    @ApiModelProperty(value = "排序方式，只能是ASC或DESC", position = 1003)
+    @ApiModelProperty(value = "排序方式，只能是ASC或DESC")
 </#if>
-    @JsonProperty(index = 1003)
-    private String sortOrder;
+    protected String sortOrder;
 
     /**
      * 获取每页显示多少条记录

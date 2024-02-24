@@ -1,6 +1,6 @@
 {
-  "projectDir" : "D:\\springboot-test",
-  "basePackagePath" : "com.test.springboottest",
+  "projectDir" : "D:\\tablego-elasticsearch",
+  "basePackagePath" : "cn.tablego.elasticsearch",
   "srcPath" : "/src/main/java",
   "moduleName" : "search",
   "ftlParamList" : [ {

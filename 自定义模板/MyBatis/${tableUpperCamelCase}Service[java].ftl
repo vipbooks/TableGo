@@ -13,10 +13,10 @@ import ${jsonParam.basePackagePath}.model.${tableInfo.upperCamelCase};
 import ${jsonParam.basePackagePath}.model.condition.${tableInfo.upperCamelCase}Condition;
 
 /**
- * ${tableInfo.simpleRemark}Service接口
+ * ${FtlUtils.emptyToDefault(tableInfo.simpleRemark, "${tableInfo.tableName}表")}Service接口
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 public interface ${tableInfo.upperCamelCase}Service {
     /**
@@ -53,7 +53,7 @@ public interface ${tableInfo.upperCamelCase}Service {
     ${tableInfo.upperCamelCase} get${tableInfo.upperCamelCase}ById(${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName});
 
     /**
-     * 根据主键ID列表查询${tableInfo.simpleRemark}列表
+     * 根据主键ID列表批量查询${tableInfo.simpleRemark}
      *
      * @param idList ${tableInfo.pkSimpleRemark}列表
      * @return 列表数据

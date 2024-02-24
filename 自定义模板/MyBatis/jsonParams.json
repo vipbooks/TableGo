@@ -3,7 +3,7 @@
   "basePackagePath" : "cn.tablego.mybatis",
   "srcPath" : "/src/main/java",
   "resourcesPath" : "/src/main/resources",
-  "commonFields" : "CREATED_BY, CREATION_DATE, LAST_UPDATED_BY, LAST_UPDATE_DATE, DELETE_FLAG",
+  "commonFields" : "CREATED_BY, CREATED_TIME, LAST_UPDATED_BY, LAST_UPDATED_TIME, DELETE_FLAG",
   "remarkMatchDict" : "类型, 类别, 分类, 状态, 是否",
   "remarkMatchMulti" : "备注, 说明, 描述",
   "ftlParamList" : [ {
@@ -62,38 +62,23 @@
       "USER_TYPE" : "UserTypeEnum"
     }
   },
-  "globalIgnoreValidFields" : [ "CREATED_BY", "CREATION_DATE", "LAST_UPDATED_BY", "LAST_UPDATE_DATE", "DELETE_FLAG" ],
+  "globalIgnoreValidFields" : [ "CREATED_BY", "CREATED_TIME", "LAST_UPDATED_BY", "LAST_UPDATED_TIME", "DELETE_FLAG" ],
   "tableIgnoreValidFields" : {
     "T_USER" : [ "USER_TYPE" ]
   },
   "searchFields" : {
-    "T_USER" : [ "USERNAME", "USER_TYPE", "FULL_NAME" ],
-    "T_USER_EXT_INFO" : [ "BIRTHDAY", "PROVINCE_CODE", "CITY_CODE", "AREA_CODE" ],
-    "T_SYS_PARAM" : [ "PARAM_NAME", "PARAM_CODE", "PARAM_TYPE" ],
     "T_DEPARTMENT" : [ "DEPT_NAME", "DEPT_CODE", "PARENT_ID" ],
-    "T_DICT_TYPE" : [ "TYPE_NAME", "TYPE_CODE" ],
-    "T_DICTIONARY" : [ "DICT_NAME", "DICT_CODE", "DICT_TYPE_CODE" ],
-    "T_PROVINCE" : [ "PROVINCE_NAME", "PROVINCE_CODE" ],
-    "T_CITY" : [ "CITY_NAME", "CITY_CODE", "PARENT_CODE" ],
-    "T_AREA" : [ "AREA_NAME", "AREA_CODE", "PARENT_CODE" ],
-    "T_ROLE" : [ "ROLE_NAME", "ROLE_CODE" ]
+    "T_SYS_PARAM" : [ "PARAM_NAME", "PARAM_CODE", "PARAM_TYPE" ],
+    "CUSTOM_TMP_TEST_USER" : [ "USERNAME", "FULL_NAME", "MOBILE_PHONE", "EMAIL", "BIRTHDAY" ]
   },
   "batchSearchFields" : {
-    "T_USER" : [ "ID" ],
     "T_DICTIONARY" : [ "DICT_TYPE_CODE" ],
-    "T_PROVINCE" : [ "PROVINCE_CODE" ],
-    "T_CITY" : [ "CITY_CODE" ],
-    "T_AREA" : [ "AREA_CODE" ]
+    "T_SYS_PARAM" : [ "PARAM_CODE" ],
+    "CUSTOM_TMP_TEST_USER" : [ "ID" ]
   },
   "checkValueExistedFields" : {
-    "T_USER" : [ "USERNAME", "ID_CARD", "MOBILE_PHONE" ],
-    "T_SYS_PARAM" : [ "PARAM_CODE" ],
     "T_DEPARTMENT" : [ "DEPT_CODE" ],
-    "T_DICT_TYPE" : [ "TYPE_CODE" ],
-    "T_DICTIONARY" : [ "DICT_CODE" ],
-    "T_PROVINCE" : [ "PROVINCE_CODE" ],
-    "T_CITY" : [ "CITY_CODE" ],
-    "T_AREA" : [ "AREA_CODE" ],
-    "T_ROLE" : [ "ROLE_CODE" ]
+    "T_SYS_PARAM" : [ "PARAM_CODE" ],
+    "CUSTOM_TMP_TEST_USER" : [ "USERNAME", "MOBILE_PHONE" ]
   }
 }

@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import cn.hutool.core.date.DatePattern;
 <#if jsonParam.enableSwagger>
@@ -24,51 +23,46 @@ public abstract class BaseBean extends OverrideBeanMethods {
     /** 版本号 */
     private static final long serialVersionUID = 6101499067277733665L;
 
-    /** 创建人，保存用户ID值 */
+    /** 创建人 */
 <#if jsonParam.enableSwagger>
-    @ApiModelProperty(value = "创建人，保存用户ID值", position = 1000)
+    @ApiModelProperty(value = "创建人")
 </#if>
-    @JsonProperty(index = 1000)
     @TableField(fill = FieldFill.INSERT)
-    private String createdBy;
+    protected String createdBy;
 
-    /** 创建日期 */
+    /** 创建时间 */
 <#if jsonParam.enableSwagger>
-    @ApiModelProperty(value = "创建日期", position = 1001)
+    @ApiModelProperty(value = "创建时间")
 </#if>
-    @JsonProperty(index = 1001)
     @JsonFormat(timezone = "GMT+8", pattern = DatePattern.NORM_DATETIME_PATTERN)
     @TableField(fill = FieldFill.INSERT)
-    private Date creationDate;
+    protected Date createdTime;
 
-    /** 最后修改人，保存用户ID值 */
+    /** 最后修改人 */
 <#if jsonParam.enableSwagger>
-    @ApiModelProperty(value = "最后修改人，保存用户ID值", position = 1002)
+    @ApiModelProperty(value = "最后修改人")
 </#if>
-    @JsonProperty(index = 1002)
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private String lastUpdatedBy;
+    protected String lastUpdatedBy;
 
-    /** 最后修改日期 */
+    /** 最后修改时间 */
 <#if jsonParam.enableSwagger>
-    @ApiModelProperty(value = "最后修改日期", position = 1003)
+    @ApiModelProperty(value = "最后修改时间")
 </#if>
-    @JsonProperty(index = 1003)
     @JsonFormat(timezone = "GMT+8", pattern = DatePattern.NORM_DATETIME_PATTERN)
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date lastUpdateDate;
+    protected Date lastUpdatedTime;
 
-    /** 删除标记，字典数据，例如：0：已删除、1：未删除 */
+    /** 删除标记，0：已删除、1：未删除 */
 <#if jsonParam.enableSwagger>
-    @ApiModelProperty(value = "删除标记，字典数据，例如：0：已删除、1：未删除", example = "1", position = 1004)
+    @ApiModelProperty(value = "删除标记，0：已删除、1：未删除", example = "1")
 </#if>
-    @JsonProperty(index = 1004)
-    @Range(min = 0, max = 1, message = "删除标记必需是{min}或{max}的一位正整数！")
+    @Range(min = 0, max = 1, message = "删除标记必需是 {min} 或 {max} 的一位正整数")
     @TableLogic
-    private Integer deleteFlag;
+    protected Integer deleteFlag;
 
     /**
-     * 获取记录创建人，保存用户ID值
+     * 获取记录创建人
      *
      * @return 记录创建人
      */
@@ -77,9 +71,9 @@ public abstract class BaseBean extends OverrideBeanMethods {
     }
 
     /**
-     * 设置记录创建人，保存用户ID值
+     * 设置记录创建人
      *
-     * @param createdBy 记录创建人，保存用户ID值
+     * @param createdBy 记录创建人
      */
     public BaseBean setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
@@ -87,26 +81,26 @@ public abstract class BaseBean extends OverrideBeanMethods {
     }
 
     /**
-     * 获取记录创建日期
+     * 获取记录创建时间
      *
-     * @return 记录创建日期
+     * @return 记录创建时间
      */
-    public Date getCreationDate() {
-        return this.creationDate;
+    public Date getCreatedTime() {
+        return this.createdTime;
     }
 
     /**
-     * 设置记录创建日期
+     * 设置记录创建时间
      *
-     * @param creationDate 记录创建日期
+     * @param createdTime 记录创建时间
      */
-    public BaseBean setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
+    public BaseBean setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
         return this;
     }
 
     /**
-     * 获取记录最后修改人，保存用户ID值
+     * 获取记录最后修改人
      *
      * @return 记录最后修改人
      */
@@ -115,9 +109,9 @@ public abstract class BaseBean extends OverrideBeanMethods {
     }
 
     /**
-     * 设置记录最后修改人，保存用户ID值
+     * 设置记录最后修改人
      *
-     * @param lastUpdatedBy 记录最后修改人，保存用户ID值
+     * @param lastUpdatedBy 记录最后修改人
      */
     public BaseBean setLastUpdatedBy(String lastUpdatedBy) {
         this.lastUpdatedBy = lastUpdatedBy;
@@ -125,26 +119,26 @@ public abstract class BaseBean extends OverrideBeanMethods {
     }
 
     /**
-     * 获取记录最后修改日期
+     * 获取记录最后修改时间
      *
-     * @return 记录最后修改日期
+     * @return 记录最后修改时间
      */
-    public Date getLastUpdateDate() {
-        return this.lastUpdateDate;
+    public Date getLastUpdatedTime() {
+        return this.lastUpdatedTime;
     }
 
     /**
-     * 设置记录最后修改日期
+     * 设置记录最后修改时间
      *
-     * @param lastUpdateDate 记录最后修改日期
+     * @param lastUpdatedTime 记录最后修改时间
      */
-    public BaseBean setLastUpdateDate(Date lastUpdateDate) {
-        this.lastUpdateDate = lastUpdateDate;
+    public BaseBean setLastUpdatedTime(Date lastUpdatedTime) {
+        this.lastUpdatedTime = lastUpdatedTime;
         return this;
     }
 
     /**
-     * 获取删除标记，字典数据，例如：0：已删除、1：未删除
+     * 获取删除标记，0：已删除、1：未删除
      *
      * @return 删除标记
      */
@@ -153,7 +147,7 @@ public abstract class BaseBean extends OverrideBeanMethods {
     }
 
     /**
-     * 设置删除标记，字典数据，例如：0：已删除、1：未删除
+     * 设置删除标记，0：已删除、1：未删除
      *
      * @param deleteFlag 删除标记
      */

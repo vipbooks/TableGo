@@ -38,6 +38,7 @@
       "enable" : true
     } ]
   }, {
+    "enable" : true,
     "commands" : [ {
       "command" : "cd ${serverProjectPath}"
     }, {
@@ -45,7 +46,7 @@
       "enable" : true
     }, {
       "command" : "sudo chmod +x ClearDockerBakImage.sh",
-      "enable" : false
+      "enable" : true
     } ]
   }, {
     "commands" : [ {
@@ -77,7 +78,13 @@
     }, {
       "command" : "docker image prune -f",
       "containsStr" : "Total reclaimed space"
-    }, {
+    } ]
+  }, {
+    "runtimeExec" : [ {
+      "command" : "${scriptPath}\\maven-lifecycle.bat clean ${projectPath}\\tablego-admin",
+      "enable" : true
+    } ],
+    "commands" : [ {
       "command" : "docker ps"
     } ]
   } ]

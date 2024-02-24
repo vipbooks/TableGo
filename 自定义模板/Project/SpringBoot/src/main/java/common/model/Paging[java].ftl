@@ -4,7 +4,6 @@ import java.util.List;
 import java.io.Serializable;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.fasterxml.jackson.annotation.JsonProperty;
 <#if jsonParam.enableSwagger>
 
 import io.swagger.annotations.ApiModel;
@@ -26,51 +25,44 @@ public class Paging<T extends Serializable> extends OverrideBeanMethods {
 
     /** 每页显示多少条记录 */
 <#if jsonParam.enableSwagger>
-    @ApiModelProperty(value = "每页显示多少条记录", example = "20", position = 1)
+    @ApiModelProperty(value = "每页显示多少条记录", example = "20")
 </#if>
-    @JsonProperty(index = 1)
     private Long pageSize = 20L;
 
     /** 当前页 */
 <#if jsonParam.enableSwagger>
-    @ApiModelProperty(value = "当前页", example = "1", position = 2)
+    @ApiModelProperty(value = "当前页", example = "1")
 </#if>
-    @JsonProperty(index = 2)
     private Long page = 1L;
 
     /** 总记录数 */
 <#if jsonParam.enableSwagger>
-    @ApiModelProperty(value = "总记录数", position = 3)
+    @ApiModelProperty(value = "总记录数")
 </#if>
-    @JsonProperty(index = 3)
     private Long total = 0L;
 
     /** 总页数 */
 <#if jsonParam.enableSwagger>
-    @ApiModelProperty(value = "总页数", position = 4)
+    @ApiModelProperty(value = "总页数")
 </#if>
-    @JsonProperty(index = 4)
     private Long totalPage = 0L;
 
     /** 是否存在上一页 */
 <#if jsonParam.enableSwagger>
-    @ApiModelProperty(value = "是否存在上一页", position = 5)
+    @ApiModelProperty(value = "是否存在上一页")
 </#if>
-    @JsonProperty(index = 5)
     private Boolean hasPrevious;
 
     /** 是否存在下一页 */
 <#if jsonParam.enableSwagger>
-    @ApiModelProperty(value = "是否存在下一页", position = 6)
+    @ApiModelProperty(value = "是否存在下一页")
 </#if>
-    @JsonProperty(index = 6)
     private Boolean hasNext;
 
     /** 当前页的记录集 */
 <#if jsonParam.enableSwagger>
-    @ApiModelProperty(value = "当前页的记录集", position = 7)
+    @ApiModelProperty(value = "当前页的记录集")
 </#if>
-    @JsonProperty(index = 7)
     private List<T> records;
 
     /** Paging空构造函数 */

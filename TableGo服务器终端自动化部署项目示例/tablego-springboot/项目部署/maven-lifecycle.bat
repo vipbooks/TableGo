@@ -13,18 +13,19 @@ if not defined options (
     goto error
 )
 if not defined projectPath (
-    echo Project path cannot be empty.
+    echo Maven project path cannot be empty.
     @echo.
     goto error
 )
 
 if exist !projectPath! (
-    echo Project path: !projectPath!
+    echo Maven options: !options!
+    echo Maven project path: !projectPath!
     @echo.
     cd /d !projectPath!
     mvn !options! -Dmaven.test.skip=true
 ) else (
-    echo Project path is not exist: !projectPath!
+    echo Maven project path is not exist: !projectPath!
     @echo.
     goto error
 )

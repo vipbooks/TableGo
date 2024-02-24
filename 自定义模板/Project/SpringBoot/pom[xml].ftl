@@ -27,7 +27,6 @@
 
         <mysql-connector-java.version>${jsonParam.version.mysqlConnectorJava}</mysql-connector-java.version>
         <mybatis-plus-boot-starter.version>${jsonParam.version.mybatisPlusBootStarter}</mybatis-plus-boot-starter.version>
-        <hibernate-validator.version>${jsonParam.version.hibernateValidator}</hibernate-validator.version>
         <commons-lang3.version>${jsonParam.version.commonsLang3}</commons-lang3.version>
         <lombok.version>${jsonParam.version.lombok}</lombok.version>
         <hutool-all.version>${jsonParam.version.hutoolAll}</hutool-all.version>
@@ -45,6 +44,9 @@
 <#if jsonParam.enableAliyunOss>
         <aliyun-sdk-oss.version>${jsonParam.version.aliyunSdkOss}</aliyun-sdk-oss.version>
 </#if>
+<#if jsonParam.enableEasyExcel>
+        <easyexcel.version>${jsonParam.version.easyexcel}</easyexcel.version>
+</#if>
 
         <maven-compiler-plugin.version>${jsonParam.version.mavenCompilerPlugin}</maven-compiler-plugin.version>
         <maven-source-plugin.version>${jsonParam.version.mavenSourcePlugin}</maven-source-plugin.version>
@@ -59,6 +61,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
         <dependency>
@@ -84,12 +91,6 @@
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>${"$"}{mybatis-plus-boot-starter.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>${"$"}{hibernate-validator.version}</version>
         </dependency>
 
         <dependency>
@@ -120,7 +121,7 @@
 
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
-            <artifactId>knife4j-spring-ui</artifactId>
+            <artifactId>knife4j-openapi2-ui</artifactId>
             <version>${"$"}{knife4j.version}</version>
         </dependency>
 
@@ -165,6 +166,14 @@
             <groupId>com.aliyun.oss</groupId>
             <artifactId>aliyun-sdk-oss</artifactId>
             <version>${"$"}{aliyun-sdk-oss.version}</version>
+        </dependency>
+</#if>
+<#if jsonParam.enableEasyExcel>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>easyexcel</artifactId>
+            <version>${"$"}{easyexcel.version}</version>
         </dependency>
 </#if>
 

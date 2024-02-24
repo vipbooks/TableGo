@@ -7,19 +7,19 @@ setlocal enabledelayedexpansion
 set projectPath=%1
 
 if not defined projectPath (
-    echo Project path cannot be empty.
+    echo SVN project path cannot be empty.
     @echo.
     goto error
 )
 
 if exist !projectPath! (
-    echo Project path: !projectPath!
+    echo SVN project path: !projectPath!
     @echo.
     cd /d C:\Program Files\TortoiseSVN\bin
     svn update !projectPath!
     exit 0
 ) else (
-    echo Project path is not exist: !projectPath!
+    echo SVN project path is not exist: !projectPath!
     @echo.
     goto error
 )

@@ -3,7 +3,7 @@
   "basePackagePath" : "cn.tablego.project.springboot",
   "srcPath" : "/src/main/java",
   "resourcesPath" : "/src/main/resources",
-  "excludeFields" : "CREATED_BY, CREATION_DATE, LAST_UPDATED_BY, LAST_UPDATE_DATE, DELETE_FLAG",
+  "commonFields" : "CREATED_BY, CREATED_TIME, LAST_UPDATED_BY, LAST_UPDATED_TIME, DELETE_FLAG",
   "remarkMatchDict" : "类型, 类别, 分类, 状态, 是否",
   "remarkMatchMulti" : "备注, 说明, 描述",
   "ftlParamList" : [ {
@@ -11,19 +11,17 @@
     "ftlRelativeDir" : "${srcPath}/model",
     "packagePath" : "${basePackagePath}.model",
     "relativePath" : "${srcPath}",
-    "excludeFields" : "${excludeFields}"
+    "excludeFields" : "${commonFields}"
   }, {
     "templateName" : "${tableUpperCamelCase}Mapper[xml].ftl",
     "ftlRelativeDir" : "${resourcesPath}/mapper",
     "relativePath" : "${resourcesPath}/mapper",
-    "needFilterField" : "false",
-    "excludeFields" : "${excludeFields}"
+    "needFilterField" : "false"
   }],
   "likeFields" : {
     "T_USER" : [ "FULL_NAME" ],
     "T_SYS_PARAM" : [ "PARAM_NAME" ],
     "T_DEPARTMENT" : [ "DEPT_NAME" ],
-    "T_DICT_TYPE" : [ "TYPE_NAME" ],
-    "T_PROVINCE" : [ "PROVINCE_NAME" ]
+    "T_DICT_TYPE" : [ "TYPE_NAME" ]
   }
 }

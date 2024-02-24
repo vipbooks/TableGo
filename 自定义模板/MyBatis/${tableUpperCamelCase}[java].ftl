@@ -28,10 +28,10 @@ import ${jsonParam.basePackagePath}.common.model.OverrideBeanMethods;
 <#if tableInfo.fieldInfos?has_content>
     <#list tableInfo.fieldInfos as fieldInfo>
         <#if !fieldInfo.primaryKey && fieldInfo.isNotNull && !FtlUtils.fieldExisted(fieldInfo, globalIgnoreValidFields) && !FtlUtils.fieldExisted(fieldInfo, tableIgnoreValidFields)>
-            <#if !importNotBlank && fieldInfo.javaType == "String">
+            <#if !importNotBlank && fieldInfo.isStringType>
                 <#assign importNotBlank = true />
 import javax.validation.constraints.NotBlank;
-            <#elseif !importNotNull && fieldInfo.javaType != "String">
+            <#elseif !importNotNull && !fieldInfo.isStringType>
                 <#assign importNotNull = true />
 import javax.validation.constraints.NotNull;
             </#if>
@@ -40,15 +40,14 @@ import javax.validation.constraints.NotNull;
 </#if>
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * <#if StringUtils.isNotBlank(tableInfo.remark)>${tableInfo.remark}(${tableInfo.tableName})<#else>${tableInfo.tableName}</#if>
+ * ${FtlUtils.emptyToDefault(tableInfo.remark, "${tableInfo.remark}(${tableInfo.tableName})", tableInfo.tableName)}
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
-@ApiModel(description = "${tableInfo.simpleRemark!tableInfo.tableName}")
+@ApiModel(description = "${FtlUtils.emptyToDefault(tableInfo.simpleRemark, "${tableInfo.tableName}")}")
 public class ${tableInfo.upperCamelCase} extends <#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.commonFields)>BaseBean<#else>OverrideBeanMethods</#if> {
     /** 版本号 */
     private static final long serialVersionUID = ${tableInfo.serialVersionUID!'1'}L;
@@ -64,13 +63,12 @@ public class ${tableInfo.upperCamelCase} extends <#if FtlUtils.fieldAllExisted(t
     </#if>
     <#list tableInfo.fieldInfos as fieldInfo>
 
-    @ApiModelProperty(value = "${fieldInfo.remark}", position = ${fieldInfo_index + 1})
-    @JsonProperty(index = ${fieldInfo_index + 1})
+    @ApiModelProperty(value = "${fieldInfo.remark}")
     <#if !fieldInfo.primaryKey && fieldInfo.isNotNull && !FtlUtils.fieldExisted(fieldInfo, globalIgnoreValidFields) && !FtlUtils.fieldExisted(fieldInfo, tableIgnoreValidFields)>
-        <#if fieldInfo.javaType == "String">
-    @NotBlank(message = "${fieldInfo.simpleRemark!fieldInfo.proName}不能为空！")
+        <#if fieldInfo.isStringType>
+    @NotBlank(message = "${fieldInfo.simpleRemark!fieldInfo.proName}不能为空")
         <#else>
-    @NotNull(message = "${fieldInfo.simpleRemark!fieldInfo.proName}不能为空！")
+    @NotNull(message = "${fieldInfo.simpleRemark!fieldInfo.proName}不能为空")
         </#if>
     </#if>
     <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>

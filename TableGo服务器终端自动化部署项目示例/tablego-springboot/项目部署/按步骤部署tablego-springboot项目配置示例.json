@@ -43,7 +43,7 @@
           "enable" : true
         }, {
           "command" : "sudo chmod +x AppService.sh ClearBakFile.sh",
-          "enable" : false
+          "enable" : true
         } ]
       } ]
     },
@@ -172,6 +172,15 @@
       } ]
     },
     "step6" : {
+      "enable" : true,
+      "remark" : "清理项目",
+      "batchConfig" : [ {
+        "runtimeExec" : [ {
+          "command" : "${scriptPath}\\maven-lifecycle.bat clean ${projectPath}"
+        } ]
+      } ]
+    },
+    "step7" : {
       "enable" : false,
       "remark" : "下载脚本文件",
       "batchConfig" : [ {

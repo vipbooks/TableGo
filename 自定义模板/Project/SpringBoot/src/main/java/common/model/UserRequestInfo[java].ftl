@@ -56,6 +56,9 @@ public class UserRequestInfo implements Serializable {
     /** 执行耗时 */
     private Long timeCost;
 
+    /** 响应状态 */
+    private Integer status;
+
     /** 错误消息 */
     private String errorMsg;
 }

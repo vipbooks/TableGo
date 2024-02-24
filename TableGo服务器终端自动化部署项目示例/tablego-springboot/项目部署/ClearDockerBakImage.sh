@@ -9,8 +9,9 @@
 bakImagePrefix=tablego
 saveImageNum=6
 
-#删除Docker旧的备份镜像
+#清理Docker旧备份镜像
 delDockerBakImage() {
+    echo 自动清理Docker旧备份镜像开始
     imageNum=`docker images | grep ${bakImagePrefix} | wc -l`
     echo "前缀 ${bakImagePrefix} 的备份镜像数：${imageNum}，保留备份镜像数：${saveImageNum}"
     docker images | grep ${bakImagePrefix} | sort -nr
@@ -26,13 +27,14 @@ delDockerBakImage() {
     else
         echo 已有备份镜像数未超过保存备份镜像数量不予清理
     fi
+    echo 自动清理Docker旧备份镜像结束
 }
 
 #使用说明，用来提示输入参数
 usage() {
     echo "p：对应 bakImagePrefix 参数，备份镜像的前缀"
     echo "n：对应 saveImageNum 参数，保存备份镜像数量"
-    echo "例如：sh ClearDockerBakImage.sh -p tablego-admin_ -n 3"
+    echo "例如：sh ClearDockerBakImage.sh -p tablego-admin -n 3"
     exit 1
 }
 
@@ -58,5 +60,5 @@ while getopts ":p:n:" OPT; do
           ;;
     esac
 done
-#删除Docker旧的备份镜像
+#清理Docker旧备份镜像
 delDockerBakImage

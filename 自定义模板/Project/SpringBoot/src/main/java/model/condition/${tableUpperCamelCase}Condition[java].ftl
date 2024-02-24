@@ -1,15 +1,15 @@
 <#-- 初始化表的查询字段 -->
-<#assign searchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.searchFields) />
+<#assign searchFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.searchFields) />
 <#-- 初始化表的批量查询字段 -->
-<#assign batchSearchFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.batchSearchFields) />
+<#assign batchSearchFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.batchSearchFields) />
 package ${jsonParam.packagePath}
 
-<#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFields, "Date")>
+<#if FtlUtils.fieldTypeExisted(searchFields, "Date")>
 import java.util.Date;
 import cn.hutool.core.date.DatePattern;
 import com.fasterxml.jackson.annotation.JsonFormat;
 </#if>
-<#if FtlUtils.fieldTypeAtListExisted(tableInfo, searchFields, "BigDecimal")>
+<#if FtlUtils.fieldTypeExisted(searchFields, "BigDecimal")>
 import java.math.BigDecimal;
 </#if>
 <#if FtlUtils.fieldTypeExisted(tableInfo, "BigInteger")>
@@ -56,47 +56,39 @@ public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
     /** 版本号 */
     private static final long serialVersionUID = ${tableInfo.serialVersionUID!'1'}L;
 <#if searchFields?has_content>
-    <#list tableInfo.fieldInfos as fieldInfo>
-        <#list searchFields as fieldName>
-            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+    <#list searchFields as fieldInfo>
 
-    <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>
+        <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>
     /** ${fieldInfo.remark!fieldInfo.colName}(开始) */
-        <#if jsonParam.enableSwagger>
+            <#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "${fieldInfo.remark!fieldInfo.colName}(开始)")
-        </#if>
+            </#if>
     @JsonFormat(timezone = "GMT+8", pattern = DatePattern.NORM_DATE_PATTERN)
     private ${fieldInfo.javaType} ${fieldInfo.proName}Begin;
 
     /** ${fieldInfo.remark!fieldInfo.colName}(结束) */
-        <#if jsonParam.enableSwagger>
+            <#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "${fieldInfo.remark!fieldInfo.colName}(结束)")
-        </#if>
+            </#if>
     @JsonFormat(timezone = "GMT+8", pattern = DatePattern.NORM_DATE_PATTERN)
     private ${fieldInfo.javaType} ${fieldInfo.proName}End;
-    <#else>
+        <#else>
     /** ${fieldInfo.remark} */
-        <#if jsonParam.enableSwagger>
+            <#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "${fieldInfo.remark}")
-        </#if>
-    private ${fieldInfo.javaType} ${fieldInfo.proName};
-    </#if>
             </#if>
-        </#list>
+    private ${fieldInfo.javaType} ${fieldInfo.proName};
+        </#if>
     </#list>
 </#if>
 <#if batchSearchFields?has_content>
-    <#list tableInfo.fieldInfos as fieldInfo>
-        <#list batchSearchFields as fieldName>
-            <#if FtlUtils.fieldEquals(fieldInfo, fieldName)>
+    <#list batchSearchFields as fieldInfo>
 
     /** ${fieldInfo.simpleRemark}列表 */
         <#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "${fieldInfo.simpleRemark}列表")
         </#if>
     private List<${fieldInfo.javaType}> ${fieldInfo.proName}List;
-            </#if>
-        </#list>
     </#list>
 </#if>
 }

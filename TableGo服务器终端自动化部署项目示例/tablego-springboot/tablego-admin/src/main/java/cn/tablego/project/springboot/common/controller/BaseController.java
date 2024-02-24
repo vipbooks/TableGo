@@ -14,7 +14,7 @@ import cn.hutool.core.util.StrUtil;
  * 用于其他Controller继承的基础Controller
  *
  * @author bianj
- * @version 1.0.0 2021-09-26
+ * @version 1.0.0 2022-09-26
  */
 public abstract class BaseController {
     @Autowired

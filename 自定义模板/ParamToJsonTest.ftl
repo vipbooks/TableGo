@@ -13,6 +13,8 @@ tempParamMap: ${JsonUtils.objToJson(tempParamMap)}
 
 tempParamList: ${JsonUtils.objToJson(tempParamList)}
 
+excelDataList: ${JsonUtils.objToJson(excelDataList)}
+
 sqlQueryData: ${JsonUtils.objToJson(sqlQueryData)}
 <#if sqlQueryData?has_content && sqlQueryData.dictList?has_content>
 

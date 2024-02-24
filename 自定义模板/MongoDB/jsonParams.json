@@ -1,6 +1,6 @@
 {
-  "projectDir" : "D:\\springboot-test",
-  "basePackagePath" : "com.test.springboottest",
+  "projectDir" : "D:\\tablego-mongodb",
+  "basePackagePath" : "cn.tablego.mongodb",
   "srcPath" : "/src/main/java",
   "moduleName" : "message",
   "ftlParamList" : [ {

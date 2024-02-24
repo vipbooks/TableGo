@@ -7,8 +7,9 @@
   "srcPath" : "/src/main/java",
   "resourcesPath" : "/src/main/resources",
   "commonFields" : "CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME",
-  "remarkMatchDict" : "类型, 类别, 状态, 是否",
+  "remarkMatchDict" : "类型, 类别, 分类, 状态, 是否",
   "remarkMatchMulti" : "备注, 说明, 描述",
+  "remarkMatchRich" : "",
   "ftlParamList" : [ {
     "templateName" : "${tableUpperCamelCase}[java].ftl",
     "ftlRelativeDir" : "${templatePath}/admin",
@@ -40,7 +41,7 @@
     }
   },
   "globalIgnoreValidFields" : [ "CREATE_BY", "CREATE_TIME", "UPDATE_BY", "UPDATE_TIME", "DEL_FLAG" ],
-  "exportFields" : {
-    "T_SYS_PARAM" : [ "PARAM_NAME", "PARAM_CODE", "PARAM_TYPE", "PARAM_VALUE" ]
+  "importAndExportFields" : {
+    "T_SYS_PARAM" : [ "PARAM_NAME", "PARAM_CODE", "PARAM_TYPE", "PARAM_VALUE", "CREATE_TIME" ]
   }
 }

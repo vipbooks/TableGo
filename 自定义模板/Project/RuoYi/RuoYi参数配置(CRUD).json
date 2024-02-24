@@ -8,8 +8,9 @@
   "srcPath" : "/src/main/java",
   "resourcesPath" : "/src/main/resources",
   "commonFields" : "CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME",
-  "remarkMatchDict" : "类型, 类别, 状态, 是否",
+  "remarkMatchDict" : "类型, 类别, 分类, 状态, 是否",
   "remarkMatchMulti" : "备注, 说明, 描述",
+  "remarkMatchRich" : "",
   "ftlParamList" : [ {
     "templateName" : "${tableUpperCamelCase}Controller[java].ftl",
     "ftlRelativeDir" : "${templatePath}/admin",
@@ -51,25 +52,17 @@
     "templateName" : "${tableLowerCamelCase}[html].ftl",
     "ftlRelativeDir" : "${templatePath}/web",
     "relativePath" : "${resourcesPath}/templates/${moduleName}/${tableLowerCamelCase}",
-    "projectSubDir" : "${webPath}",
-    "excludeFields" : "${commonFields}"
+    "projectSubDir" : "${webPath}"
   }, {
     "templateName" : "add[html].ftl",
     "ftlRelativeDir" : "${templatePath}/web",
     "relativePath" : "${resourcesPath}/templates/${moduleName}/${tableLowerCamelCase}",
-    "projectSubDir" : "${webPath}",
-    "excludeFields" : "${commonFields}"
+    "projectSubDir" : "${webPath}"
   }, {
     "templateName" : "edit[html].ftl",
     "ftlRelativeDir" : "${templatePath}/web",
     "relativePath" : "${resourcesPath}/templates/${moduleName}/${tableLowerCamelCase}",
-    "projectSubDir" : "${webPath}",
-    "excludeFields" : "${commonFields}"
-  }, {
-    "templateName" : "mainMenu[sql].ftl",
-    "ftlRelativeDir" : "${templatePath}",
-    "relativePath" : "/sql/menu",
-    "buildSingleFile" : "true"
+    "projectSubDir" : "${webPath}"
   }, {
     "templateName" : "${tableLowerCamelCase}Menu[sql].ftl",
     "ftlRelativeDir" : "${templatePath}",
@@ -93,12 +86,13 @@
   },
   "globalIgnoreValidFields" : [ "CREATE_BY", "CREATE_TIME", "UPDATE_BY", "UPDATE_TIME", "DEL_FLAG" ],
   "searchFields" : {
-    "T_SYS_PARAM" : [ "PARAM_NAME", "PARAM_CODE", "PARAM_TYPE" ],
+    "T_SYS_PARAM" : [ "PARAM_NAME", "PARAM_CODE", "PARAM_TYPE", "CREATE_TIME" ],
     "T_PROVINCE" : [ "PROVINCE_NAME", "PROVINCE_CODE" ],
     "T_CITY" : [ "CITY_NAME", "CITY_CODE" ],
     "T_AREA" : [ "AREA_NAME", "AREA_CODE" ]
   },
   "batchSearchFields" : {
+    "T_SYS_PARAM" : [ "PARAM_CODE" ],
     "T_PROVINCE" : [ "PROVINCE_CODE" ],
     "T_CITY" : [ "CITY_CODE" ],
     "T_AREA" : [ "AREA_CODE" ]
@@ -121,7 +115,7 @@
     "T_CITY" : [ "CITY_NAME", "CITY_CODE", "PARENT_CODE" ],
     "T_AREA" : [ "AREA_NAME", "AREA_CODE", "PARENT_CODE" ]
   },
-  "exportFields" : {
-    "T_SYS_PARAM" : [ "PARAM_NAME", "PARAM_CODE", "PARAM_TYPE", "PARAM_VALUE" ]
+  "importAndExportFields" : {
+    "T_SYS_PARAM" : [ "PARAM_NAME", "PARAM_CODE", "PARAM_TYPE", "PARAM_VALUE", "CREATE_TIME" ]
   }
 }

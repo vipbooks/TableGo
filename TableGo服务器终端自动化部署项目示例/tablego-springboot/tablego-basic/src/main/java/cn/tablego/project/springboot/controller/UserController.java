@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cn.tablego.project.springboot.common.controller.BaseController;
 import cn.tablego.project.springboot.common.model.Paging;
+import cn.tablego.project.springboot.common.model.PagingCondition;
 import cn.tablego.project.springboot.common.model.Result;
 import cn.tablego.project.springboot.model.User;
 import io.swagger.annotations.Api;
@@ -25,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
  * 用户服务
  *
  * @author bianj
- * @version 1.0.0 2021-09-26
+ * @version 1.0.0 2022-09-26
  */
 @Slf4j
 @Api(tags = "用户服务")
@@ -36,9 +37,10 @@ public class UserController extends BaseController {
     private String appName;
 
     @ApiOperation(value = "分页查询用户列表")
+    @ApiImplicitParam(name = "condition", value = "分页查询请求参数", required = true, dataType = "PagingCondition", paramType = "body")
     @PostMapping("/findUserPage")
-    public Paging<User> findUserPage() {
-        log.info("[{}] [{}] 分页查询用户列表", getServerHost(), appName);
+    public Paging<User> findUserPage(@RequestBody PagingCondition condition) {
+        log.info("[{}] [{}] 分页查询用户列表: {}", getServerHost(), appName, condition);
         return new Paging<>();
     }
 

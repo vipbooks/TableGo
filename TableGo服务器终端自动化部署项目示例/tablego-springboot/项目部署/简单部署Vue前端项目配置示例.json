@@ -29,11 +29,13 @@
     "zipFileList" : [ {
       "srcDir" : "${projectPath}\\dist",
       "outPath" : "${projectPath}\\dist-zip\\html.zip",
-      "enable" : true
+      "enable" : true,
+      "remark" : "文件夹压缩示例"
     }, {
       "srcFiles" : "${projectPath}\\package.json, ${projectPath}\\vue.config.js, ${projectPath}\\README.md",
       "outPath" : "${projectPath}\\dist-zip\\example.zip",
-      "enable" : true
+      "enable" : false,
+      "remark" : "多文件压缩示例"
     } ]
   }, {
     "commands" : [ {

@@ -84,7 +84,7 @@ public class RequestUtils {
     }
 
     /**
-     * 获得请求头中的用户代理信息
+     * 获取请求头中的用户代理信息
      *
      * @param request HttpServletRequest
      * @return 用户代理信息
@@ -97,7 +97,7 @@ public class RequestUtils {
     }
 
     /**
-     * 获得请求头中的用户代理对象
+     * 获取请求头中的用户代理对象
      *
      * @param headerUserAgent 请求头中的用户代理信息
      * @return 用户代理对象
@@ -109,4 +109,16 @@ public class RequestUtils {
         return UserAgentParser.parse(headerUserAgent);
     }
 
+    /**
+     * 获取响应状态
+     *
+     * @return 响应状态
+     */
+    public static Integer getResponseStatus() {
+        HttpServletResponse response = RequestUtils.getResponse();
+        if (response != null) {
+            return response.getStatus();
+        }
+        return null;
+    }
 }
