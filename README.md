@@ -49,3 +49,7 @@ MySQL关键字做表名导致生成代码或文档报错的解决方法，以ord
 #### TableGo功能一览
 
 ![](http://cdn.tablego.cn/images/function_list.png)
+
+#### 计算机软件著作权
+
+![](http://cdn.tablego.cn/images/copyright.jpg)
