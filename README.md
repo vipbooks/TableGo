@@ -1,6 +1,6 @@
 # TableGo
 
-#### 介绍aaa
+#### 介绍
 
 ![](http://cdn.tablego.cn/images/tablego.png)
 
