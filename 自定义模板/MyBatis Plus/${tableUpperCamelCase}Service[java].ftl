@@ -96,6 +96,14 @@ public interface ${tableInfo.upperCamelCase}Service extends IService<${tableInfo
      * @return 是否成功
      */
     Boolean update${tableInfo.upperCamelCase}(${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase});
+
+    /**
+     * 批量新增或修改${tableInfo.simpleRemark}列表
+     *
+     * @param ${tableInfo.lowerCamelCase}List ${tableInfo.simpleRemark}列表
+     * @return 是否成功
+     */
+    Boolean batchSaveOrUpdate(List<${tableInfo.upperCamelCase}> ${tableInfo.lowerCamelCase}List);
 <#if tableInfo.pkLowerCamelName?has_content>
 
     /**

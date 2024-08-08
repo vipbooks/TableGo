@@ -29,7 +29,7 @@ import ${jsonParam.basePackagePath}.common.service.AliyunOssService;
  * 阿里云OSS服务
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 <#if jsonParam.enableSwagger>
 @Api(tags = "阿里云OSS服务")

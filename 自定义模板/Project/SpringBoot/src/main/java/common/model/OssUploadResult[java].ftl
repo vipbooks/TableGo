@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
  * OSS文件上传返回结果
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 @Data
 @Builder
@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class OssUploadResult implements Serializable {
     /** 版本号 */
-    private static final long serialVersionUID = 860229005300493886L;
+    private static final long serialVersionUID = ${FtlUtils.getSerialVersionUID()}L;
 
     /** OSS服务器地址 */
 <#if jsonParam.enableSwagger>

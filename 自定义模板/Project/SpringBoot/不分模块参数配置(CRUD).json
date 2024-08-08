@@ -1,0 +1,99 @@
+{
+  "projectDir" : "D:\\tablego-springboot",
+  "basePackagePath" : "cn.tablego.project.springboot",
+  "srcPath" : "/src/main/java",
+  "resourcesPath" : "/src/main/resources",
+  "testPath" : "/src/test/java",
+  "commonFields" : "created_by, created_time, last_updated_by, last_updated_time, is_deleted",
+  "remarkMatchDict" : "类型, 类别, 分类, 状态, 是否",
+  "remarkMatchMulti" : "备注, 说明, 描述",
+  "ftlParamList" : [ {
+    "templateName" : "${tableUpperCamelCase}[java].ftl",
+    "ftlRelativeDir" : "${srcPath}/model",
+    "packagePath" : "${basePackagePath}.model",
+    "relativePath" : "${srcPath}",
+    "excludeFields" : "${commonFields}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Condition[java].ftl",
+    "ftlRelativeDir" : "${srcPath}/model/condition",
+    "packagePath" : "${basePackagePath}.model.condition",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateNames" : "${tableUpperCamelCase}Import[java].ftl, ${tableUpperCamelCase}Export[java].ftl",
+    "ftlRelativeDir" : "${srcPath}/model/excel",
+    "packagePath" : "${basePackagePath}.model.excel",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Service[java].ftl",
+    "ftlRelativeDir" : "${srcPath}/service",
+    "packagePath" : "${basePackagePath}.service",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Controller[java].ftl",
+    "ftlRelativeDir" : "${srcPath}/controller",
+    "packagePath" : "${basePackagePath}.controller",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Mapper[java].ftl",
+    "ftlRelativeDir" : "${srcPath}/mapper",
+    "packagePath" : "${basePackagePath}.mapper",
+    "relativePath" : "${srcPath}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Mapper[xml].ftl",
+    "ftlRelativeDir" : "${resourcesPath}/mapper",
+    "relativePath" : "${resourcesPath}/mapper",
+    "needFilterField" : "false"
+  }, {
+    "templateName" : "${tableUpperCamelCase}ServiceTest[java].ftl",
+    "ftlRelativeDir" : "${testPath}",
+    "packagePath" : "${basePackagePath}",
+    "relativePath" : "${testPath}"
+  } ],
+  "searchFields" : {
+    "t_user" : [ "username", "full_name", "mobile_phone", "email", "birthday" ],
+    "t_sys_param" : [ "param_name", "param_code", "param_type" ],
+    "t_department" : [ "dept_name", "dept_code", "parent_id" ],
+    "t_dict_type" : [ "type_name", "type_code", "dict_value" ],
+    "t_dictionary" : [ "dict_name", "dict_code", "dict_type_code" ],
+    "t_province" : [ "province_name", "province_code" ],
+    "t_city" : [ "city_name", "city_code", "parent_code" ],
+    "t_area" : [ "area_name", "area_code", "parent_code" ]
+  },
+  "batchSearchFields" : {
+    "t_user" : [ "id" ],
+    "t_department" : [ "dept_code" ],
+    "t_dictionary" : [ "dict_type_code" ],
+    "t_province" : [ "province_code" ],
+    "t_city" : [ "city_code" ],
+    "t_area" : [ "area_code" ]
+  },
+  "checkValueExistedFields" : {
+    "t_user" : [ "username", "mobile_phone" ],
+    "t_sys_param" : [ "param_code" ],
+    "t_department" : [ "dept_code" ],
+    "t_dict_type" : [ "type_code" ],
+    "t_dictionary" : [ "dict_code" ],
+    "t_province" : [ "province_code" ],
+    "t_city" : [ "city_code" ],
+    "t_area" : [ "area_code" ]
+  },
+  "importAndExportFields" : {
+    "t_user " : [ "username", "full_name", "id_card", "mobile_phone", "email", "birthday" ],
+    "t_sys_param" : [ "param_name", "param_code", "param_type", "param_value1", "param_value2", "param_value3" ]
+  },
+  "noSqlTables" : [ "t_sys_param", "t_department" ],
+  "useCacheTables" : [ "t_sys_param", "t_department", "t_dict_type", "t_dictionary" ],
+  "componentList" : [ {
+    "name" : "Swagger组件",
+    "enable" : "true",
+    "codeEnableKey" : "enableSwagger"
+  }, {
+    "name" : "EasyExcel组件",
+    "enable" : "false",
+    "codeEnableKey" : "enableEasyExcel",
+    "dynamicFtlParams" : [ {
+      "dependentParamName" : "importAndExportFields",
+      "dynamicFtlNames" : "${tableUpperCamelCase}Import[java].ftl, ${tableUpperCamelCase}Export[java].ftl"
+    } ]
+  } ]
+}

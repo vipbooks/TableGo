@@ -3,7 +3,7 @@
   "basePackagePath" : "cn.tablego.mybatisplus",
   "srcPath" : "/src/main/java",
   "resourcesPath" : "/src/main/resources",
-  "commonFields" : "CREATED_BY, CREATED_TIME, LAST_UPDATED_BY, LAST_UPDATED_TIME, DELETE_FLAG",
+  "commonFields" : "CREATED_BY, CREATED_TIME, LAST_UPDATED_BY, LAST_UPDATED_TIME, IS_DELETED",
   "remarkMatchDict" : "类型, 类别, 分类, 状态, 是否",
   "remarkMatchMulti" : "备注, 说明, 描述",
   "ftlParamList" : [ {
@@ -54,22 +54,16 @@
     }
   },
   "globalFieldType" : {
-    "DELETE_FLAG" : "String",
     "IS_ENABLE" : "YesNoEnum"
   },
   "tableFieldType" : {
-    "T_USER" : {
+    "CUSTOM_TMP_TEST_USER" : {
       "USER_TYPE" : "UserTypeEnum"
     }
   },
-  "globalIgnoreValidFields" : [ "CREATED_BY", "CREATED_TIME", "LAST_UPDATED_BY", "LAST_UPDATED_TIME", "DELETE_FLAG" ],
+  "globalIgnoreValidFields" : [ "CREATED_BY", "CREATED_TIME", "LAST_UPDATED_BY", "LAST_UPDATED_TIME", "IS_DELETED" ],
   "tableIgnoreValidFields" : {
-    "T_USER" : [ "USER_TYPE" ]
-  },
-  "likeFields" : {
-    "T_DEPARTMENT" : [ "DEPT_NAME" ],
-    "T_SYS_PARAM" : [ "PARAM_NAME" ],
-    "CUSTOM_TMP_TEST_USER" : [ "FULL_NAME" ]
+    "CUSTOM_TMP_TEST_USER" : [ "USER_TYPE" ]
   },
   "searchFields" : {
     "T_DEPARTMENT" : [ "DEPT_NAME", "DEPT_CODE", "PARENT_ID" ],
@@ -86,5 +80,5 @@
     "T_SYS_PARAM" : [ "PARAM_CODE" ],
     "CUSTOM_TMP_TEST_USER" : [ "USERNAME", "MOBILE_PHONE" ]
   },
-  "noSqlTables" : [ "T_SYS_PARAM" ]
+  "noSqlTables" : [ "T_SYS_PARAM", "T_DEPARTMENT" ]
 }

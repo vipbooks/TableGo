@@ -107,7 +107,7 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
     @DeleteMapping("/deleteList")
     public Result<Boolean> deleteList(@RequestBody List<${tableInfo.pkJavaType}> idList) {
         Assert.isNotEmpty(idList, "请选择需要删除的数据！");
-        <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")>
+        <#if FtlUtils.fieldExisted(tableInfo, "IS_DELETED")>
         Boolean bool = ${tableInfo.lowerCamelCase}Service.delete${tableInfo.upperCamelCase}LogicByIds(idList);
         <#else>
         Boolean bool = ${tableInfo.lowerCamelCase}Service.delete${tableInfo.upperCamelCase}ByIds(idList);

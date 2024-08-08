@@ -3,8 +3,6 @@
 <#assign globalIgnoreValidFields = jsonParam.globalIgnoreValidFields />
 <#-- 初始化表要忽略验证的字段 -->
 <#assign tableIgnoreValidFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.tableIgnoreValidFields) />
-<#-- 初始化表的模糊查询字段 -->
-<#assign likeFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.likeFields) />
 package ${jsonParam.packagePath}
 
 <#if FtlUtils.fieldTypeExisted(tableInfo, "Date")>
@@ -19,10 +17,6 @@ import java.math.BigDecimal;
 </#if>
 <#if FtlUtils.fieldTypeExisted(tableInfo, "BigInteger")>
 import java.math.BigInteger;
-</#if>
-<#if FtlUtils.fieldAtListExisted(tableInfo, likeFields)>
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.SqlCondition;
 </#if>
 <#assign importNotBlank = false />
 <#assign importNotNull = false />
@@ -89,6 +83,7 @@ public class ${tableInfo.upperCamelCase} extends <#if FtlUtils.fieldAllExisted(t
     </#if>
     <#list tableInfo.fieldInfos as fieldInfo>
 
+    /** ${fieldInfo.remark} */
     @ApiModelProperty(value = "${fieldInfo.remark}")
     <#if !fieldInfo.primaryKey && fieldInfo.isNotNull && !FtlUtils.fieldExisted(fieldInfo, globalIgnoreValidFields) && !FtlUtils.fieldExisted(fieldInfo, tableIgnoreValidFields)>
         <#if fieldInfo.isStringType>
@@ -104,9 +99,6 @@ public class ${tableInfo.upperCamelCase} extends <#if FtlUtils.fieldAllExisted(t
     @JsonFormat(timezone = "GMT+8", pattern = <#if fieldInfo.isDateTimeType>DatePattern.NORM_DATETIME_PATTERN<#else>DatePattern.NORM_DATE_PATTERN</#if>)
     <#elseif fieldInfo.javaType == "Long">
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    </#if>
-    <#if FtlUtils.fieldExisted(likeFields, fieldInfo.colName)>
-    @TableField(condition = SqlCondition.LIKE)
     </#if>
     private ${fieldInfo.javaType} ${fieldInfo.proName};
     </#list>

@@ -25,28 +25,33 @@
   "batchConfig" : [ {
     "commands" : [ {
       "command" : "cd /opt/tablego-springboot"
-    }, {
-      "command" : "sh AppService.sh restart tablego-admin ${profile} ${tablegoAdminPort}",
-      "enable" : true
+    } ]
+  }, {
+    "enable" : true,
+    "commands" : [ {
+      "command" : "sh AppService.sh restart tablego-admin ${profile} ${tablegoAdminPort}"
     }, {
       "command" : "touch tablego-admin.log && tail -f tablego-admin.log",
-      "containsStrSigquit" : "Started AdminApplication",
-      "enable" : true
-    }, {
-      "command" : "sh AppService.sh restart tablego-basic ${profile} ${tablegoBasicPort}",
-      "enable" : true
+      "containsStrSigquit" : "Started AdminApplication"
+    } ]
+  }, {
+    "enable" : true,
+    "commands" : [ {
+      "command" : "sh AppService.sh restart tablego-basic ${profile} ${tablegoBasicPort}"
     }, {
       "command" : "touch tablego-basic.log && tail -f tablego-basic.log",
-      "containsStrSigquit" : "Started BasicApplication",
-      "enable" : true
-    }, {
-      "command" : "sh AppService.sh restart tablego-iam ${profile} ${tablegoIamPort}",
-      "enable" : true
+      "containsStrSigquit" : "Started BasicApplication"
+    } ]
+  }, {
+    "enable" : true,
+    "commands" : [ {
+      "command" : "sh AppService.sh restart tablego-iam ${profile} ${tablegoIamPort}"
     }, {
       "command" : "touch tablego-iam.log && tail -f tablego-iam.log",
-      "containsStrSigquit" : "Started IamApplication",
-      "enable" : true
-    }, {
+      "containsStrSigquit" : "Started IamApplication"
+    } ]
+  }, {
+    "commands" : [ {
       "command" : "ls"
     } ]
   } ]

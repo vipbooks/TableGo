@@ -8,13 +8,16 @@
   "serverScriptPath" : "/opt/tablego-springboot",
   "profiles" : {
     "dev" : {
-      "script" : "build"
+      "script" : "build",
+      "backup" : false
     },
     "test" : {
-      "script" : "test"
+      "script" : "build:test",
+      "backup" : false
     },
     "prod" : {
-      "script" : "prod"
+      "script" : "build:prod",
+      "backup" : true
     }
   },
   "batchConfig" : [ {
@@ -38,9 +41,9 @@
       "remark" : "多文件压缩示例"
     } ]
   }, {
+    "enable" : "${backup}",
     "commands" : [ {
-      "command" : "cd ${serverProjectPath}",
-      "enable" : true
+      "command" : "cd ${serverProjectPath}"
     }, {
       "command" : "mkdir -p ${serverProjectPath}/bak",
       "enable" : true
@@ -52,13 +55,13 @@
       "command" : "sh ${serverScriptPath}/ClearBakFile.sh -d ${serverProjectPath}/bak -e tar.gz",
       "waitSeconds" : 2,
       "enable" : true
-    } ],
+    } ]
+  }, {
     "fileUploads" : [ {
       "fromPath" : [ "${projectPath}\\dist-zip\\html.zip" ],
       "toPath" : "${serverProjectPath}",
       "enable" : true
-    } ]
-  }, {
+    } ],
     "commands" : [ {
       "command" : "cd ${serverProjectPath}"
     }, {

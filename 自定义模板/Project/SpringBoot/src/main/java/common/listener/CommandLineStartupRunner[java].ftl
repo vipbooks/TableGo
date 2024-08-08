@@ -15,7 +15,7 @@ import cn.hutool.core.util.StrUtil;
  * 应用启动监听，监听应用是否启动完成
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 @Component
 public class CommandLineStartupRunner implements CommandLineRunner {

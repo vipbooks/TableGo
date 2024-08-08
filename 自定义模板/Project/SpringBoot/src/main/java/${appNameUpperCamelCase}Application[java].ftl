@@ -19,7 +19,7 @@ import com.spring4all.swagger.EnableSwagger2Doc;
 </#if>
  * 
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 @SpringBootApplication
 <#if jsonParam.enableSwagger>

@@ -1,7 +1,7 @@
 package ${jsonParam.packagePath}
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.SpringBootConfiguration;
 
 import lombok.Data;
 
@@ -9,10 +9,10 @@ import lombok.Data;
  * 阿里云OSS参数配置
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 @Data
-@Configuration
+@SpringBootConfiguration
 @ConfigurationProperties("aliyun.oss")
 public class AliyunOssConfig {
     /** 外网访问节点域名 */

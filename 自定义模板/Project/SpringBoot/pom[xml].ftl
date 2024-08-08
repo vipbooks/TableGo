@@ -27,7 +27,6 @@
 
         <mysql-connector-java.version>${jsonParam.version.mysqlConnectorJava}</mysql-connector-java.version>
         <mybatis-plus-boot-starter.version>${jsonParam.version.mybatisPlusBootStarter}</mybatis-plus-boot-starter.version>
-        <commons-lang3.version>${jsonParam.version.commonsLang3}</commons-lang3.version>
         <lombok.version>${jsonParam.version.lombok}</lombok.version>
         <hutool-all.version>${jsonParam.version.hutoolAll}</hutool-all.version>
 <#if jsonParam.enableSwagger>
@@ -81,6 +80,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <version>${"$"}{mysql-connector-java.version}</version>
@@ -91,12 +95,6 @@
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>${"$"}{mybatis-plus-boot-starter.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${"$"}{commons-lang3.version}</version>
         </dependency>
 
         <dependency>

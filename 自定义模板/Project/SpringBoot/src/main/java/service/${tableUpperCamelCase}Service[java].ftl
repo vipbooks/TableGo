@@ -1,22 +1,27 @@
 <#-- 初始化表的查询字段 -->
 <#assign searchFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.searchFields) />
+<#-- 初始化表的批量查询字段 -->
+<#assign batchSearchFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.batchSearchFields) />
 <#-- 初始化查询字段中的日期字段 -->
 <#assign dateFieldInfo = FtlUtils.getFieldInfoByType(searchFields, "Date") />
 <#-- 初始化需要生成检查字段值是否已存在的接口的字段 -->
-<#assign checkValueExistedFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.checkValueExistedFields) />
+<#assign checkValueExistedFieldInfos = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.checkValueExistedFields) />
+<#assign checkValueExistedFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.checkValueExistedFields) />
 <#-- 初始化是否不生成SQL查询的接口 -->
 <#assign isNoSqlTable = FtlUtils.tableExisted(tableInfo, jsonParam.noSqlTables) />
 <#-- 初始化是否是使用缓存的表 -->
 <#assign isUseCacheTable = FtlUtils.tableExisted(tableInfo, jsonParam.useCacheTables) />
+<#-- 初始化需要导入导出Excel的字段 -->
+<#assign importAndExportFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.importAndExportFields) />
 package ${jsonParam.packagePath}
 
 <#if FtlUtils.fieldTypeExisted(searchFields, "Date")>
 import cn.hutool.core.date.DateUtil;
 </#if>
-<#if checkValueExistedFields?has_content || tableInfo.pkLowerCamelName?has_content>
+<#if checkValueExistedFieldInfos?has_content || tableInfo.pkLowerCamelName?has_content>
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 </#if>
-<#if checkValueExistedFields?has_content>
+<#if checkValueExistedFieldInfos?has_content>
 import cn.hutool.core.util.BooleanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import ${jsonParam.basePackagePath}.common.util.Assert;
@@ -36,6 +41,12 @@ import org.springframework.cache.annotation.Cacheable;
 <#if !tableInfo.pkIsStringType>
 import java.util.Objects;
 </#if>
+<#if jsonParam.enableEasyExcel && importAndExportFields?has_content>
+import cn.hutool.core.bean.BeanUtil;
+
+import ${jsonParam.basePackagePath}.common.util.EasyExcelUtils;
+import ${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName?has_content>${jsonParam.moduleName}.</#if>excel.${tableInfo.upperCamelCase}Import;
+</#if>
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import cn.hutool.core.util.StrUtil;
@@ -52,10 +63,10 @@ import ${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName?has_content>
 import ${jsonParam.basePackagePath}.mapper.<#if jsonParam.moduleName?has_content>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Mapper;
 
 /**
- * ${tableInfo.simpleRemark}Service接口实现
+ * ${FtlUtils.emptyToDefault(tableInfo.simpleRemark, "${tableInfo.tableName}表")}Service接口实现
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 @Slf4j
 @Service
@@ -76,21 +87,9 @@ public class ${tableInfo.upperCamelCase}Service extends ServiceImpl<${tableInfo.
     public IPage<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}Page(${tableInfo.upperCamelCase}Condition condition) {
         IPage<${tableInfo.upperCamelCase}> page = condition.buildPage();
 <#if isNoSqlTable>
-        LambdaQueryWrapper<${tableInfo.upperCamelCase}> queryWrapper = condition.buildLambdaQueryWrapper(${tableInfo.upperCamelCase}.class);
-    <#if dateFieldInfo?has_content>
-
-        queryWrapper.ge(condition.get${dateFieldInfo.upperCamelCase}Begin() != null, ${dateFieldInfo.upperCamelCase}::get${dateFieldInfo.upperCamelCase}, condition.get${dateFieldInfo.upperCamelCase}Begin());
-        if (condition.get${dateFieldInfo.upperCamelCase}End() != null) {
-            queryWrapper.lt(${tableInfo.upperCamelCase}::get${dateFieldInfo.upperCamelCase}, DateUtil.endOfDay(condition.get${dateFieldInfo.upperCamelCase}End()));
-        }
-    </#if>
-    <#if FtlUtils.fieldExisted(tableInfo, "CREATED_TIME")>
-        queryWrapper.orderByDesc(${tableInfo.upperCamelCase}::getCreatedTime);
-    </#if>
-        return this.page(page, queryWrapper);
+        return this.page(page, getListQueryWrapper(condition));
 <#else>
     <#if dateFieldInfo?has_content>
-
         if (condition.get${dateFieldInfo.upperCamelCase}End() != null) {
             condition.set${dateFieldInfo.upperCamelCase}End(DateUtil.endOfDay(condition.get${dateFieldInfo.upperCamelCase}End()));
         }
@@ -110,18 +109,7 @@ public class ${tableInfo.upperCamelCase}Service extends ServiceImpl<${tableInfo.
 </#if>
     public List<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}List(${tableInfo.upperCamelCase}Condition condition) {
 <#if isNoSqlTable>
-        LambdaQueryWrapper<${tableInfo.upperCamelCase}> queryWrapper = condition.buildLambdaQueryWrapper(${tableInfo.upperCamelCase}.class);
-    <#if dateFieldInfo?has_content>
-
-        queryWrapper.ge(condition.get${dateFieldInfo.upperCamelCase}Begin() != null, ${tableInfo.upperCamelCase}::get${dateFieldInfo.upperCamelCase}, condition.get${dateFieldInfo.upperCamelCase}Begin());
-        if (condition.get${dateFieldInfo.upperCamelCase}End() != null) {
-            queryWrapper.lt(${tableInfo.upperCamelCase}::get${dateFieldInfo.upperCamelCase}, DateUtil.endOfDay(condition.get${dateFieldInfo.upperCamelCase}End()));
-        }
-    </#if>
-    <#if FtlUtils.fieldExisted(tableInfo, "CREATED_TIME")>
-        queryWrapper.orderByDesc(${tableInfo.upperCamelCase}::getCreatedTime);
-    </#if>
-        return this.list(queryWrapper);
+        return this.list(getListQueryWrapper(condition));
 <#else>
     <#if dateFieldInfo?has_content>
         if (condition.get${dateFieldInfo.upperCamelCase}End() != null) {
@@ -142,26 +130,18 @@ public class ${tableInfo.upperCamelCase}Service extends ServiceImpl<${tableInfo.
     @Cacheable
 </#if>
     public ${tableInfo.upperCamelCase} get${tableInfo.upperCamelCase}(${tableInfo.upperCamelCase}Condition condition) {
-<#if isNoSqlTable>
         LambdaQueryWrapper<${tableInfo.upperCamelCase}> queryWrapper = condition.buildLambdaQueryWrapper();
     <#if searchFields?has_content>
-        <#list searchFields as fieldInfo>
-                <#if !fieldInfo.isDateType>
-        queryWrapper.eq(<#if fieldInfo.isStringType>StrUtil.isNotBlank(condition.get${fieldInfo.upperCamelCase}())<#else>condition.get${fieldInfo.upperCamelCase}() != null</#if>, ${tableInfo.upperCamelCase}::get${fieldInfo.upperCamelCase}, condition.get${fieldInfo.upperCamelCase}());
-                </#if>
+        <#assign searchFieldList = FtlUtils.tableFieldFilter(searchFields, "IGNORE_DATE") />
+        <#list searchFieldList as fieldInfo>
+            <#if fieldInfo_index == 0>
+        queryWrapper.eq(<#if fieldInfo.isStringType>StrUtil.isNotBlank(condition.get${fieldInfo.upperCamelCase}())<#else>condition.get${fieldInfo.upperCamelCase}() != null</#if>, ${tableInfo.upperCamelCase}::get${fieldInfo.upperCamelCase}, condition.get${fieldInfo.upperCamelCase}())<#if !fieldInfo_has_next>;</#if>
+            <#else>
+                .eq(<#if fieldInfo.isStringType>StrUtil.isNotBlank(condition.get${fieldInfo.upperCamelCase}())<#else>condition.get${fieldInfo.upperCamelCase}() != null</#if>, ${tableInfo.upperCamelCase}::get${fieldInfo.upperCamelCase}, condition.get${fieldInfo.upperCamelCase}())<#if !fieldInfo_has_next>;</#if>
+            </#if>
         </#list>
     </#if>
         return this.getOne(queryWrapper, false);
-<#else>
-        List<${tableInfo.upperCamelCase}> list = this.baseMapper.get${tableInfo.upperCamelCase}(condition);
-        if (CollUtil.isNotEmpty(list)) {
-            if (list.size() > 1) {
-                log.warn("Expected one result (or null) to be returned by get${tableInfo.upperCamelCase}(), but found: {}", list.size());
-            }
-            return list.get(0);
-        }
-        return null;
-</#if>
     }
 <#if tableInfo.pkLowerCamelName?has_content>
 
@@ -210,7 +190,7 @@ public class ${tableInfo.upperCamelCase}Service extends ServiceImpl<${tableInfo.
         return Optional.ofNullable(list).orElse(CollUtil.toList()).stream().collect(Collectors.toMap(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, ${tableInfo.upperCamelCase} -> ${tableInfo.upperCamelCase}));
     }
 </#if>
-<#if checkValueExistedFields?has_content>
+<#if checkValueExistedFieldInfos?has_content>
 
     /**
      * 检查${tableInfo.simpleRemark}是否存在
@@ -224,14 +204,13 @@ public class ${tableInfo.upperCamelCase}Service extends ServiceImpl<${tableInfo.
     public Boolean check${tableInfo.upperCamelCase}Existed(${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
         QueryWrapper<${tableInfo.upperCamelCase}> queryWrapper = Wrappers.query();
         queryWrapper.select("1").lambda()
-    <#list checkValueExistedFields as fieldInfo>
-                .eq(<#if fieldInfo.isStringType>StrUtil.isNotBlank(${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}())<#else>${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}() != null</#if>, ${tableInfo.upperCamelCase}::get${fieldInfo.upperCamelCase}, ${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}())<#if !fieldInfo_has_next>;</#if>
+    <#list checkValueExistedFieldInfos as fieldInfo>
+                .eq(<#if fieldInfo.isStringType>StrUtil.isNotBlank(${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}())<#else>${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}() != null</#if>, ${tableInfo.upperCamelCase}::get${fieldInfo.upperCamelCase}, ${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}())
     </#list>
     <#if tableInfo.pkUpperCamelName?has_content>
-        queryWrapper.lambda().ne(<#if tableInfo.pkIsStringType>StrUtil.isNotBlank(${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}())<#else>${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}() != null</#if>, ${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, ${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}());
+                .ne(<#if tableInfo.pkIsStringType>StrUtil.isNotBlank(${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}())<#else>${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}() != null</#if>, ${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, ${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}())
     </#if>
-        queryWrapper.last("LIMIT 1");
-
+                .last("LIMIT 1");
         return BooleanUtil.toBoolean(this.getObj(queryWrapper, Object::toString));
     }
 </#if>
@@ -247,7 +226,7 @@ public class ${tableInfo.upperCamelCase}Service extends ServiceImpl<${tableInfo.
 </#if>
     @Transactional(rollbackFor = Exception.class)
     public Boolean add${tableInfo.upperCamelCase}(${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
-<#if checkValueExistedFields?has_content>
+<#if checkValueExistedFieldInfos?has_content>
         check${tableInfo.upperCamelCase}Valid(${tableInfo.lowerCamelCase});
 </#if>
         return this.save(${tableInfo.lowerCamelCase});
@@ -264,10 +243,30 @@ public class ${tableInfo.upperCamelCase}Service extends ServiceImpl<${tableInfo.
 </#if>
     @Transactional(rollbackFor = Exception.class)
     public Boolean update${tableInfo.upperCamelCase}(${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
-<#if checkValueExistedFields?has_content>
+<#if checkValueExistedFieldInfos?has_content>
         check${tableInfo.upperCamelCase}Valid(${tableInfo.lowerCamelCase});
 </#if>
         return this.updateById(${tableInfo.lowerCamelCase});
+    }
+
+    /**
+     * 批量新增或修改${tableInfo.simpleRemark}列表
+     *
+     * @param ${tableInfo.lowerCamelCase}List ${tableInfo.simpleRemark}列表
+     * @return 是否成功
+     */
+<#if isUseCacheTable && (jsonParam.enableEhCache || jsonParam.enableRedis)>
+    @CacheEvict(allEntries = true)
+</#if>
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean batchSaveOrUpdate(List<${tableInfo.upperCamelCase}> ${tableInfo.lowerCamelCase}List) {
+        if (CollUtil.isEmpty(${tableInfo.lowerCamelCase}List)) {
+            return false;
+        }
+<#if checkValueExistedFieldInfos?has_content>
+        ${tableInfo.lowerCamelCase}List.forEach(this::check${tableInfo.upperCamelCase}Valid);
+</#if>
+        return this.saveOrUpdateBatch(${tableInfo.lowerCamelCase}List);
     }
 <#if tableInfo.pkLowerCamelName?has_content>
 
@@ -299,7 +298,29 @@ public class ${tableInfo.upperCamelCase}Service extends ServiceImpl<${tableInfo.
         return this.removeByIds(idList);
     }
 </#if>
-<#if checkValueExistedFields?has_content>
+<#if jsonParam.enableEasyExcel && importAndExportFields?has_content>
+
+    /**
+     * 导入${tableInfo.simpleRemark}
+     *
+     * @param dataList ${tableInfo.simpleRemark}数据列表
+     * @return 报错数据列表
+     */
+    <#if isUseCacheTable && (jsonParam.enableEhCache || jsonParam.enableRedis)>
+    @CacheEvict(allEntries = true)
+    </#if>
+    @Transactional(rollbackFor = Exception.class)
+    public List<String> import${tableInfo.upperCamelCase}(List<${tableInfo.upperCamelCase}Import> dataList) {
+        List<String> errorList = importExcelDataVerify(dataList);
+        if (CollUtil.isNotEmpty(errorList)) {
+            return errorList;
+        }
+        List<${tableInfo.upperCamelCase}> saveList = BeanUtil.copyToList(dataList, ${tableInfo.upperCamelCase}.class);
+        this.saveBatch(saveList);
+        return errorList;
+    }
+</#if>
+<#if checkValueExistedFieldInfos?has_content>
 
     /**
      * 检查${tableInfo.simpleRemark}是否有效
@@ -307,13 +328,106 @@ public class ${tableInfo.upperCamelCase}Service extends ServiceImpl<${tableInfo.
      * @param ${tableInfo.lowerCamelCase} ${tableInfo.simpleRemark}
      */
     private void check${tableInfo.upperCamelCase}Valid(${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
-    <#list checkValueExistedFields as fieldInfo>
+    <#list checkValueExistedFieldInfos as fieldInfo>
         ${fieldInfo.javaType} ${fieldInfo.proName} = ${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}();
         if (<#if fieldInfo.isStringType>StrUtil.isNotBlank(${fieldInfo.proName})<#else>${fieldInfo.proName} != null</#if>) {
-            Boolean ${fieldInfo.proName}Existed = check${tableInfo.upperCamelCase}Existed(${tableInfo.upperCamelCase}.builder()<#if tableInfo.pkLowerCamelName?has_content>.${tableInfo.pkLowerCamelName}(${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}())</#if>.${fieldInfo.proName}(${tableInfo.lowerCamelCase}.get${fieldInfo.upperCamelCase}()).build());
+            ${tableInfo.upperCamelCase} condition = ${tableInfo.upperCamelCase}.builder()<#if tableInfo.pkUpperCamelName?has_content>.${tableInfo.pkLowerCamelName}(${tableInfo.lowerCamelCase}.get${tableInfo.pkUpperCamelName}())</#if>.${fieldInfo.proName}(${fieldInfo.proName}).build();
+            Boolean ${fieldInfo.proName}Existed = check${tableInfo.upperCamelCase}Existed(condition);
             Assert.isFalse(${fieldInfo.proName}Existed, "${fieldInfo.simpleRemark}已存在，请重新输入！");
         }
     </#list>
+    }
+</#if>
+<#if isNoSqlTable>
+
+    /**
+     * 获取查询列表的QueryWrapper
+     *
+     * @param condition ${tableInfo.simpleRemark}查询条件
+     * @return LambdaQueryWrapper
+     */
+    private LambdaQueryWrapper<${tableInfo.upperCamelCase}> getListQueryWrapper(${tableInfo.upperCamelCase}Condition condition) {
+        LambdaQueryWrapper<${tableInfo.upperCamelCase}> queryWrapper = condition.buildLambdaQueryWrapper();
+    <#if searchFields?has_content>
+        <#assign searchFieldList = FtlUtils.tableFieldFilter(searchFields, "IGNORE_DATE") />
+        <#assign orderByFieldExisted = FtlUtils.fieldExisted(tableInfo, "created_time") />
+        <#assign queryWrapperExisted = false />
+        <#list searchFieldList as fieldInfo>
+            <#if fieldInfo_index == 0>
+                <#assign queryWrapperExisted = true />
+        queryWrapper.<#if fieldInfo.isStringType && !FtlUtils.strContainsAny(fieldInfo.colName, "_id") && !fieldInfo.isDictType>like<#else>eq</#if>(<#if fieldInfo.isStringType>StrUtil.isNotBlank(condition.get${fieldInfo.upperCamelCase}())<#else>condition.get${fieldInfo.upperCamelCase}() != null</#if>, ${tableInfo.upperCamelCase}::get${fieldInfo.upperCamelCase}, condition.get${fieldInfo.upperCamelCase}())<#if !fieldInfo_has_next && !dateFieldInfo?has_content && !batchSearchFields?has_content && !orderByFieldExisted>;</#if>
+            <#else>
+                .<#if fieldInfo.isStringType && !FtlUtils.strContainsAny(fieldInfo.colName, "_id") && !fieldInfo.isDictType>like<#else>eq</#if>(<#if fieldInfo.isStringType>StrUtil.isNotBlank(condition.get${fieldInfo.upperCamelCase}())<#else>condition.get${fieldInfo.upperCamelCase}() != null</#if>, ${tableInfo.upperCamelCase}::get${fieldInfo.upperCamelCase}, condition.get${fieldInfo.upperCamelCase}())<#if !fieldInfo_has_next && !dateFieldInfo?has_content && !batchSearchFields?has_content && !orderByFieldExisted>;</#if>
+            </#if>
+        </#list>
+    </#if>
+    <#if dateFieldInfo?has_content>
+        <#if queryWrapperExisted>
+                .ge(condition.get${dateFieldInfo.upperCamelCase}Begin() != null, ${tableInfo.upperCamelCase}::get${dateFieldInfo.upperCamelCase}, condition.get${dateFieldInfo.upperCamelCase}Begin())
+                .lt(condition.get${dateFieldInfo.upperCamelCase}End() != null, ${tableInfo.upperCamelCase}::get${dateFieldInfo.upperCamelCase}, condition.get${dateFieldInfo.upperCamelCase}End() != null ? DateUtil.endOfDay(condition.get${dateFieldInfo.upperCamelCase}End()) : null)<#if !batchSearchFields?has_content && !orderByFieldExisted>;</#if>
+        <#else>
+            <#assign queryWrapperExisted = true />
+        queryWrapper.ge(condition.get${dateFieldInfo.upperCamelCase}Begin() != null, ${tableInfo.upperCamelCase}::get${dateFieldInfo.upperCamelCase}, condition.get${dateFieldInfo.upperCamelCase}Begin())
+                .lt(condition.get${dateFieldInfo.upperCamelCase}End() != null, ${tableInfo.upperCamelCase}::get${dateFieldInfo.upperCamelCase}, condition.get${dateFieldInfo.upperCamelCase}End() != null ? DateUtil.endOfDay(condition.get${dateFieldInfo.upperCamelCase}End()) : null)<#if !batchSearchFields?has_content && !orderByFieldExisted>;</#if>
+
+        </#if>
+    </#if>
+    <#if batchSearchFields?has_content>
+        <#list batchSearchFields as fieldInfo>
+            <#if queryWrapperExisted>
+                .in(CollUtil.isNotEmpty(condition.get${fieldInfo.upperCamelCase}List()), ${tableInfo.upperCamelCase}::get${fieldInfo.upperCamelCase}, condition.get${fieldInfo.upperCamelCase}List())<#if !fieldInfo_has_next && !orderByFieldExisted>;</#if>
+            <#else>
+                <#assign queryWrapperExisted = true />
+        queryWrapper.in(CollUtil.isNotEmpty(condition.get${fieldInfo.upperCamelCase}List()), ${tableInfo.upperCamelCase}::get${fieldInfo.upperCamelCase}, condition.get${fieldInfo.upperCamelCase}List())<#if !fieldInfo_has_next && !orderByFieldExisted>;</#if>
+            </#if>
+        </#list>
+    </#if>
+    <#if orderByFieldExisted>
+            <#if queryWrapperExisted>
+                .orderByDesc(${tableInfo.upperCamelCase}::getCreatedTime);
+            <#else>
+        queryWrapper.orderByDesc(${tableInfo.upperCamelCase}::getCreatedTime);
+            </#if>
+    </#if>
+        return queryWrapper;
+    }
+</#if>
+<#if jsonParam.enableEasyExcel && importAndExportFields?has_content>
+
+    /**
+     * 导入Excel的业务数据校验
+     *
+     * @param dataList ${tableInfo.simpleRemark}数据列表
+     * @return 报错数据列表
+     */
+    private List<String> importExcelDataVerify(List<${tableInfo.upperCamelCase}Import> dataList) {
+        Map<String, String> valueMap = EasyExcelUtils.getExcelPropertyAnnotationValueMap(${tableInfo.upperCamelCase}Import.builder().build());
+        List<String> errorList = CollUtil.toList();
+        for (${tableInfo.upperCamelCase}Import data : dataList) {
+            Integer rowNumber = data.getRowNumber();
+    <#list importAndExportFields as fieldInfo>
+        <#if fieldInfo.primaryKey><#continue></#if>
+        <#if fieldInfo.isNotNull && FtlUtils.fieldExisted(fieldInfo, checkValueExistedFields)>
+            String ${fieldInfo.lowerCamelCase} = data.get${fieldInfo.upperCamelCase}();
+            if (<#if fieldInfo.isStringType>StrUtil.isBlank(${fieldInfo.lowerCamelCase})<#else>${fieldInfo.lowerCamelCase} == null</#if>) {
+                errorList.add(String.format("第 %s 行，%s不能为空", rowNumber, valueMap.get("${fieldInfo.lowerCamelCase}")));
+            } else if (check${tableInfo.upperCamelCase}Existed(${tableInfo.upperCamelCase}.builder().${fieldInfo.lowerCamelCase}(${fieldInfo.lowerCamelCase}).build())) {
+                errorList.add(String.format("第 %s 行，%s已存在", rowNumber, valueMap.get("${fieldInfo.lowerCamelCase}")));
+            }
+        <#elseif fieldInfo.isNotNull>
+            String ${fieldInfo.lowerCamelCase} = data.get${fieldInfo.upperCamelCase}();
+            if (<#if fieldInfo.isStringType>StrUtil.isBlank(${fieldInfo.lowerCamelCase})<#else>${fieldInfo.lowerCamelCase} == null</#if>) {
+                errorList.add(String.format("第 %s 行，%s不能为空", rowNumber, valueMap.get("${fieldInfo.lowerCamelCase}")));
+            }
+        <#elseif FtlUtils.fieldExisted(fieldInfo, checkValueExistedFields)>
+            String ${fieldInfo.lowerCamelCase} = data.get${fieldInfo.upperCamelCase}();
+            if (${fieldInfo.lowerCamelCase} != null && check${tableInfo.upperCamelCase}Existed(${tableInfo.upperCamelCase}.builder().${fieldInfo.lowerCamelCase}(${fieldInfo.lowerCamelCase}).build())) {
+                errorList.add(String.format("第 %s 行，%s已存在", rowNumber, valueMap.get("${fieldInfo.lowerCamelCase}")));
+            }
+        </#if>
+    </#list>
+        }
+        return errorList;
     }
 </#if>
 }

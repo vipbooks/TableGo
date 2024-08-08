@@ -10,19 +10,22 @@
       "profile" : "dev",
       "tablegoAdminPort" : "6611",
       "tablegoBasicPort" : "6622",
-      "tablegoIamPort" : "6633"
+      "tablegoIamPort" : "6633",
+      "backup" : false
     },
     "test" : {
       "profile" : "test",
       "tablegoAdminPort" : "6611",
       "tablegoBasicPort" : "6622",
-      "tablegoIamPort" : "6633"
+      "tablegoIamPort" : "6633",
+      "backup" : false
     },
     "prod" : {
       "profile" : "prod",
       "tablegoAdminPort" : "6611",
       "tablegoBasicPort" : "6622",
-      "tablegoIamPort" : "6633"
+      "tablegoIamPort" : "6633",
+      "backup" : true
     }
   },
   "stepBatchConfig" : {
@@ -70,16 +73,21 @@
           "enable" : true
         } ]
       }, {
+        "enable" : "${backup}",
         "commands" : [ {
-          "command" : "cd ${serverProjectPath}/tablego-admin"
+          "command" : "cd ${serverProjectPath}"
         }, {
           "command" : "docker tag tablego-admin tablego-admin_`date +%Y%m%d%H%M%S`",
           "sleepSeconds" : 2,
           "enable" : true
         }, {
-          "command" : "sh ../ClearDockerBakImage.sh -p tablego-admin_",
+          "command" : "sh ClearDockerBakImage.sh -p tablego-admin_",
           "waitSeconds" : 2,
           "enable" : true
+        } ]
+      }, {
+        "commands" : [ {
+          "command" : "cd ${serverProjectPath}/tablego-admin"
         }, {
           "command" : "docker rm -f tablego-admin",
           "containsStr" : "tablego-admin",
@@ -111,16 +119,21 @@
           "enable" : true
         } ]
       }, {
+        "enable" : "${backup}",
         "commands" : [ {
-          "command" : "cd ${serverProjectPath}/tablego-basic"
+          "command" : "cd ${serverProjectPath}"
         }, {
           "command" : "docker tag tablego-basic tablego-basic_`date +%Y%m%d%H%M%S`",
           "sleepSeconds" : 2,
           "enable" : true
         }, {
-          "command" : "sh ../ClearDockerBakImage.sh -p tablego-basic_",
+          "command" : "sh ClearDockerBakImage.sh -p tablego-basic_",
           "waitSeconds" : 2,
           "enable" : true
+        } ]
+      }, {
+        "commands" : [ {
+          "command" : "cd ${serverProjectPath}/tablego-basic"
         }, {
           "command" : "docker rm -f tablego-basic",
           "containsStr" : "tablego-basic",
@@ -152,16 +165,21 @@
           "enable" : true
         } ]
       }, {
+        "enable" : "${backup}",
         "commands" : [ {
-          "command" : "cd ${serverProjectPath}/tablego-iam"
+          "command" : "cd ${serverProjectPath}"
         }, {
           "command" : "docker tag tablego-iam tablego-iam_`date +%Y%m%d%H%M%S`",
           "sleepSeconds" : 2,
           "enable" : true
         }, {
-          "command" : "sh ../ClearDockerBakImage.sh -p tablego-iam_",
+          "command" : "sh ClearDockerBakImage.sh -p tablego-iam_",
           "waitSeconds" : 2,
           "enable" : true
+        } ]
+      }, {
+        "commands" : [ {
+          "command" : "cd ${serverProjectPath}/tablego-iam"
         }, {
           "command" : "docker rm -f tablego-iam",
           "containsStr" : "tablego-iam",

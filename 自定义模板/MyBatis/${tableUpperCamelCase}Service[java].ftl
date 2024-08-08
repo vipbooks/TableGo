@@ -111,7 +111,7 @@ public interface ${tableInfo.upperCamelCase}Service {
      * @return 是否成功
      */
     Boolean delete${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList);
-    <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")>
+    <#if FtlUtils.fieldExisted(tableInfo, "IS_DELETED")>
 
     /**
      * 批量逻辑删除${tableInfo.simpleRemark}

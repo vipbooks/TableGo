@@ -15,7 +15,7 @@ import ${jsonParam.basePackagePath}.common.exception.BizException;
  * 断言，用于业务判断，不符合业务要求将抛出业务异常
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 public class Assert {
     /**

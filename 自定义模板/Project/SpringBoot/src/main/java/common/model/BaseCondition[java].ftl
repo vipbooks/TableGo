@@ -10,11 +10,11 @@ import cn.hutool.core.bean.BeanUtil;
  * 查询条件的基础类，用于继承
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 public abstract class BaseCondition extends BasePagingCondition {
     /** 版本号 */
-    private static final long serialVersionUID = 8030810384199964818L;
+    private static final long serialVersionUID = ${FtlUtils.getSerialVersionUID()}L;
 
     /**
      * 创建查询条件构造器，将对象或Map转Bean对象，
@@ -25,7 +25,7 @@ public abstract class BaseCondition extends BasePagingCondition {
      */
     public <T> QueryWrapper<T> buildQueryWrapper(Class<T> clazz) {
         T entity = BeanUtil.toBean(this, clazz);
-        return new QueryWrapper<>(entity);
+        return Wrappers.query(entity);
     }
 
     /**
@@ -34,7 +34,7 @@ public abstract class BaseCondition extends BasePagingCondition {
      * @return 查询条件构造器
      */
     public <T> QueryWrapper<T> buildQueryWrapper() {
-        return new QueryWrapper<>();
+        return Wrappers.query();
     }
 
     /**

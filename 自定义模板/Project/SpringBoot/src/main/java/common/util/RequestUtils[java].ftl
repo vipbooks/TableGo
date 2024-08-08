@@ -19,10 +19,11 @@ import cn.hutool.http.useragent.UserAgentParser;
  * 处理用户请求的工具类
  * 
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 public class RequestUtils {
     private static final Logger logger = LoggerFactory.getLogger(RequestUtils.class);
+
     /** 用户代理Key */
     public static final String USER_AGENT_KEY = "User-Agent";
 

@@ -4,11 +4,11 @@ package ${jsonParam.packagePath}
  * 业务异常类
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 public class BizException extends RuntimeException {
     /** 版本号 */
-    private static final long serialVersionUID = 6600666999314080292L;
+    private static final long serialVersionUID = ${FtlUtils.getSerialVersionUID()}L;
 
     /** 异常编码，与org.springframework.http.HttpStatus同 */
     private Integer code;

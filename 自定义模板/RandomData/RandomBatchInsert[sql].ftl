@@ -2,9 +2,12 @@
 <#if tableInfoList?has_content>
     <#list tableInfoList as tableInfo>
         <#if tableInfo.fieldInfos?has_content>
--- <#if StringUtils.isNotBlank(tableInfo.remark)>${tableInfo.remark}(${tableInfo.tableName})<#else>${tableInfo.tableName}</#if>
+-- ${tableInfo.remark}
 -- TRUNCATE TABLE ${tableInfo.tableName};
-INSERT INTO ${tableInfo.tableName}(<#list tableInfo.fieldInfos as fieldInfo>${fieldInfo.colName}<#if fieldInfo_has_next>,</#if></#list>) VALUES <#list 1..10 as i>(<#list tableInfo.fieldInfos as fieldInfo><#if fieldInfo.primaryKey><#if dbType=="mysql" || dbType=="mariadb">UUID()<#elseif dbType=="oracle">SYS_GUID()<#elseif dbType=="mssql">NEWID()<#elseif dbType=="postgresql">UUID_GENERATE_V4()<#elseif dbType=="db2">CONCAT(HEX(RAND()),HEX(RAND()))</#if><#elseif fieldInfo.isNumericType>${RandomStringUtils.randomNumeric(fieldInfo.columnSize)}<#elseif fieldInfo.javaType=="Date"><#if dbType=="oracle">SYSDATE<#elseif dbType=="mssql">GETDATE()<#else>NOW()</#if><#else>'${RandomStringUtils.randomAlphanumeric(((fieldInfo.columnSize>50)?string(50,fieldInfo.columnSize))?number)}'</#if><#if fieldInfo_has_next>,</#if></#list>)<#if i_has_next>,</#if></#list>;
+INSERT INTO ${tableInfo.tableName}(<#list tableInfo.fieldInfos as fieldInfo>${fieldInfo.colName}<#if fieldInfo_has_next>,</#if></#list>) VALUES
+    <#list 1..10 as i>
+    (<#list tableInfo.fieldInfos as fieldInfo><#if fieldInfo.primaryKey>'<#if tableInfo.pkColumnSize gte 32>${IdWorker.get32UUID()}<#elseif fieldInfo.columnSize gte 19>${IdWorker.getId()}<#else>${FtlUtils.getRandomString19(6)}</#if>'<#elseif fieldInfo.isNumericType><#if fieldInfo.columnSize lt 4>${FtlUtils.getRandomString19(1)}<#else>${FtlUtils.getRandomString19(fieldInfo.columnSize-3)}</#if><#elseif fieldInfo.isDateType>'<#if fieldInfo.isDateTimeType>${DateUtils.getRandomDateTime("2000-01-01")}<#else>${DateUtils.getRandomDate("2000-01-01")}</#if>'<#else>'${FtlUtils.getRandomString(((fieldInfo.columnSize>6)?string(6,fieldInfo.columnSize))?number)}'</#if><#if fieldInfo_has_next>,</#if></#list>)<#if i_has_next>,<#else>;</#if>
+    </#list>
 
         </#if>
     </#list>

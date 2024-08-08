@@ -4,11 +4,14 @@ server:
     context-path: ${jsonParam.contextPath}
   tomcat:
     uri-encoding: UTF-8
-    max-connections: 10000
-    acceptCount: 2000
+    max-connections: 8192
+    accept-count: 100
+    connection-timeout: 20000
+    keep-alive-timeout: 20000
     threads:
-      max: 1000
-      min-spare: 20
+      max: 200
+      min-spare: 10
+    max-keep-alive-requests: 100
     max-http-form-post-size: 50MB
 spring:
   profiles:
@@ -16,6 +19,7 @@ spring:
   application:
     name: ${jsonParam.appName}
   main:
+    allow-circular-references: true
     allow-bean-definition-overriding: true
   mvc:
     format:
@@ -24,7 +28,7 @@ spring:
       date-time: yyyy-MM-dd HH:mm:ss
 <#if jsonParam.enableSwagger>
     pathmatch:
-      matching-strategy: ant_path_matcher
+      matching-strategy: ANT_PATH_MATCHER
 </#if>
   servlet:
     multipart:
@@ -55,8 +59,8 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: assign_id
-      logic-delete-value: 0
-      logic-not-delete-value: 1
+      logic-delete-value: 1
+      logic-not-delete-value: 0
       where-strategy: not_empty
       insert-strategy: not_empty
       update-strategy: not_empty

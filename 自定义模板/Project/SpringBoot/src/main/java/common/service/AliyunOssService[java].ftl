@@ -39,7 +39,7 @@ import ${jsonParam.basePackagePath}.common.model.OssUploadResult;
  * 阿里云OSS服务接口
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 @Slf4j
 @Service

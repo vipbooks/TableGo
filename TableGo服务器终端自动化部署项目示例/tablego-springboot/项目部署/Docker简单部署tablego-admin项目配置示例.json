@@ -8,15 +8,18 @@
   "profiles" : {
     "dev" : {
       "profile" : "dev",
-      "port" : "8080"
+      "port" : "8080",
+      "backup" : false
     },
     "test" : {
       "profile" : "test",
-      "port" : "8081"
+      "port" : "8081",
+      "backup" : false
     },
     "prod" : {
       "profile" : "prod",
-      "port" : "8082"
+      "port" : "8082",
+      "backup" : true
     }
   },
   "batchConfig" : [ {
@@ -49,16 +52,21 @@
       "enable" : true
     } ]
   }, {
+    "enable" : "${backup}",
     "commands" : [ {
-      "command" : "cd ${serverProjectPath}/tablego-admin"
+      "command" : "cd ${serverProjectPath}"
     }, {
       "command" : "docker tag tablego-admin tablego-admin_`date +%Y%m%d%H%M%S`",
       "sleepSeconds" : 2,
       "enable" : true
     }, {
-      "command" : "sh ../ClearDockerBakImage.sh -p tablego-admin_",
+      "command" : "sh ClearDockerBakImage.sh -p tablego-admin_",
       "waitSeconds" : 2,
       "enable" : true
+    } ]
+  }, {
+    "commands" : [ {
+      "command" : "cd ${serverProjectPath}/tablego-admin"
     }, {
       "command" : "docker rm -f tablego-admin",
       "containsStr" : "tablego-admin",

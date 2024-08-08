@@ -56,14 +56,17 @@ public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
     <#list searchFields as fieldInfo>
 
         <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>
+    /** ${fieldInfo.remark}(开始) */
     @ApiModelProperty(value = "${fieldInfo.remark}(开始)")
     @JsonFormat(timezone = "GMT+8", pattern = DatePattern.NORM_DATE_PATTERN)
     private ${fieldInfo.javaType} ${fieldInfo.proName}Begin;
 
+    /** ${fieldInfo.remark}(结束)" */
     @ApiModelProperty(value = "${fieldInfo.remark}(结束)")
     @JsonFormat(timezone = "GMT+8", pattern = DatePattern.NORM_DATE_PATTERN)
     private ${fieldInfo.javaType} ${fieldInfo.proName}End;
         <#else>
+    /** ${fieldInfo.remark} */
     @ApiModelProperty(value = "${fieldInfo.remark}")
     private ${fieldInfo.javaType} ${fieldInfo.proName};
         </#if>

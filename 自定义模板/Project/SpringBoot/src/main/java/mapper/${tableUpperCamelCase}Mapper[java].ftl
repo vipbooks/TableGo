@@ -13,10 +13,10 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import ${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName?has_content>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase};
 
 /**
- * ${tableInfo.simpleRemark}Mapper接口
+ * ${FtlUtils.emptyToDefault(tableInfo.simpleRemark, "${tableInfo.tableName}表")}Mapper接口
  * 
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 public interface ${tableInfo.upperCamelCase}Mapper extends BaseMapper<${tableInfo.upperCamelCase}> {
 <#if !isNoSqlTable>
@@ -36,14 +36,6 @@ public interface ${tableInfo.upperCamelCase}Mapper extends BaseMapper<${tableInf
      * @return 列表数据
      */
     List<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}List(@Param("condition") ${tableInfo.upperCamelCase}Condition condition);
-
-    /**
-     * 查询${tableInfo.simpleRemark}
-     * 
-     * @param condition 查询条件
-     * @return ${tableInfo.simpleRemark}
-     */
-    List<${tableInfo.upperCamelCase}> get${tableInfo.upperCamelCase}(@Param("condition") ${tableInfo.upperCamelCase}Condition condition);
 </#if>
 
 }

@@ -44,7 +44,7 @@ import ${jsonParam.basePackagePath}.common.model.Result;
  * 日志切面拦截器
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 @Aspect
 @Component

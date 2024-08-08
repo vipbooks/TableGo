@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
  * 用户请求信息
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 @Data
 @Builder
@@ -21,7 +21,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class UserRequestInfo implements Serializable {
     /** 版本号 */
-    private static final long serialVersionUID = 66334266866024978L;
+    private static final long serialVersionUID = ${FtlUtils.getSerialVersionUID()}L;
 
     /** 请求路径 */
     private String uri;

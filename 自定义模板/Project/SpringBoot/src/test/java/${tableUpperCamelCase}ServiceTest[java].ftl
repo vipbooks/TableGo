@@ -37,10 +37,10 @@ import ${jsonParam.basePackagePath}.service.<#if jsonParam.moduleName??>${jsonPa
     </#if>
 </#if>
 /**
- * ${tableInfo.simpleRemark}Service接口测试
+ * ${FtlUtils.emptyToDefault(tableInfo.simpleRemark, "${tableInfo.tableName}表")}Service接口测试
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 @SpringBootTest
 public class ${tableInfo.upperCamelCase}ServiceTest {
@@ -100,7 +100,7 @@ public class ${tableInfo.upperCamelCase}ServiceTest {
         if (bool) {
             Console.log("新增${tableInfo.simpleRemark}成功");
         } else {
-            Console.log("新增${tableInfo.simpleRemark}失败");
+            Console.error("新增${tableInfo.simpleRemark}失败");
         }
 
         Instant end = Instant.now();
@@ -122,7 +122,7 @@ public class ${tableInfo.upperCamelCase}ServiceTest {
         if (bool) {
             Console.log("修改${tableInfo.simpleRemark}成功");
         } else {
-            Console.log("修改${tableInfo.simpleRemark}失败");
+            Console.error("修改${tableInfo.simpleRemark}失败");
         }
 
         Instant end = Instant.now();
@@ -138,7 +138,7 @@ public class ${tableInfo.upperCamelCase}ServiceTest {
         if (bool) {
             Console.log("删除${tableInfo.simpleRemark}成功");
         } else {
-            Console.log("删除${tableInfo.simpleRemark}失败");
+            Console.error("删除${tableInfo.simpleRemark}失败");
         }
 
         Instant end = Instant.now();
@@ -156,7 +156,7 @@ public class ${tableInfo.upperCamelCase}ServiceTest {
         if (bool) {
             Console.log("批量删除${tableInfo.simpleRemark}成功");
         } else {
-            Console.log("批量删除${tableInfo.simpleRemark}失败");
+            Console.error("批量删除${tableInfo.simpleRemark}失败");
         }
 
         Instant end = Instant.now();

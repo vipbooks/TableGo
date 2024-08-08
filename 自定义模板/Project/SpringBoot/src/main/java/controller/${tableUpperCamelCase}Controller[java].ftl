@@ -1,7 +1,5 @@
 <#-- 初始化需要导入导出Excel的字段 -->
 <#assign importAndExportFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.importAndExportFields) />
-<#-- 初始化需要生成检查字段值是否已存在的接口的字段 -->
-<#assign checkValueExistedFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.checkValueExistedFields) />
 package ${jsonParam.packagePath}
 
 <#if jsonParam.enableSwagger>
@@ -27,9 +25,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.collection.CollUtil;
-import java.util.Map;
 
 import ${jsonParam.basePackagePath}.common.util.EasyExcelUtils;
 import ${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName?has_content>${jsonParam.moduleName}.</#if>excel.${tableInfo.upperCamelCase}Export;
@@ -46,10 +42,10 @@ import ${jsonParam.basePackagePath}.model.<#if jsonParam.moduleName?has_content>
 import ${jsonParam.basePackagePath}.service.<#if jsonParam.moduleName?has_content>${jsonParam.moduleName}.</#if>${tableInfo.upperCamelCase}Service;
 
 /**
- * ${tableInfo.simpleRemark!tableInfo.tableName}Controller
+ * ${FtlUtils.emptyToDefault(tableInfo.simpleRemark, "${tableInfo.tableName}表")}Controller
  * 
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 <#if jsonParam.enableSwagger>
 @Api(tags = "${tableInfo.simpleRemark!tableInfo.tableName}")
@@ -195,72 +191,62 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
 </#if>
 <#if jsonParam.enableEasyExcel && importAndExportFields?has_content>
 
+    <#if !jsonParam.enableSwagger>
+    /**
+     * 导入${tableInfo.simpleRemark}
+     *
+     * @param file Excel文件
+     * @return 结果数据
+     */
+    <#else>
     @ApiOperation(value = "导入${tableInfo.simpleRemark}")
     @ApiImplicitParam(name = "file", value = "Excel文件", required = true, dataType = "__file")
+    </#if>
     @PostMapping("/import${tableInfo.upperCamelCase}")
     public Result<Object> import${tableInfo.upperCamelCase}(@RequestPart("file") MultipartFile file) {
         Result<Object> result = Result.ok();
         EasyExcelUtils.importExcel(file, ${tableInfo.upperCamelCase}Import.class, dataList -> {
-            List<String> errorList = excelImportVerify(dataList);
+            List<String> errorList = ${tableInfo.lowerCamelCase}Service.import${tableInfo.upperCamelCase}(dataList);
             if (CollUtil.isNotEmpty(errorList)) {
                 result.setFailed(errorList);
-                return;
             }
-            List<${tableInfo.upperCamelCase}> list = BeanUtil.copyToList(dataList, ${tableInfo.upperCamelCase}.class);
-            ${tableInfo.lowerCamelCase}Service.saveBatch(list);
         });
         return result;
     }
 
+    <#if !jsonParam.enableSwagger>
+    /**
+     * 下载${tableInfo.simpleRemark}模板
+     */
+    <#else>
     @ApiOperation(value = "下载${tableInfo.simpleRemark}模板")
+    </#if>
     @GetMapping("/downExcelTemplate")
     public void downExcelTemplate() {
         EasyExcelUtils.exportEmptyExcel("${tableInfo.simpleRemark}模板", ${tableInfo.upperCamelCase}Import.class, response);
     }
 
+    <#if !jsonParam.enableSwagger>
+    /**
+     * 导出${tableInfo.simpleRemark}
+     *
+     * @param condition ${tableInfo.simpleRemark}查询条件
+     */
+    <#else>
     @ApiOperation(value = "导出${tableInfo.simpleRemark}")
     @ApiImplicitParam(name = "condition", value = "${tableInfo.simpleRemark}查询条件", required = true, dataType = "${tableInfo.upperCamelCase}Condition", paramType = "body")
+    </#if>
     @PostMapping("/export${tableInfo.upperCamelCase}")
     public void export${tableInfo.upperCamelCase}(@RequestBody ${tableInfo.upperCamelCase}Condition condition) {
         List<${tableInfo.upperCamelCase}> list = ${tableInfo.lowerCamelCase}Service.find${tableInfo.upperCamelCase}List(condition);
         List<${tableInfo.upperCamelCase}Export> dataList = BeanUtil.copyToList(list, ${tableInfo.upperCamelCase}Export.class);
-        EasyExcelUtils.exportExcel("${tableInfo.simpleRemark}", dataList, ${tableInfo.upperCamelCase}Export.class, response);
-    }
 
-    /**
-     * Excel导入业务数据校验
-     *
-     * @param dataList ${tableInfo.simpleRemark}导入参数列表
-     * @return 报错数据列表
-     */
-    private List<String> excelImportVerify(List<${tableInfo.upperCamelCase}Import> dataList) {
-        Map<String, String> valueMap = EasyExcelUtils.getExcelPropertyAnnotationValueMap(${tableInfo.upperCamelCase}Import.builder().build());
-        List<String> errorList = CollUtil.toList();
-        for (${tableInfo.upperCamelCase}Import data : dataList) {
-            Integer rowNumber = data.getRowNumber();
-    <#list importAndExportFields as fieldInfo>
-        <#if fieldInfo.primaryKey><#continue></#if>
-        <#if fieldInfo.isNotNull && FtlUtils.fieldExisted(fieldInfo, checkValueExistedFields)>
-            String ${fieldInfo.lowerCamelCase} = data.get${fieldInfo.upperCamelCase}();
-            if (<#if fieldInfo.isStringType>StrUtil.isBlank(${fieldInfo.lowerCamelCase})<#else>${fieldInfo.lowerCamelCase} == null</#if>) {
-                errorList.add(String.format("第 %s 行，%s不能为空", rowNumber, valueMap.get("${fieldInfo.lowerCamelCase}")));
-            } else if (${tableInfo.lowerCamelCase}Service.check${tableInfo.upperCamelCase}Existed(${tableInfo.upperCamelCase}.builder().${fieldInfo.lowerCamelCase}(${fieldInfo.lowerCamelCase}).build())) {
-                errorList.add(String.format("第 %s 行，%s已存在", rowNumber, valueMap.get("${fieldInfo.lowerCamelCase}")));
-            }
-            <#elseif fieldInfo.isNotNull>
-            String ${fieldInfo.lowerCamelCase} = data.get${fieldInfo.upperCamelCase}();
-            if (<#if fieldInfo.isStringType>StrUtil.isBlank(${fieldInfo.lowerCamelCase})<#else>${fieldInfo.lowerCamelCase} == null</#if>) {
-                errorList.add(String.format("第 %s 行，%s不能为空", rowNumber, valueMap.get("${fieldInfo.lowerCamelCase}")));
-            }
-            <#elseif FtlUtils.fieldExisted(fieldInfo, checkValueExistedFields)>
-            String ${fieldInfo.lowerCamelCase} = data.get${fieldInfo.upperCamelCase}();
-            if (${fieldInfo.lowerCamelCase} != null && ${tableInfo.lowerCamelCase}Service.check${tableInfo.upperCamelCase}Existed(${tableInfo.upperCamelCase}.builder().${fieldInfo.lowerCamelCase}(${fieldInfo.lowerCamelCase}).build())) {
-                errorList.add(String.format("第 %s 行，%s已存在", rowNumber, valueMap.get("${fieldInfo.lowerCamelCase}")));
-            }
-        </#if>
-    </#list>
+        String name = "${tableInfo.simpleRemark}";
+        if (CollUtil.isEmpty(dataList) || dataList.size() <= EasyExcelUtils.ZIP_BATCH_SIZE) {
+            EasyExcelUtils.exportExcel(name, dataList, ${tableInfo.upperCamelCase}Export.class, response);
+        } else {
+            EasyExcelUtils.exportZip(name, dataList, ${tableInfo.upperCamelCase}Export.class, response);
         }
-        return errorList;
     }
 </#if>
 }

@@ -1,0 +1,21 @@
+{
+  "projectDir" : "D:\\tablego-springboot",
+  "basePackagePath" : "cn.tablego.project.springboot",
+  "srcPath" : "/src/main/java",
+  "resourcesPath" : "/src/main/resources",
+  "commonFields" : "created_by, created_time, last_updated_by, last_updated_time, is_deleted",
+  "remarkMatchDict" : "类型, 类别, 分类, 状态, 是否",
+  "remarkMatchMulti" : "备注, 说明, 描述",
+  "ftlParamList" : [ {
+    "templateName" : "${tableUpperCamelCase}[java].ftl",
+    "ftlRelativeDir" : "${srcPath}/model",
+    "packagePath" : "${basePackagePath}.model",
+    "relativePath" : "${srcPath}",
+    "excludeFields" : "${commonFields}"
+  }, {
+    "templateName" : "${tableUpperCamelCase}Mapper[xml].ftl",
+    "ftlRelativeDir" : "${resourcesPath}/mapper",
+    "relativePath" : "${resourcesPath}/mapper",
+    "needFilterField" : "false"
+  }]
+}

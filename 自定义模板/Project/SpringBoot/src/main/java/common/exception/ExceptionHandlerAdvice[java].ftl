@@ -24,7 +24,7 @@ import ${jsonParam.basePackagePath}.common.model.Result;
  * 统一异常处理类
  * 
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 @RestControllerAdvice
 public class ExceptionHandlerAdvice {

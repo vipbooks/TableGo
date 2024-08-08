@@ -25,15 +25,16 @@ import lombok.NoArgsConstructor;
 </#if>
 import lombok.Data;
 import lombok.Builder;
+import lombok.ToString;
 import lombok.EqualsAndHashCode;
 
 import ${jsonParam.basePackagePath}.common.model.BaseExcel;
 
 /**
- * <#if StringUtils.isNotBlank(tableInfo.simpleRemark)>${tableInfo.simpleRemark}<#else>${tableInfo.tableName}</#if>导出参数
+ * ${FtlUtils.emptyToDefault(tableInfo.simpleRemark, "${tableInfo.tableName}表")}导入参数
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 @Data
 @Builder
@@ -41,6 +42,7 @@ import ${jsonParam.basePackagePath}.common.model.BaseExcel;
 @NoArgsConstructor
 @AllArgsConstructor
 </#if>
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @ColumnWidth(20)
 @HeadRowHeight(20)
@@ -53,7 +55,7 @@ public class ${tableInfo.upperCamelCase}Import extends BaseExcel {
     <#list importAndExportFields as fieldInfo>
 
     /** ${fieldInfo.remark} */
-    @ExcelProperty(value = "${fieldInfo.remark}")
+    @ExcelProperty(value = "${fieldInfo.remark}", index = ${fieldInfo_index})
     <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>
     @DateTimeFormat(<#if fieldInfo.isDateTimeType>DatePattern.NORM_DATETIME_PATTERN<#else>DatePattern.NORM_DATE_PATTERN</#if>)
     </#if>

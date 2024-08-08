@@ -1,9 +1,12 @@
 package ${jsonParam.packagePath}
 
-import java.util.List;
 import java.io.Serializable;
+import java.util.List;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 <#if jsonParam.enableSwagger>
 
 import io.swagger.annotations.ApiModel;
@@ -14,14 +17,17 @@ import io.swagger.annotations.ApiModelProperty;
  * 分页响应参数
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
+@Data
+@NoArgsConstructor
+@Accessors(chain = true)
 <#if jsonParam.enableSwagger>
 @ApiModel(description = "分页响应参数")
 </#if>
-public class Paging<T extends Serializable> extends OverrideBeanMethods {
+public class Paging<T extends Serializable> implements Serializable {
     /** 版本号 */
-    private static final long serialVersionUID = 6242056024283004874L;
+    private static final long serialVersionUID = ${FtlUtils.getSerialVersionUID()}L;
 
     /** 每页显示多少条记录 */
 <#if jsonParam.enableSwagger>
@@ -51,23 +57,19 @@ public class Paging<T extends Serializable> extends OverrideBeanMethods {
 <#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "是否存在上一页")
 </#if>
-    private Boolean hasPrevious;
+    private Boolean hasPrevious = false;
 
     /** 是否存在下一页 */
 <#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "是否存在下一页")
 </#if>
-    private Boolean hasNext;
+    private Boolean hasNext = false;
 
     /** 当前页的记录集 */
 <#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "当前页的记录集")
 </#if>
     private List<T> records;
-
-    /** Paging空构造函数 */
-    public Paging() {
-    }
 
     /**
      * Paging对象造函数
@@ -80,8 +82,6 @@ public class Paging<T extends Serializable> extends OverrideBeanMethods {
      */
     public Paging(Long pageSize, Long page, Long total, Long totalPage, List<T> records) {
         this.setPageSize(pageSize).setPage(page).setTotal(total).setTotalPage(totalPage).setRecords(records);
-        this.setHasPrevious(page > 1);
-        this.setHasNext(page < totalPage);
     }
 
     /** 创建分页对象 */
@@ -92,7 +92,7 @@ public class Paging<T extends Serializable> extends OverrideBeanMethods {
     /**
      * 创建分页对象并赋值
      *
-     * @param page 分页模型
+     * @param page MyBatisPlus的分页模型
      * @return 分页数据
      */
     public static <T extends Serializable> Paging<T> buildPaging(IPage<T> page) {
@@ -128,15 +128,6 @@ public class Paging<T extends Serializable> extends OverrideBeanMethods {
     }
 
     /**
-     * 获取每页显示多少条记录
-     *
-     * @return 每页显示多少条记录
-     */
-    public Long getPageSize() {
-        return pageSize;
-    }
-
-    /**
      * 设置每页显示多少条记录
      *
      * @param pageSize 每页显示多少条记录
@@ -147,15 +138,6 @@ public class Paging<T extends Serializable> extends OverrideBeanMethods {
             this.pageSize = pageSize;
         }
         return this;
-    }
-
-    /**
-     * 获取当前页
-     *
-     * @return 当前页
-     */
-    public Long getPage() {
-        return page;
     }
 
     /**
@@ -172,15 +154,6 @@ public class Paging<T extends Serializable> extends OverrideBeanMethods {
     }
 
     /**
-     * 获取总记录数
-     *
-     * @return 总记录数
-     */
-    public Long getTotal() {
-        return total;
-    }
-
-    /**
      * 设置总记录数
      *
      * @param total 总记录数
@@ -191,15 +164,6 @@ public class Paging<T extends Serializable> extends OverrideBeanMethods {
             this.total = total;
         }
         return this;
-    }
-
-    /**
-     * 获取总页数
-     *
-     * @return 总页数
-     */
-    public Long getTotalPage() {
-        return totalPage;
     }
 
     /**
@@ -216,43 +180,15 @@ public class Paging<T extends Serializable> extends OverrideBeanMethods {
     }
 
     /**
-     * 获取当前页的记录集
-     *
-     * @return 当前页的记录集
-     */
-    public List<T> getRecords() {
-        return records;
-    }
-
-    /**
-     * 设置当前页的记录集
-     *
-     * @param records 当前页的记录集
-     * @return 分页数据
-     */
-    public Paging<T> setRecords(List<T> records) {
-        this.records = records;
-        return this;
-    }
-
-    /**
      * 获取是否存在上一页
      *
      * @return 是否存在上一页
      */
     public Boolean getHasPrevious() {
-        return hasPrevious;
-    }
-
-    /**
-     * 设置是否存在上一页
-     *
-     * @param hasPrevious 是否存在上一页
-     * @return 分页数据
-     */
-    public Paging<T> setHasPrevious(Boolean hasPrevious) {
-        this.hasPrevious = hasPrevious;
-        return this;
+        if (this.page != null) {
+            this.hasPrevious = this.page > 1;
+        }
+        return this.hasPrevious;
     }
 
     /**
@@ -261,17 +197,9 @@ public class Paging<T extends Serializable> extends OverrideBeanMethods {
      * @return 是否存在下一页
      */
     public Boolean getHasNext() {
-        return hasNext;
-    }
-
-    /**
-     * 设置是否存在下一页
-     *
-     * @param hasNext 是否存在下一页
-     * @return 分页数据
-     */
-    public Paging<T> setHasNext(Boolean hasNext) {
-        this.hasNext = hasNext;
-        return this;
+        if (this.page != null && this.totalPage != null) {
+            this.hasNext = this.page < this.totalPage;
+        }
+        return this.hasNext;
     }
 }

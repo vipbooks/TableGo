@@ -1,7 +1,7 @@
 package ${jsonParam.packagePath}
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -10,9 +10,9 @@ import org.springframework.web.filter.CorsFilter;
  * 跨域请求配置
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
-@Configuration
+@SpringBootConfiguration
 public class CorsConfig {
     /**
      * 配置跨域请求参数

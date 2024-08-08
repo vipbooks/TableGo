@@ -10,19 +10,22 @@
       "profile" : "dev",
       "tablegoAdminPort" : "6611",
       "tablegoBasicPort" : "6622",
-      "tablegoIamPort" : "6633"
+      "tablegoIamPort" : "6633",
+      "backup" : false
     },
     "test" : {
       "profile" : "test",
       "tablegoAdminPort" : "6611",
       "tablegoBasicPort" : "6622",
-      "tablegoIamPort" : "6633"
+      "tablegoIamPort" : "6633",
+      "backup" : false
     },
     "prod" : {
       "profile" : "prod",
       "tablegoAdminPort" : "6611",
       "tablegoBasicPort" : "6622",
-      "tablegoIamPort" : "6633"
+      "tablegoIamPort" : "6633",
+      "backup" : true
     }
   },
   "stepBatchConfig" : {
@@ -36,6 +39,7 @@
           "enable" : true
         } ]
       }, {
+        "enable" : true,
         "commands" : [ {
           "command" : "cd ${serverProjectPath}"
         }, {
@@ -51,6 +55,7 @@
       "enable" : true,
       "remark" : "更新SVN代码并打包",
       "batchConfig" : [ {
+        "mutexLock" : "package",
         "runtimeExec" : [ {
           "command" : "${scriptPath}\\svn-update-project.bat ${projectPath}",
           "enable" : false
@@ -64,6 +69,7 @@
       "enable" : true,
       "remark" : "部署 tablego-admin 工程",
       "batchConfig" : [ {
+        "enable" : "${backup}",
         "commands" : [ {
           "command" : "cd ${serverProjectPath}",
           "enable" : true
@@ -78,13 +84,13 @@
           "command" : "sh ClearBakFile.sh -d ${serverProjectPath}/bak/tablego-admin -e jar",
           "waitSeconds" : 2,
           "enable" : true
-        } ],
+        } ]
+      }, {
         "fileUploads" : [ {
           "fromPath" : [ "${projectPath}\\tablego-admin\\target\\tablego-admin.jar" ],
           "toPath" : "${serverProjectPath}",
           "enable" : true
-        } ]
-      }, {
+        } ],
         "commands" : [ {
           "command" : "cd ${serverProjectPath}"
         }, {
@@ -101,6 +107,7 @@
       "enable" : true,
       "remark" : "部署 tablego-basic 工程",
       "batchConfig" : [ {
+        "enable" : "${backup}",
         "commands" : [ {
           "command" : "cd ${serverProjectPath}",
           "enable" : true
@@ -115,13 +122,13 @@
           "command" : "sh ClearBakFile.sh -d ${serverProjectPath}/bak/tablego-basic -e jar",
           "waitSeconds" : 2,
           "enable" : true
-        } ],
+        } ]
+      }, {
         "fileUploads" : [ {
           "fromPath" : [ "${projectPath}\\tablego-basic\\target\\tablego-basic.jar" ],
           "toPath" : "${serverProjectPath}",
           "enable" : true
-        } ]
-      }, {
+        } ],
         "commands" : [ {
           "command" : "cd ${serverProjectPath}"
         }, {
@@ -138,6 +145,7 @@
       "enable" : true,
       "remark" : "部署 tablego-iam 工程",
       "batchConfig" : [ {
+        "enable" : "${backup}",
         "commands" : [ {
           "command" : "cd ${serverProjectPath}",
           "enable" : true
@@ -152,13 +160,13 @@
           "command" : "sh ClearBakFile.sh -d ${serverProjectPath}/bak/tablego-iam -e jar",
           "waitSeconds" : 2,
           "enable" : true
-        } ],
+        } ]
+      }, {
         "fileUploads" : [ {
           "fromPath" : [ "${projectPath}\\tablego-iam\\target\\tablego-iam.jar" ],
           "toPath" : "${serverProjectPath}",
           "enable" : true
-        } ]
-      }, {
+        } ],
         "commands" : [ {
           "command" : "cd ${serverProjectPath}"
         }, {
@@ -175,6 +183,7 @@
       "enable" : true,
       "remark" : "清理项目",
       "batchConfig" : [ {
+        "mutexLock" : "clean",
         "runtimeExec" : [ {
           "command" : "${scriptPath}\\maven-lifecycle.bat clean ${projectPath}"
         } ]

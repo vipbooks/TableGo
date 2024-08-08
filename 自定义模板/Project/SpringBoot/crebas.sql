@@ -1,194 +1,194 @@
--- DROP DATABASE IF EXISTS test;
--- CREATE DATABASE test;
--- USE test;
+-- drop database if exists demo;
+-- create database demo;
+-- use demo;
 
-DROP TABLE IF EXISTS T_USER;
+drop table if exists t_user;
 
-DROP TABLE IF EXISTS T_SYS_PARAM;
+drop table if exists t_sys_param;
 
-DROP TABLE IF EXISTS T_DEPARTMENT;
+drop table if exists t_department;
 
-DROP TABLE IF EXISTS T_DICT_TYPE;
+drop table if exists t_dict_type;
 
-DROP TABLE IF EXISTS T_DICTIONARY;
+drop table if exists t_dictionary;
 
-DROP TABLE IF EXISTS T_PROVINCE;
+drop table if exists t_province;
 
-DROP TABLE IF EXISTS T_CITY;
+drop table if exists t_city;
 
-DROP TABLE IF EXISTS T_AREA;
+drop table if exists t_area;
 
 /*==============================================================*/
-/* Table: T_USER                                                */
+/* table: t_user                                                */
 /*==============================================================*/
-CREATE TABLE T_USER (
-   ID                   VARCHAR(36) NOT NULL COMMENT '主键ID',
-   USERNAME             VARCHAR(64) NOT NULL COMMENT '用户名',
-   FULL_NAME            VARCHAR(36) NOT NULL COMMENT '姓名',
-   MOBILE_PHONE         VARCHAR(36) NOT NULL COMMENT '移动电话',
-   ID_CARD              VARCHAR(36) DEFAULT NULL COMMENT '身份证',
-   EMAIL                VARCHAR(36) DEFAULT NULL COMMENT '电子邮箱',
-   BIRTHDAY             DATE DEFAULT NULL COMMENT '出生日期',
-   TENANT_CODE          VARCHAR(64) COMMENT '租户编码',
-   CREATED_BY           VARCHAR(36) COMMENT '创建人',
-   CREATED_TIME         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-   LAST_UPDATED_BY      VARCHAR(36) COMMENT '最后修改人',
-   LAST_UPDATED_TIME    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-   DELETE_FLAG          SMALLINT NOT NULL DEFAULT 1 COMMENT '删除标记，0：已删除、1：未删除',
-   PRIMARY KEY (ID),
-   UNIQUE KEY AK_USERNAME_UNIQUE (USERNAME)
+create table t_user (
+   id                   varchar(36) not null comment '主键ID',
+   username             varchar(64) not null comment '用户名',
+   full_name            varchar(36) not null comment '姓名',
+   mobile_phone         varchar(36) not null comment '移动电话',
+   id_card              varchar(36) default null comment '身份证',
+   email                varchar(36) default null comment '电子邮箱',
+   birthday             date default null comment '出生日期',
+   tenant_code          varchar(64) comment '租户编码',
+   created_by           varchar(36) comment '创建人',
+   created_time         datetime not null default current_timestamp comment '创建时间',
+   last_updated_by      varchar(36) comment '最后修改人',
+   last_updated_time    datetime not null default current_timestamp on update current_timestamp comment '最后修改时间',
+   is_deleted           tinyint not null default 0 comment '是否删除，0：未删除；1：已删除',
+   primary key (id),
+   unique key uk_user_username (username)
 );
 
-ALTER TABLE T_USER COMMENT '用户';
+alter table t_user comment '用户';
 
 /*==============================================================*/
-/* Table: T_SYS_PARAM                                           */
+/* table: t_sys_param                                           */
 /*==============================================================*/
-CREATE TABLE T_SYS_PARAM
+create table t_sys_param
 (
-   ID                   VARCHAR(36) NOT NULL COMMENT '主键ID',
-   PARAM_NAME           VARCHAR(64) NOT NULL COMMENT '参数名称',
-   PARAM_CODE           VARCHAR(36) NOT NULL COMMENT '参数编码',
-   PARAM_TYPE           VARCHAR(36) NOT NULL COMMENT '参数类型',
-   PARAM_VALUE1         VARCHAR(500) COMMENT '参数值1',
-   PARAM_VALUE2         VARCHAR(500) COMMENT '参数值2',
-   PARAM_VALUE3         VARCHAR(500) COMMENT '参数值3',
-   REMARK               VARCHAR(1000) COMMENT '备注',
-   TENANT_CODE          VARCHAR(64) COMMENT '租户编码',
-   CREATED_BY           VARCHAR(36) COMMENT '创建人',
-   CREATED_TIME         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-   LAST_UPDATED_BY      VARCHAR(36) COMMENT '最后修改人',
-   LAST_UPDATED_TIME    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-   DELETE_FLAG          SMALLINT NOT NULL DEFAULT 1 COMMENT '删除标记，0：已删除、1：未删除',
-   PRIMARY KEY (ID),
-   UNIQUE KEY AK_PARAM_CODE_UNIQUE (PARAM_CODE)
+   id                   varchar(36) not null comment '主键ID',
+   param_name           varchar(64) not null comment '参数名称',
+   param_code           varchar(36) not null comment '参数编码',
+   param_type           varchar(36) not null comment '参数类型',
+   param_value1         varchar(500) comment '参数值1',
+   param_value2         varchar(500) comment '参数值2',
+   param_value3         varchar(500) comment '参数值3',
+   remark               varchar(1000) comment '备注',
+   tenant_code          varchar(64) comment '租户编码',
+   created_by           varchar(36) comment '创建人',
+   created_time         datetime not null default current_timestamp comment '创建时间',
+   last_updated_by      varchar(36) comment '最后修改人',
+   last_updated_time    datetime not null default current_timestamp on update current_timestamp comment '最后修改时间',
+   is_deleted           tinyint not null default 0 comment '是否删除，0：未删除；1：已删除',
+   primary key (id),
+   unique key uk_param_code (param_code)
 );
 
-ALTER TABLE T_SYS_PARAM COMMENT '系统参数';
+alter table t_sys_param comment '系统参数';
 
 /*==============================================================*/
-/* Table: T_DEPARTMENT                                          */
+/* table: t_department                                          */
 /*==============================================================*/
-CREATE TABLE T_DEPARTMENT
+create table t_department
 (
-   ID                   VARCHAR(36) NOT NULL COMMENT '主键ID',
-   PARENT_ID            VARCHAR(36) NOT NULL COMMENT '父ID',
-   DEPT_NAME            VARCHAR(64) NOT NULL COMMENT '部门名称',
-   DEPT_CODE            VARCHAR(64) NOT NULL COMMENT '部门编码',
-   SORT_NO              INT DEFAULT 1 COMMENT '排序',
-   TENANT_CODE          VARCHAR(64) COMMENT '租户编码',
-   CREATED_BY           VARCHAR(36) COMMENT '创建人',
-   CREATED_TIME         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-   LAST_UPDATED_BY      VARCHAR(36) COMMENT '最后修改人',
-   LAST_UPDATED_TIME    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-   DELETE_FLAG          SMALLINT NOT NULL DEFAULT 1 COMMENT '删除标记，0：已删除、1：未删除',
-   PRIMARY KEY (ID),
-   UNIQUE KEY AK_DEPT_CODE_UNIQUE (DEPT_CODE)
+   id                   varchar(36) not null comment '主键ID',
+   parent_id            varchar(36) not null comment '父ID',
+   dept_name            varchar(64) not null comment '部门名称',
+   dept_code            varchar(64) not null comment '部门编码',
+   sort_no              int default 1 comment '排序',
+   tenant_code          varchar(64) comment '租户编码',
+   created_by           varchar(36) comment '创建人',
+   created_time         datetime not null default current_timestamp comment '创建时间',
+   last_updated_by      varchar(36) comment '最后修改人',
+   last_updated_time    datetime not null default current_timestamp on update current_timestamp comment '最后修改时间',
+   is_deleted           tinyint not null default 0 comment '是否删除，0：未删除；1：已删除',
+   primary key (id),
+   unique key uk_dept_code (dept_code)
 );
 
-ALTER TABLE T_DEPARTMENT COMMENT '部门';
+alter table t_department comment '部门';
 
 /*==============================================================*/
-/* Table: T_DICT_TYPE                                           */
+/* table: t_dict_type                                           */
 /*==============================================================*/
-CREATE TABLE T_DICT_TYPE
+create table t_dict_type
 (
-   ID                   VARCHAR(36) NOT NULL COMMENT '主键ID',
-   TYPE_NAME            VARCHAR(64) NOT NULL COMMENT '类型名称',
-   TYPE_CODE            VARCHAR(64) NOT NULL COMMENT '类型编码',
-   REMARK               VARCHAR(1000) COMMENT '备注',
-   CREATED_BY           VARCHAR(36) COMMENT '创建人',
-   CREATED_TIME         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-   LAST_UPDATED_BY      VARCHAR(36) COMMENT '最后修改人',
-   LAST_UPDATED_TIME    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-   DELETE_FLAG          SMALLINT NOT NULL DEFAULT 1 COMMENT '删除标记，0：已删除、1：未删除',
-   PRIMARY KEY (ID),
-   UNIQUE KEY AK_TYPE_CODE_UNIQUE (TYPE_CODE)
+   id                   varchar(36) not null comment '主键ID',
+   type_name            varchar(64) not null comment '类型名称',
+   type_code            varchar(64) not null comment '类型编码',
+   remark               varchar(1000) comment '备注',
+   created_by           varchar(36) comment '创建人',
+   created_time         datetime not null default current_timestamp comment '创建时间',
+   last_updated_by      varchar(36) comment '最后修改人',
+   last_updated_time    datetime not null default current_timestamp on update current_timestamp comment '最后修改时间',
+   is_deleted           tinyint not null default 0 comment '是否删除，0：未删除；1：已删除',
+   primary key (id),
+   unique key uk_dicttype_type_code (type_code)
 );
 
-ALTER TABLE T_DICT_TYPE COMMENT '字典类型';
+alter table t_dict_type comment '字典类型';
 
 /*==============================================================*/
-/* Table: T_DICTIONARY                                          */
+/* table: t_dictionary                                          */
 /*==============================================================*/
-CREATE TABLE T_DICTIONARY
+create table t_dictionary
 (
-   ID                   VARCHAR(36) NOT NULL COMMENT '主键ID',
-   DICT_TYPE_CODE       VARCHAR(64) NOT NULL COMMENT '字典类型编码',
-   DICT_NAME            VARCHAR(64) NOT NULL COMMENT '字典名称',
-   DICT_CODE            VARCHAR(64) NOT NULL COMMENT '字典编码',
-   DICT_VALUE           VARCHAR(64) NOT NULL COMMENT '字典值',
-   SORT_NO              INT DEFAULT 1 COMMENT '排序',
-   REMARK               VARCHAR(1000) COMMENT '备注',
-   CREATED_BY           VARCHAR(36) COMMENT '创建人',
-   CREATED_TIME         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-   LAST_UPDATED_BY      VARCHAR(36) COMMENT '最后修改人',
-   LAST_UPDATED_TIME    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-   DELETE_FLAG          SMALLINT NOT NULL DEFAULT 1 COMMENT '删除标记，0：已删除、1：未删除',
-   PRIMARY KEY (ID),
-   UNIQUE KEY AK_DICTIONARY_UNIQUE (DICT_TYPE_CODE, DICT_CODE)
+   id                   varchar(36) not null comment '主键ID',
+   dict_type_id         varchar(64) not null comment '字典类型ID',
+   dict_name            varchar(64) not null comment '字典名称',
+   dict_code            varchar(64) not null comment '字典编码',
+   dict_value           varchar(64) not null comment '字典值',
+   sort_no              int default 1 comment '排序',
+   remark               varchar(1000) comment '备注',
+   created_by           varchar(36) comment '创建人',
+   created_time         datetime not null default current_timestamp comment '创建时间',
+   last_updated_by      varchar(36) comment '最后修改人',
+   last_updated_time    datetime not null default current_timestamp on update current_timestamp comment '最后修改时间',
+   is_deleted           tinyint not null default 0 comment '是否删除，0：未删除；1：已删除',
+   primary key (id),
+   unique key uk_dictionary (dict_type_id, dict_code)
 );
 
-ALTER TABLE T_DICTIONARY COMMENT '字典项';
+alter table t_dictionary comment '字典项';
 
 /*==============================================================*/
-/* Table: T_PROVINCE                                            */
+/* table: t_province                                            */
 /*==============================================================*/
-CREATE TABLE T_PROVINCE
+create table t_province
 (
-   ID                   VARCHAR(36) NOT NULL COMMENT '主键ID',
-   PROVINCE_CODE        VARCHAR(36) NOT NULL COMMENT '省份编码',
-   PROVINCE_NAME        VARCHAR(64) NOT NULL COMMENT '省份名称',
-   TENANT_CODE          VARCHAR(64) COMMENT '租户编码',
-   CREATED_BY           VARCHAR(36) COMMENT '创建人',
-   CREATED_TIME         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-   LAST_UPDATED_BY      VARCHAR(36) COMMENT '最后修改人',
-   LAST_UPDATED_TIME    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-   DELETE_FLAG          SMALLINT NOT NULL DEFAULT 1 COMMENT '删除标记，0：已删除、1：未删除',
-   PRIMARY KEY (ID),
-   UNIQUE KEY AK_PROVINCE_CODE_UNIQUE (PROVINCE_CODE)
+   id                   varchar(36) not null comment '主键ID',
+   province_code        varchar(36) not null comment '省份编码',
+   province_name        varchar(64) not null comment '省份名称',
+   tenant_code          varchar(64) comment '租户编码',
+   created_by           varchar(36) comment '创建人',
+   created_time         datetime not null default current_timestamp comment '创建时间',
+   last_updated_by      varchar(36) comment '最后修改人',
+   last_updated_time    datetime not null default current_timestamp on update current_timestamp comment '最后修改时间',
+   is_deleted           tinyint not null default 0 comment '是否删除，0：未删除；1：已删除',
+   primary key (id),
+   unique key uk_province_code (province_code)
 );
 
-ALTER TABLE T_PROVINCE COMMENT '省份';
+alter table t_province comment '省份';
 
 /*==============================================================*/
-/* Table: T_CITY                                                */
+/* table: t_city                                                */
 /*==============================================================*/
-CREATE TABLE T_CITY
+create table t_city
 (
-   ID                   VARCHAR(36) NOT NULL COMMENT '主键ID',
-   CITY_CODE            VARCHAR(36) NOT NULL COMMENT '市区编码',
-   CITY_NAME            VARCHAR(64) NOT NULL COMMENT '市区名称',
-   PARENT_CODE          VARCHAR(36) NOT NULL COMMENT '父编码',
-   TENANT_CODE          VARCHAR(64) COMMENT '租户编码',
-   CREATED_BY           VARCHAR(36) COMMENT '创建人',
-   CREATED_TIME         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-   LAST_UPDATED_BY      VARCHAR(36) COMMENT '最后修改人',
-   LAST_UPDATED_TIME    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-   DELETE_FLAG          SMALLINT NOT NULL DEFAULT 1 COMMENT '删除标记，0：已删除、1：未删除',
-   PRIMARY KEY (ID),
-   UNIQUE KEY AK_CITY_CODE_UNIQUE (CITY_CODE)
+   id                   varchar(36) not null comment '主键ID',
+   city_code            varchar(36) not null comment '市区编码',
+   city_name            varchar(64) not null comment '市区名称',
+   parent_code          varchar(36) not null comment '父编码',
+   tenant_code          varchar(64) comment '租户编码',
+   created_by           varchar(36) comment '创建人',
+   created_time         datetime not null default current_timestamp comment '创建时间',
+   last_updated_by      varchar(36) comment '最后修改人',
+   last_updated_time    datetime not null default current_timestamp on update current_timestamp comment '最后修改时间',
+   is_deleted           tinyint not null default 0 comment '是否删除，0：未删除；1：已删除',
+   primary key (id),
+   unique key uk_city_code (city_code)
 );
 
-ALTER TABLE T_CITY COMMENT '市区';
+alter table t_city comment '市区';
 
 /*==============================================================*/
-/* Table: T_AREA                                                */
+/* table: t_area                                                */
 /*==============================================================*/
-CREATE TABLE T_AREA
+create table t_area
 (
-   ID                   VARCHAR(36) NOT NULL COMMENT '主键ID',
-   AREA_CODE            VARCHAR(36) NOT NULL COMMENT '地区编码',
-   AREA_NAME            VARCHAR(64) NOT NULL COMMENT '地区名称',
-   PARENT_CODE          VARCHAR(36) NOT NULL COMMENT '父编码',
-   TENANT_CODE          VARCHAR(64) COMMENT '租户编码',
-   CREATED_BY           VARCHAR(36) COMMENT '创建人',
-   CREATED_TIME         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-   LAST_UPDATED_BY      VARCHAR(36) COMMENT '最后修改人',
-   LAST_UPDATED_TIME    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-   DELETE_FLAG          SMALLINT NOT NULL DEFAULT 1 COMMENT '删除标记，0：已删除、1：未删除',
-   PRIMARY KEY (ID),
-   UNIQUE KEY AK_AREA_CODE_UNIQUE (AREA_CODE)
+   id                   varchar(36) not null comment '主键ID',
+   area_code            varchar(36) not null comment '地区编码',
+   area_name            varchar(64) not null comment '地区名称',
+   parent_code          varchar(36) not null comment '父编码',
+   tenant_code          varchar(64) comment '租户编码',
+   created_by           varchar(36) comment '创建人',
+   created_time         datetime not null default current_timestamp comment '创建时间',
+   last_updated_by      varchar(36) comment '最后修改人',
+   last_updated_time    datetime not null default current_timestamp on update current_timestamp comment '最后修改时间',
+   is_deleted           tinyint not null default 0 comment '是否删除，0：未删除；1：已删除',
+   primary key (id),
+   unique key uk_area_code (area_code)
 );
 
-ALTER TABLE T_AREA COMMENT '地区';
+alter table t_area comment '地区';

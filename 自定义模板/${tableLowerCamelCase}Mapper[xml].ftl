@@ -1,4 +1,4 @@
-<#-- 用于生成MyBatis的Mapper.xml配置文件 -->
+<#-- 用于生成MyBatis的Mapper.xml配置文件(适用于MySQL) -->
 <#-- 初始化表的查询字段 -->
 <#assign searchFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.searchFields) />
 <#-- 如果配置的查询字段为空则取表字段的前几个字段 -->
@@ -49,11 +49,11 @@
     <#else>
             <include refid="allColumns" />
     </#if>
-        FROM ${tableInfo.tableName} <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias} </#if>WHERE <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>DELETE_FLAG = '1'<#else>1 = 1</#if>
+        FROM ${tableInfo.tableName} <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias} </#if>WHERE <#if FtlUtils.fieldExisted(tableInfo, "is_deleted")><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>is_deleted = 0<#else>1 = 1</#if>
     <#if searchFields?has_content>
         <#list searchFields as fieldInfo>
         <if test="${fieldInfo.proName} != null<#if fieldInfo.isStringType> and ${fieldInfo.proName} != ''</#if>">
-            AND <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName}<#if fieldInfo.isStringType && fieldInfo.lowerColName?index_of("_id") == -1 && !fieldInfo.isDictType> LIKE CONCAT('%', ${"#"}{${fieldInfo.proName}}, '%')<#else> = ${"#"}{${fieldInfo.proName}}</#if>
+            AND <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName}<#if fieldInfo.isStringType && !FtlUtils.strContainsAny(fieldInfo.colName, "_id") && !fieldInfo.isDictType> LIKE CONCAT('%', ${"#"}{${fieldInfo.proName}}, '%')<#else> = ${"#"}{${fieldInfo.proName}}</#if>
         </if>
         </#list>
     </#if>
@@ -70,7 +70,7 @@
     <#else>
             <include refid="allColumns" />
     </#if>
-        FROM ${tableInfo.tableName} <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias} </#if>WHERE <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>DELETE_FLAG = '1'<#else>1 = 1</#if>
+        FROM ${tableInfo.tableName} <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias} </#if>WHERE <#if FtlUtils.fieldExisted(tableInfo, "is_deleted")><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>is_deleted = 0<#else>1 = 1</#if>
     <#if searchFields?has_content>
         <#list searchFields as fieldInfo>
         <if test="${fieldInfo.proName} != null<#if fieldInfo.isStringType> and ${fieldInfo.proName} != ''</#if>">
@@ -89,7 +89,7 @@
     <#else>
             <include refid="allColumns" />
     </#if>
-        FROM ${tableInfo.tableName} <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias} </#if>WHERE <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${tableInfo.pkColName} = ${"#"}{${tableInfo.pkLowerCamelName}}<#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")> AND <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>DELETE_FLAG = '1'</#if>
+        FROM ${tableInfo.tableName} <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias} </#if>WHERE <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${tableInfo.pkColName} = ${"#"}{${tableInfo.pkLowerCamelName}}<#if FtlUtils.fieldExisted(tableInfo, "is_deleted")> AND <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>is_deleted = 0</#if>
     </select>
 
     <!-- 根据主键ID列表查询${tableInfo.simpleRemark}列表 -->
@@ -100,7 +100,7 @@
     <#else>
             <include refid="allColumns" />
     </#if>
-        FROM ${tableInfo.tableName} <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias} </#if>WHERE <#if FtlUtils.fieldExisted(tableInfo, "DEL_FLAG")><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>DEL_FLAG = '0' AND </#if><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${tableInfo.pkColName} IN
+        FROM ${tableInfo.tableName} <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias} </#if>WHERE <#if FtlUtils.fieldExisted(tableInfo, "is_deleted")><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>is_deleted = 0 AND </#if><#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${tableInfo.pkColName} IN
         <foreach collection="idList" index="index" item="${tableInfo.pkLowerCamelName}" open="(" separator="," close=")">
             ${"#"}{${tableInfo.pkLowerCamelName}}
         </foreach>
@@ -175,7 +175,7 @@
     </#if>
 <#if tableInfo.pkLowerCamelName?has_content>
 
-    <!-- 删除${tableInfo.simpleRemark} -->
+    <!-- 物理删除${tableInfo.simpleRemark} -->
     <delete id="delete${tableInfo.upperCamelCase}ById">
         DELETE FROM ${tableInfo.tableName} WHERE ${tableInfo.pkColName} = ${"#"}{${tableInfo.pkLowerCamelName}}
     </delete>
@@ -187,17 +187,17 @@
             ${"#"}{${tableInfo.pkLowerCamelName}}
         </foreach>
     </delete>
-    <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")>
+    <#if FtlUtils.fieldExisted(tableInfo, "is_deleted")>
 
     <!-- 批量逻辑删除${tableInfo.simpleRemark} -->
     <update id="delete${tableInfo.upperCamelCase}LogicByIds">
         UPDATE ${tableInfo.tableName}
         <set>
-            DELETE_FLAG = '0',
-            LAST_UPDATED_TIME = NOW(),
-            <if test="userId != null and userId != ''">LAST_UPDATED_BY = ${"#"}{userId}</if>
+            is_deleted = 1,
+            last_updated_time = NOW(),
+            <if test="userId != null and userId != ''">last_updated_by = ${"#"}{userId}</if>
         </set>
-        WHERE DELETE_FLAG = '1' AND ${tableInfo.pkColName} IN
+        WHERE is_deleted = 0 AND ${tableInfo.pkColName} IN
         <foreach collection="idList" index="index" item="${tableInfo.pkLowerCamelName}" open="(" separator="," close=")">
             ${"#"}{${tableInfo.pkLowerCamelName}}
         </foreach>

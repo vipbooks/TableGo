@@ -3,7 +3,7 @@
   "basePackagePath" : "cn.tablego.mybatis",
   "srcPath" : "/src/main/java",
   "resourcesPath" : "/src/main/resources",
-  "commonFields" : "CREATED_BY, CREATED_TIME, LAST_UPDATED_BY, LAST_UPDATED_TIME, DELETE_FLAG",
+  "commonFields" : "CREATED_BY, CREATED_TIME, LAST_UPDATED_BY, LAST_UPDATED_TIME, IS_DELETED",
   "remarkMatchDict" : "类型, 类别, 分类, 状态, 是否",
   "remarkMatchMulti" : "备注, 说明, 描述",
   "ftlParamList" : [ {
@@ -54,7 +54,6 @@
     }
   },
   "globalFieldType" : {
-    "DELETE_FLAG" : "String",
     "IS_ENABLE" : "YesNoEnum"
   },
   "tableFieldType" : {
@@ -62,7 +61,7 @@
       "USER_TYPE" : "UserTypeEnum"
     }
   },
-  "globalIgnoreValidFields" : [ "CREATED_BY", "CREATED_TIME", "LAST_UPDATED_BY", "LAST_UPDATED_TIME", "DELETE_FLAG" ],
+  "globalIgnoreValidFields" : [ "CREATED_BY", "CREATED_TIME", "LAST_UPDATED_BY", "LAST_UPDATED_TIME", "IS_DELETED" ],
   "tableIgnoreValidFields" : {
     "T_USER" : [ "USER_TYPE" ]
   },

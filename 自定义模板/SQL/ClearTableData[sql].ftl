@@ -3,7 +3,7 @@
 <#if tableInfoList?has_content>
     <#list tableInfoList as tableInfo>
 
--- 清空<#if StringUtils.isNotBlank(tableInfo.simpleRemark)>${tableInfo.simpleRemark}(${tableInfo.tableName})<#else>${tableInfo.tableName}</#if>
+-- 清空${FtlUtils.replaceStrEmpty(tableInfo.simpleRemark, "表")}表数据
 TRUNCATE TABLE ${tableInfo.tableName};
     </#list>
 </#if>

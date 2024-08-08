@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 <#if FtlUtils.fieldTypeExisted(importAndExportFields, "BigInteger")>
 import java.math.BigInteger;
 </#if>
+import java.io.Serializable;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
@@ -25,15 +26,12 @@ import lombok.NoArgsConstructor;
 </#if>
 import lombok.Data;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-
-import ${jsonParam.basePackagePath}.common.model.BaseExcel;
 
 /**
- * <#if StringUtils.isNotBlank(tableInfo.simpleRemark)>${tableInfo.simpleRemark}<#else>${tableInfo.tableName}</#if>导入参数
- *
+ * ${FtlUtils.emptyToDefault(tableInfo.simpleRemark, "${tableInfo.tableName}表")}导出参数
+ * 
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 @Data
 @Builder
@@ -41,12 +39,11 @@ import ${jsonParam.basePackagePath}.common.model.BaseExcel;
 @NoArgsConstructor
 @AllArgsConstructor
 </#if>
-@EqualsAndHashCode(callSuper = true)
 @ColumnWidth(20)
 @HeadRowHeight(20)
 @ContentRowHeight(18)
 @ExcelIgnoreUnannotated
-public class ${tableInfo.upperCamelCase}Export extends BaseExcel {
+public class ${tableInfo.upperCamelCase}Export implements Serializable {
     /** 版本号 */
     private static final long serialVersionUID = ${tableInfo.serialVersionUID!'1'}L;
 <#if importAndExportFields?has_content>

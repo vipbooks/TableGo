@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 <#if FtlUtils.fieldTypeExisted(searchFields, "BigDecimal")>
 import java.math.BigDecimal;
 </#if>
-<#if FtlUtils.fieldTypeExisted(tableInfo, "BigInteger")>
+<#if FtlUtils.fieldTypeExisted(searchFields, "BigInteger")>
 import java.math.BigInteger;
 </#if>
 <#if jsonParam.enableSwagger>
@@ -29,28 +29,30 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 </#if>
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.ToString;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import ${jsonParam.basePackagePath}.common.model.BaseCondition;
 
 /**
- * ${tableInfo.simpleRemark!tableInfo.tableName}查询条件
+ * ${FtlUtils.emptyToDefault(tableInfo.simpleRemark, "${tableInfo.tableName}表")}查询条件
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
-@Setter
-@Getter
+@Data
 @Builder
 <#if searchFields?has_content || batchSearchFields?has_content>
 @NoArgsConstructor
 @AllArgsConstructor
 </#if>
 @Accessors(chain = true)
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 <#if jsonParam.enableSwagger>
-@ApiModel(description = "${tableInfo.simpleRemark!tableInfo.tableName}查询条件")
+@ApiModel(description = "${FtlUtils.emptyToDefault(tableInfo.simpleRemark, "${tableInfo.tableName}表")}查询条件")
 </#if>
 public class ${tableInfo.upperCamelCase}Condition extends BaseCondition {
     /** 版本号 */

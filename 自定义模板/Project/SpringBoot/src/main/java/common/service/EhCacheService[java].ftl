@@ -20,7 +20,7 @@ import net.sf.ehcache.Element;
  * EhCache缓存Service接口
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 @Service
 public class EhCacheService {

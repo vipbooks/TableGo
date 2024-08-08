@@ -51,7 +51,7 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements ${tableInfo.upper
     private static final Logger logger = LoggerFactory.getLogger(${tableInfo.upperCamelCase}ServiceImpl.class);
 
     @Autowired
-    private ${tableInfo.upperCamelCase}Mapper ${tableInfo.upperCamelCase}Mapper;
+    private ${tableInfo.upperCamelCase}Mapper ${tableInfo.lowerCamelCase}Mapper;
 
     @Override
     public PageInfo<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}Page(${tableInfo.upperCamelCase}Condition condition) {
@@ -144,7 +144,7 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements ${tableInfo.upper
     public Boolean delete${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList) {
         return ${tableInfo.upperCamelCase}Mapper.delete${tableInfo.upperCamelCase}ByIds(idList);
     }
-    <#if FtlUtils.fieldExisted(tableInfo, "DELETE_FLAG")>
+    <#if FtlUtils.fieldExisted(tableInfo, "IS_DELETED")>
 
     @Transactional(rollbackFor = Exception.class)
     @Override

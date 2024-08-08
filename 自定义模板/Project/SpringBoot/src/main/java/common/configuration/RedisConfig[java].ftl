@@ -12,7 +12,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.cache.interceptor.SimpleKey;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
@@ -43,10 +43,10 @@ import cn.hutool.json.JSONUtil;
  * Redis参数配置，继承CachingConfigurerSupport覆盖默认的缓存Key生成器
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 @EnableCaching
-@Configuration
+@SpringBootConfiguration
 public class RedisConfig extends CachingConfigurerSupport {
     /** String序列化器 */
     private final StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();

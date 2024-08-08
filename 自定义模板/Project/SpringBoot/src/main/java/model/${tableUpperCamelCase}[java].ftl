@@ -1,5 +1,3 @@
-<#-- 初始化表的模糊查询字段 -->
-<#assign likeFields = FtlUtils.getJsonFieldList(tableInfo, jsonParam.likeFields) />
 package ${jsonParam.packagePath}
 
 <#if FtlUtils.fieldTypeExisted(tableInfo, "Date")>
@@ -14,10 +12,6 @@ import java.math.BigDecimal;
 </#if>
 <#if FtlUtils.fieldTypeExisted(tableInfo, "BigInteger")>
 import java.math.BigInteger;
-</#if>
-<#if FtlUtils.fieldAtListExisted(tableInfo, likeFields)>
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.SqlCondition;
 </#if>
 <#assign importNotBlank = false />
 <#assign importNotNull = false />
@@ -46,35 +40,36 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 </#if>
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import lombok.experimental.Accessors;
-
 <#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.commonFields)>
+import lombok.EqualsAndHashCode;
 import ${jsonParam.basePackagePath}.common.model.BaseBean;
 <#else>
-import ${jsonParam.basePackagePath}.common.model.OverrideBeanMethods;
+import java.io.Serializable;
 </#if>
 
 /**
- * <#if StringUtils.isNotBlank(tableInfo.remark)>${tableInfo.remark}(${tableInfo.tableName})<#else>${tableInfo.tableName}</#if>
+ * ${FtlUtils.emptyToDefault(tableInfo.remark, "${tableInfo.remark}(${tableInfo.tableName})", tableInfo.tableName)}
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
-@Setter
-@Getter
+@Data
 @Builder
 <#if tableInfo.fieldInfos?has_content>
 @NoArgsConstructor
 @AllArgsConstructor
 </#if>
 @Accessors(chain = true)
+<#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.commonFields)>
+@EqualsAndHashCode(callSuper = true)
+</#if>
 <#if jsonParam.enableSwagger>
-@ApiModel(description = "${tableInfo.simpleRemark!tableInfo.tableName}")
+@ApiModel(description = "${FtlUtils.emptyToDefault(tableInfo.simpleRemark, "${tableInfo.tableName}")}")
 </#if>
 @TableName("${tableInfo.tableName}")
-public class ${tableInfo.upperCamelCase} extends <#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.commonFields)>BaseBean<#else>OverrideBeanMethods</#if> {
+public class ${tableInfo.upperCamelCase} <#if FtlUtils.fieldAllExisted(tableInfo.allFieldNameList, jsonParam.commonFields)>extends BaseBean<#else>implements Serializable</#if> {
     /** 版本号 */
     private static final long serialVersionUID = ${tableInfo.serialVersionUID!'1'}L;
 <#if tableInfo.fieldInfos?has_content>
@@ -102,9 +97,6 @@ public class ${tableInfo.upperCamelCase} extends <#if FtlUtils.fieldAllExisted(t
     @JsonFormat(timezone = "GMT+8", pattern = <#if fieldInfo.isDateTimeType>DatePattern.NORM_DATETIME_PATTERN<#else>DatePattern.NORM_DATE_PATTERN</#if>)
     <#elseif fieldInfo.javaType == "Long">
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    </#if>
-    <#if FtlUtils.fieldExisted(likeFields, fieldInfo.colName)>
-    @TableField(condition = SqlCondition.LIKE)
     </#if>
     private ${fieldInfo.javaType} ${fieldInfo.proName};
     </#list>

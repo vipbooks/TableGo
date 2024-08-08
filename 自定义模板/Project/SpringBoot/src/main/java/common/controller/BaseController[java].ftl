@@ -10,7 +10,7 @@ import org.springframework.core.env.Environment;
  * 用于其他Controller继承的基础Controller
  *
  * @author ${paramConfig.author}
- * @version 1.0.0 ${today}
+ * @since  ${dateTime}
  */
 public abstract class BaseController {
     @Autowired
