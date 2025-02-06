@@ -12,14 +12,14 @@ struct ${tableInfo.upperCamelCase}: Codable {
     <#list tableInfo.fieldInfos as fieldInfo>
     /// ${fieldInfo.remark!fieldInfo.colName}
         <#if fieldInfo.isNumericType>
-            <#if fieldInfo.javaType == "Float">
+            <#if fieldInfo.fieldType == "Float">
     var ${fieldInfo.lowerCamelCase}: Float?
-            <#elseif fieldInfo.javaType == "Double">
+            <#elseif fieldInfo.fieldType == "Double">
     var ${fieldInfo.lowerCamelCase}: Double?
             <#else>
     var ${fieldInfo.lowerCamelCase}: Int?
             </#if>
-        <#elseif fieldInfo.javaType == "Boolean">
+        <#elseif fieldInfo.fieldType == "Boolean">
     var ${fieldInfo.lowerCamelCase}: Bool?
         <#else>
     var ${fieldInfo.lowerCamelCase}: String?

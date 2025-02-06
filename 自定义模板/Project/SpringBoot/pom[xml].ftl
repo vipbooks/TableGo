@@ -27,6 +27,7 @@
 
         <mysql-connector-java.version>${jsonParam.version.mysqlConnectorJava}</mysql-connector-java.version>
         <mybatis-plus-boot-starter.version>${jsonParam.version.mybatisPlusBootStarter}</mybatis-plus-boot-starter.version>
+        <mybatis-plus-jsqlparser.version>${jsonParam.version.mybatisPlusJsqlparser}</mybatis-plus-jsqlparser.version>
         <lombok.version>${jsonParam.version.lombok}</lombok.version>
         <hutool-all.version>${jsonParam.version.hutoolAll}</hutool-all.version>
 <#if jsonParam.enableSwagger>
@@ -95,6 +96,12 @@
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>${"$"}{mybatis-plus-boot-starter.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-jsqlparser-4.9</artifactId>
+            <version>${"$"}{mybatis-plus-jsqlparser.version}</version>
         </dependency>
 
         <dependency>

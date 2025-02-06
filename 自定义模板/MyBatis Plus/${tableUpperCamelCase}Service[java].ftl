@@ -121,5 +121,16 @@ public interface ${tableInfo.upperCamelCase}Service extends IService<${tableInfo
      * @return 是否成功
      */
     Boolean delete${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList);
+    <#if FtlUtils.fieldExisted(tableInfo, "IS_ENABLE")>
+
+    /**
+     * 启用或禁用${tableInfo.simpleRemark}
+     *
+     * @param idList ${tableInfo.pkRemark}列表
+     * @param isEnable 是否启用，0：禁用；1：启用
+     * @return 是否成功
+     */
+    Boolean enableOrDisable(List<${tableInfo.pkJavaType}> idList, Integer isEnable) ;
+    </#if>
 </#if>
 }

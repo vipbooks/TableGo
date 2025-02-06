@@ -1,6 +1,9 @@
 <#-- 用于生成Controller的自定义模板 -->
 package ${jsonParam.packagePath}
 
+<#if tableInfo.pkLowerCamelName?has_content && FtlUtils.fieldExisted(tableInfo, "is_enable")>
+import java.util.Collections;
+</#if>
 import java.util.List;
 import javax.validation.Valid;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -110,5 +113,21 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
         Boolean bool = ${tableInfo.lowerCamelCase}Service.delete${tableInfo.upperCamelCase}ByIds(idList);
         return Result.okOrFailed(bool);
     }
+    <#if FtlUtils.fieldExisted(tableInfo, "is_enable")>
+
+    @ApiOperation(value = "启用${tableInfo.simpleRemark}")
+    @ApiImplicitParam(name = "${tableInfo.pkLowerCamelName}", value = "${tableInfo.pkRemark}", required = true)
+    @GetMapping("/enable${tableInfo.upperCamelCase}/{id}")
+    public Result<Boolean> enable${tableInfo.upperCamelCase}(@PathVariable ${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}) {
+        return Result.okOrFailed(${tableInfo.lowerCamelCase}Service.enableOrDisable(Collections.singletonList(${tableInfo.pkLowerCamelName}), 1));
+    }
+
+    @ApiOperation(value = "禁用${tableInfo.simpleRemark}")
+    @ApiImplicitParam(name = "${tableInfo.pkLowerCamelName}", value = "${tableInfo.pkRemark}", required = true)
+    @GetMapping("/disable${tableInfo.upperCamelCase}/{id}")
+    public Result<Boolean> disable${tableInfo.upperCamelCase}(@PathVariable ${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}) {
+        return Result.okOrFailed(${tableInfo.lowerCamelCase}Service.enableOrDisable(Collections.singletonList(${tableInfo.pkLowerCamelName}), 0));
+    }
+    </#if>
 </#if>
 }

@@ -8,9 +8,9 @@
 typedef struct {
 <#if tableInfo.fieldInfos?has_content>
     <#list tableInfo.fieldInfos as fieldInfo>
-        <#if fieldInfo.javaType == "BigDecimal">
+        <#if fieldInfo.fieldType == "BigDecimal">
     double ${fieldInfo.lowerCamelCase}; // ${fieldInfo.remark!fieldInfo.colName}
-        <#elseif fieldInfo.javaType == "Integer">
+        <#elseif fieldInfo.fieldType == "Integer">
     int ${fieldInfo.lowerCamelCase}; // ${fieldInfo.remark!fieldInfo.colName}
         <#else>
     string ${fieldInfo.lowerCamelCase}; // ${fieldInfo.remark!fieldInfo.colName}

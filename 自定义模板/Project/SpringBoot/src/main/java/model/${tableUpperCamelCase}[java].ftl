@@ -83,21 +83,21 @@ public class ${tableInfo.upperCamelCase} <#if FtlUtils.fieldAllExisted(tableInfo
         <#if jsonParam.enableSwagger>
     @ApiModelProperty(value = "${fieldInfo.remark}")
         </#if>
-    <#if !fieldInfo.primaryKey && fieldInfo.isNotNull>
-        <#if fieldInfo.isStringType>
+        <#if !fieldInfo.primaryKey && fieldInfo.isNotNull>
+            <#if fieldInfo.isStringType>
     @NotBlank(message = "${fieldInfo.simpleRemark!fieldInfo.proName}不能为空")
-        <#else>
+            <#else>
     @NotNull(message = "${fieldInfo.simpleRemark!fieldInfo.proName}不能为空")
+            </#if>
         </#if>
-    </#if>
-    <#if fieldInfo.primaryKey>
+        <#if fieldInfo.primaryKey>
     @TableId
-    </#if>
-    <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>
+        </#if>
+        <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>
     @JsonFormat(timezone = "GMT+8", pattern = <#if fieldInfo.isDateTimeType>DatePattern.NORM_DATETIME_PATTERN<#else>DatePattern.NORM_DATE_PATTERN</#if>)
-    <#elseif fieldInfo.javaType == "Long">
+        <#elseif fieldInfo.javaType == "Long">
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    </#if>
+        </#if>
     private ${fieldInfo.javaType} ${fieldInfo.proName};
     </#list>
     <#if paramConfig.showMergeUpdateMark>

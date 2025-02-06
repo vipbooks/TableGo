@@ -17,11 +17,11 @@ namespace ${paramConfig.packagePath}
         /// <summary>
         /// ${fieldInfo.remark!fieldInfo.colName}
         /// </summary>
-        <#if fieldInfo.javaType == "Date">
+        <#if fieldInfo.fieldType == "Date">
         public DateTime ${fieldInfo.proName} { set; get; }
-        <#elseif fieldInfo.javaType == "BigDecimal">
+        <#elseif fieldInfo.fieldType == "BigDecimal">
         public decimal ${fieldInfo.proName} { set; get; }
-        <#elseif fieldInfo.javaType == "Integer">
+        <#elseif fieldInfo.fieldType == "Integer">
         public int ${fieldInfo.proName} { set; get; }
         <#else>
         public string ${fieldInfo.proName} { set; get; }

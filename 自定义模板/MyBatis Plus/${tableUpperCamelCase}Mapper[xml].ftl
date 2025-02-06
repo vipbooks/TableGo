@@ -52,7 +52,7 @@
             AND <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName} &gt;= ${"#"}{condition.${fieldInfo.proName}Begin}
         </if>
         <if test="condition.${fieldInfo.proName}End != null">
-            AND <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName} &lt; ${"#"}{condition.${fieldInfo.proName}End}
+            AND <#if StringUtils.isNotBlank(tableInfo.tableAlias)>${tableInfo.tableAlias}.</#if>${fieldInfo.colName} &lt;<#if !fieldInfo.isDateTimeType>=</#if> ${"#"}{condition.${fieldInfo.proName}End}
         </if>
             <#else>
         <if test="condition.${fieldInfo.proName} != null<#if fieldInfo.isStringType> and condition.${fieldInfo.proName} != ''</#if>">

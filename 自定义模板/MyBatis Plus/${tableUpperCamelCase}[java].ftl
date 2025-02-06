@@ -85,21 +85,21 @@ public class ${tableInfo.upperCamelCase} extends <#if FtlUtils.fieldAllExisted(t
 
     /** ${fieldInfo.remark} */
     @ApiModelProperty(value = "${fieldInfo.remark}")
-    <#if !fieldInfo.primaryKey && fieldInfo.isNotNull && !FtlUtils.fieldExisted(fieldInfo, globalIgnoreValidFields) && !FtlUtils.fieldExisted(fieldInfo, tableIgnoreValidFields)>
-        <#if fieldInfo.isStringType>
+        <#if !fieldInfo.primaryKey && fieldInfo.isNotNull && !FtlUtils.fieldExisted(fieldInfo, globalIgnoreValidFields) && !FtlUtils.fieldExisted(fieldInfo, tableIgnoreValidFields)>
+            <#if fieldInfo.isStringType>
     @NotBlank(message = "${fieldInfo.simpleRemark!fieldInfo.proName}不能为空")
-        <#else>
+            <#else>
     @NotNull(message = "${fieldInfo.simpleRemark!fieldInfo.proName}不能为空")
+            </#if>
         </#if>
-    </#if>
-    <#if fieldInfo.primaryKey>
+        <#if fieldInfo.primaryKey>
     @TableId
-    </#if>
-    <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>
+        </#if>
+        <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>
     @JsonFormat(timezone = "GMT+8", pattern = <#if fieldInfo.isDateTimeType>DatePattern.NORM_DATETIME_PATTERN<#else>DatePattern.NORM_DATE_PATTERN</#if>)
-    <#elseif fieldInfo.javaType == "Long">
+        <#elseif fieldInfo.javaType == "Long">
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    </#if>
+        </#if>
     private ${fieldInfo.javaType} ${fieldInfo.proName};
     </#list>
     <#if paramConfig.showMergeUpdateMark>

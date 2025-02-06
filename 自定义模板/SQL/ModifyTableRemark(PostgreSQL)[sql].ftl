@@ -1,5 +1,5 @@
-<#-- 用于生成修改数据库表注释和字段注释的自定义模板 -->
--- 修改数据库表注释和字段注释SQL
+<#-- 用于生成 PostgreSQL 修改数据库表注释和字段注释的自定义模板 -->
+-- 修改 PostgreSQL 数据库表注释和字段注释SQL
 <#if tableInfoList?has_content>
     <#list tableInfoList as tableInfo>
 
@@ -10,11 +10,11 @@
 -- 修改${tableInfo.tableName}
             </#if>
             <#if tableInfo.remark?? && tableInfo.remark?trim != "">
-ALTER TABLE ${tableInfo.tableName} COMMENT='${tableInfo.remark}';
+COMMENT ON TABLE ${tableInfo.tableName} IS '${tableInfo.remark}';
             </#if>
             <#list tableInfo.fieldInfos as fieldInfo>
                 <#if fieldInfo.remark?? && fieldInfo.remark?trim != "">
-ALTER TABLE ${tableInfo.tableName} MODIFY COLUMN ${fieldInfo.colName} ${fieldInfo.dataTypeStr}<#if fieldInfo.isNotNull> NOT NULL</#if> COMMENT '${fieldInfo.remark}';
+COMMENT ON COLUMN ${tableInfo.tableName}.${fieldInfo.colName} IS '${fieldInfo.remark}';
                 </#if>
             </#list>
         </#if>

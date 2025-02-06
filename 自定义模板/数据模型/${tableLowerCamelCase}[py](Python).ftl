@@ -5,7 +5,7 @@
 class ${tableInfo.upperCamelCase}(models.Model):
 <#if tableInfo.fieldInfos?has_content>
     <#list tableInfo.fieldInfos as fieldInfo>
-        <#if fieldInfo.javaType == "Date">
+        <#if fieldInfo.fieldType == "Date">
     ${fieldInfo.lowerColName} = models.DateTimeField(
             <#if fieldInfo.unique>
         unique=True,
@@ -16,7 +16,7 @@ class ${tableInfo.upperCamelCase}(models.Model):
         verbose_name="${fieldInfo.simpleRemark}",
         help_text="${fieldInfo.remark}"
     )
-        <#elseif fieldInfo.javaType == "BigDecimal">
+        <#elseif fieldInfo.fieldType == "BigDecimal">
     ${fieldInfo.lowerColName} = models.DecimalField(
             <#if fieldInfo.unique>
         unique=True,
@@ -27,7 +27,7 @@ class ${tableInfo.upperCamelCase}(models.Model):
         verbose_name="${fieldInfo.simpleRemark}",
         help_text="${fieldInfo.remark}"
     )
-        <#elseif fieldInfo.javaType == "Integer">
+        <#elseif fieldInfo.fieldType == "Integer">
     ${fieldInfo.lowerColName} = models.IntegerField(
             <#if fieldInfo.unique>
         unique=True,

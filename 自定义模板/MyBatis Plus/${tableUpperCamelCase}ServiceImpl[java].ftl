@@ -64,7 +64,7 @@ public class ${tableInfo.upperCamelCase}ServiceImpl extends ServiceImpl<${tableI
 <#if isNoSqlTable>
         return this.page(page, getListQueryWrapper(condition));
 <#else>
-    <#if dateFieldInfo?has_content>
+    <#if dateFieldInfo?has_content && dateFieldInfo.isDateTimeType>
         if (condition.get${dateFieldInfo.upperCamelCase}End() != null) {
             condition.set${dateFieldInfo.upperCamelCase}End(DateUtil.endOfDay(condition.get${dateFieldInfo.upperCamelCase}End()));
         }
@@ -78,7 +78,7 @@ public class ${tableInfo.upperCamelCase}ServiceImpl extends ServiceImpl<${tableI
 <#if isNoSqlTable>
         return this.list(getListQueryWrapper(condition));
 <#else>
-    <#if dateFieldInfo?has_content>
+    <#if dateFieldInfo?has_content && dateFieldInfo.isDateTimeType>
         if (condition.get${dateFieldInfo.upperCamelCase}End() != null) {
             condition.set${dateFieldInfo.upperCamelCase}End(DateUtil.endOfDay(condition.get${dateFieldInfo.upperCamelCase}End()));
         }
@@ -184,6 +184,16 @@ public class ${tableInfo.upperCamelCase}ServiceImpl extends ServiceImpl<${tableI
     public Boolean delete${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList) {
         return this.removeByIds(idList);
     }
+    <#if FtlUtils.fieldExisted(tableInfo, "IS_ENABLE")>
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Boolean enableOrDisable(List<${tableInfo.pkJavaType}> idList, Integer isEnable) {
+        return this.lambdaUpdate().set(${tableInfo.upperCamelCase}::getIsEnable, isEnable)
+                .in(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, idList)
+                .update();
+    }
+    </#if>
 </#if>
 <#if checkValueExistedFields?has_content>
 
@@ -229,12 +239,19 @@ public class ${tableInfo.upperCamelCase}ServiceImpl extends ServiceImpl<${tableI
     <#if dateFieldInfo?has_content>
         <#if queryWrapperExisted>
                 .ge(condition.get${dateFieldInfo.upperCamelCase}Begin() != null, ${tableInfo.upperCamelCase}::get${dateFieldInfo.upperCamelCase}, condition.get${dateFieldInfo.upperCamelCase}Begin())
+                <#if dateFieldInfo.isDateTimeType>
                 .lt(condition.get${dateFieldInfo.upperCamelCase}End() != null, ${tableInfo.upperCamelCase}::get${dateFieldInfo.upperCamelCase}, condition.get${dateFieldInfo.upperCamelCase}End() != null ? DateUtil.endOfDay(condition.get${dateFieldInfo.upperCamelCase}End()) : null)<#if !batchSearchFields?has_content && !orderByFieldExisted>;</#if>
+                <#else>
+                .le(condition.get${dateFieldInfo.upperCamelCase}End() != null, ${tableInfo.upperCamelCase}::get${dateFieldInfo.upperCamelCase}, condition.get${dateFieldInfo.upperCamelCase}End())<#if !batchSearchFields?has_content && !orderByFieldExisted>;</#if>
+                </#if>
         <#else>
             <#assign queryWrapperExisted = true />
         queryWrapper.ge(condition.get${dateFieldInfo.upperCamelCase}Begin() != null, ${tableInfo.upperCamelCase}::get${dateFieldInfo.upperCamelCase}, condition.get${dateFieldInfo.upperCamelCase}Begin())
+                <#if dateFieldInfo.isDateTimeType>
                 .lt(condition.get${dateFieldInfo.upperCamelCase}End() != null, ${tableInfo.upperCamelCase}::get${dateFieldInfo.upperCamelCase}, condition.get${dateFieldInfo.upperCamelCase}End() != null ? DateUtil.endOfDay(condition.get${dateFieldInfo.upperCamelCase}End()) : null)<#if !batchSearchFields?has_content && !orderByFieldExisted>;</#if>
-
+                <#else>
+                .le(condition.get${dateFieldInfo.upperCamelCase}End() != null, ${tableInfo.upperCamelCase}::get${dateFieldInfo.upperCamelCase}, condition.get${dateFieldInfo.upperCamelCase}End())<#if !batchSearchFields?has_content && !orderByFieldExisted>;</#if>
+                </#if>
         </#if>
     </#if>
     <#if batchSearchFields?has_content>

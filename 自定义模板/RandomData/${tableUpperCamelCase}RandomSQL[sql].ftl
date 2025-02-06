@@ -31,7 +31,7 @@ INSERT INTO ${tableInfo.tableName}(<#list fieldList as fieldInfo>${fieldInfo.col
         <#assign fieldList = FtlUtils.tableFieldFilter(tableInfo.allFieldInfos, "IGNORE_PK") />
         <#assign fieldList = FtlUtils.getRandomList(fieldList, fieldRandomCount) />
         <#if fieldList?has_content>
-UPDATE ${tableInfo.tableName} SET <#list fieldList as fieldInfo>${fieldInfo.colName}=<#if fieldInfo.isNumericType><#if fieldInfo.columnSize lt 4>${FtlUtils.getRandomString19(1)}<#else>${FtlUtils.getRandomString19(fieldInfo.columnSize-3)}</#if><#elseif fieldInfo.isDateType>'<#if fieldInfo.isDateTimeType>${DateUtils.getRandomDateTime("2000-01-01")}<#else>${DateUtils.getRandomDate("2000-01-01")}</#if>'<#else>'${FtlUtils.getRandomString(((fieldInfo.columnSize>6)?string(6,fieldInfo.columnSize))?number)}'</#if><#if fieldInfo_has_next>,</#if></#list> WHERE ${tableInfo.pkColName}='${pkValueList[i-1]}';
+UPDATE ${tableInfo.tableName} SET <#list fieldList as fieldInfo>${fieldInfo.colName}=<#if fieldInfo.isNumericType><#if fieldInfo.columnSize lt 4>${FtlUtils.getRandomString19(1)}<#else>${FtlUtils.getRandomString19(fieldInfo.columnSize-3)}</#if><#elseif fieldInfo.isDateType>'<#if fieldInfo.isDateTimeType>${DateUtils.getRandomDateTime("2000-01-01")}<#else>${DateUtils.getRandomDate("2000-01-01")}</#if>'<#elseif fieldInfo.isTimestampType>'${DateUtils.getRandomDateTime("2000-01-01")}'<#else>'${FtlUtils.getRandomString(((fieldInfo.columnSize>6)?string(6,fieldInfo.columnSize))?number)}'</#if><#if fieldInfo_has_next>,</#if></#list> WHERE ${tableInfo.pkColName}='${pkValueList[i-1]}';
         </#if>
     </#list>
 

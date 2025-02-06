@@ -55,6 +55,7 @@ create table t_sys_param
    param_value3         varchar(500) comment '参数值3',
    remark               varchar(1000) comment '备注',
    tenant_code          varchar(64) comment '租户编码',
+   is_enable            tinyint not null default 1 comment '是否启用，0：禁用；1：启用',
    created_by           varchar(36) comment '创建人',
    created_time         datetime not null default current_timestamp comment '创建时间',
    last_updated_by      varchar(36) comment '最后修改人',

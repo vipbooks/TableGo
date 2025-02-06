@@ -78,21 +78,21 @@ public class ${tableInfo.upperCamelCase} <#if FtlUtils.fieldAllExisted(tableInfo
         <#if FtlUtils.fieldEquals(fieldInfo, "remark")><#continue></#if>
 
     @ApiModelProperty(value = "${fieldInfo.remark}")
-    <#if FtlUtils.fieldExisted(fieldInfo, importAndExportFields)>
+        <#if FtlUtils.fieldExisted(fieldInfo, importAndExportFields)>
     @Excel(name = "${fieldInfo.simpleRemark}")
-    </#if>
-    <#if !fieldInfo.primaryKey && fieldInfo.isNotNull && !FtlUtils.fieldExisted(fieldInfo, globalIgnoreValidFields)>
-        <#if fieldInfo.isStringType>
-    @NotBlank(message = "${fieldInfo.simpleRemark!fieldInfo.proName}不能为空！")
-        <#else>
-    @NotNull(message = "${fieldInfo.simpleRemark!fieldInfo.proName}不能为空！")
         </#if>
-    </#if>
-    <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>
+        <#if !fieldInfo.primaryKey && fieldInfo.isNotNull && !FtlUtils.fieldExisted(fieldInfo, globalIgnoreValidFields)>
+            <#if fieldInfo.isStringType>
+    @NotBlank(message = "${fieldInfo.simpleRemark!fieldInfo.proName}不能为空！")
+            <#else>
+    @NotNull(message = "${fieldInfo.simpleRemark!fieldInfo.proName}不能为空！")
+            </#if>
+        </#if>
+        <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>
     @JsonFormat(timezone = "GMT+8", pattern = <#if fieldInfo.isDateTimeType>"yyyy-MM-dd HH:mm:ss"<#else>"yyyy-MM-dd"</#if>)
-    <#elseif fieldInfo.javaType == "Long">
+        <#elseif fieldInfo.javaType == "Long">
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    </#if>
+        </#if>
     private ${fieldInfo.javaType} ${fieldInfo.proName};
     </#list>
     <#if paramConfig.showMergeUpdateMark>

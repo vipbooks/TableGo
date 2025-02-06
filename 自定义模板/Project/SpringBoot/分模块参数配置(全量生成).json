@@ -227,17 +227,18 @@
     "java" : "1.8",
     "springBootStarterParent" : "2.7.18",
     "mysqlConnectorJava" : "8.4.0",
-    "mybatisPlusBootStarter" : "3.5.7",
+    "mybatisPlusBootStarter" : "3.5.10",
+    "mybatisPlusJsqlparser" : "3.5.10",
     "swaggerSpringBootStarter" : "1.9.1.RELEASE",
     "knife4j" : "4.5.0",
-    "snakeyaml" : "2.2",
-    "lombok" : "1.18.32",
-    "hutoolAll" : "5.8.29",
-    "redisson" : "3.28.0",
-    "easyexcel" : "3.3.4",
+    "snakeyaml" : "2.3",
+    "lombok" : "1.18.36",
+    "hutoolAll" : "5.8.35",
+    "redisson" : "3.40.2",
+    "easyexcel" : "4.0.3",
     "mavenCompilerPlugin" : "3.13.0",
     "mavenSourcePlugin" : "3.3.1",
     "smartDocMavenPlugin" : "2.7.7",
-    "aliyunSdkOss" : "3.17.4"
+    "aliyunSdkOss" : "3.18.1"
   }
 }

@@ -51,9 +51,9 @@ public class ${tableInfo.upperCamelCase}Export implements Serializable {
 
     /** ${fieldInfo.remark} */
     @ExcelProperty(value = "${fieldInfo.remark}")
-    <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>
+        <#if FtlUtils.fieldTypeEquals(fieldInfo, "Date", "Timestamp")>
     @DateTimeFormat(<#if fieldInfo.isDateTimeType>DatePattern.NORM_DATETIME_PATTERN<#else>DatePattern.NORM_DATE_PATTERN</#if>)
-    </#if>
+        </#if>
     private ${fieldInfo.javaType} ${fieldInfo.proName};
     </#list>
 </#if>

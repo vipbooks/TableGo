@@ -7,6 +7,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 </#if>
+<#if tableInfo.pkLowerCamelName?has_content && FtlUtils.fieldExisted(tableInfo, "is_enable")>
+import java.util.Collections;
+</#if>
 import java.util.List;
 import javax.validation.Valid;
 
@@ -188,6 +191,40 @@ public class ${tableInfo.upperCamelCase}Controller extends BaseController {
         Boolean bool = ${tableInfo.lowerCamelCase}Service.delete${tableInfo.upperCamelCase}ByIds(idList);
         return Result.okOrFailed(bool);
     }
+    <#if FtlUtils.fieldExisted(tableInfo, "is_enable")>
+
+    <#if !jsonParam.enableSwagger>
+    /**
+     * 启用${tableInfo.simpleRemark}
+     *
+     * @param ${tableInfo.pkLowerCamelName} ${tableInfo.pkRemark}
+     * @return 结果数据
+     */
+    <#else>
+    @ApiOperation(value = "启用${tableInfo.simpleRemark}")
+    @ApiImplicitParam(name = "${tableInfo.pkLowerCamelName}", value = "${tableInfo.pkRemark}", required = true)
+    </#if>
+    @GetMapping("/enable${tableInfo.upperCamelCase}/{id}")
+    public Result<Boolean> enable${tableInfo.upperCamelCase}(@PathVariable ${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}) {
+        return Result.okOrFailed(${tableInfo.lowerCamelCase}Service.enableOrDisable(Collections.singletonList(${tableInfo.pkLowerCamelName}), 1));
+    }
+
+    <#if !jsonParam.enableSwagger>
+    /**
+     * 禁用${tableInfo.simpleRemark}
+     *
+     * @param ${tableInfo.pkLowerCamelName} ${tableInfo.pkRemark}
+     * @return 结果数据
+     */
+    <#else>
+    @ApiOperation(value = "禁用${tableInfo.simpleRemark}")
+    @ApiImplicitParam(name = "${tableInfo.pkLowerCamelName}", value = "${tableInfo.pkRemark}", required = true)
+    </#if>
+    @GetMapping("/disable${tableInfo.upperCamelCase}/{id}")
+    public Result<Boolean> disable${tableInfo.upperCamelCase}(@PathVariable ${tableInfo.pkJavaType} ${tableInfo.pkLowerCamelName}) {
+        return Result.okOrFailed(${tableInfo.lowerCamelCase}Service.enableOrDisable(Collections.singletonList(${tableInfo.pkLowerCamelName}), 0));
+    }
+    </#if>
 </#if>
 <#if jsonParam.enableEasyExcel && importAndExportFields?has_content>
 

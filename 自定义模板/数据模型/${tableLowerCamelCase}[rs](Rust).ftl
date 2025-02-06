@@ -6,11 +6,11 @@
 pub struct ${tableInfo.upperCamelCase} {
 <#if tableInfo.fieldInfos?has_content>
     <#list tableInfo.fieldInfos as fieldInfo>
-        <#if fieldInfo.javaType == "Date">
+        <#if fieldInfo.fieldType == "Date">
     pub ${fieldInfo.lowerColName}: DateTime, // ${fieldInfo.remark!fieldInfo.colName}
-        <#elseif fieldInfo.javaType == "BigDecimal">
+        <#elseif fieldInfo.fieldType == "BigDecimal">
     pub ${fieldInfo.lowerColName}: f64, // ${fieldInfo.remark!fieldInfo.colName}
-        <#elseif fieldInfo.javaType == "Integer">
+        <#elseif fieldInfo.fieldType == "Integer">
     pub ${fieldInfo.lowerColName}: u32, // ${fieldInfo.remark!fieldInfo.colName}
         <#else>
     pub ${fieldInfo.lowerColName}: String, // ${fieldInfo.remark!fieldInfo.colName}

@@ -7,7 +7,7 @@
     <#list 1..10 as i>
     <${tableInfo.lowerCamelCase}>
         <#list tableInfo.fieldInfos as fieldInfo>
-        <${fieldInfo.lowerCamelCase}><#if fieldInfo.primaryKey><#if tableInfo.pkColumnSize gte 32>${IdWorker.get32UUID()}<#elseif fieldInfo.columnSize gte 19>${IdWorker.getId()}<#else>${FtlUtils.getRandomString19(6)}</#if><#elseif fieldInfo.isNumericType><#if fieldInfo.columnSize lt 4>${FtlUtils.getRandomString19(1)}<#else>${FtlUtils.getRandomString19(fieldInfo.columnSize-3)}</#if><#elseif fieldInfo.isDateType><#if fieldInfo.isDateTimeType>${DateUtils.getRandomDateTime("2000-01-01")}<#else>${DateUtils.getRandomDate("2000-01-01")}</#if><#else>${FtlUtils.getRandomString(((fieldInfo.columnSize>6)?string(6,fieldInfo.columnSize))?number)}</#if></${fieldInfo.lowerCamelCase}>
+        <${fieldInfo.lowerCamelCase}><#if fieldInfo.primaryKey><#if tableInfo.pkColumnSize gte 32>${IdWorker.get32UUID()}<#elseif fieldInfo.columnSize gte 19>${IdWorker.getId()}<#else>${FtlUtils.getRandomString19(6)}</#if><#elseif fieldInfo.isNumericType><#if fieldInfo.columnSize lt 4>${FtlUtils.getRandomString19(1)}<#else>${FtlUtils.getRandomString19(fieldInfo.columnSize-3)}</#if><#elseif fieldInfo.isDateType><#if fieldInfo.isDateTimeType>${DateUtils.getRandomDateTime("2000-01-01")}<#else>${DateUtils.getRandomDate("2000-01-01")}</#if><#elseif fieldInfo.isTimestampType>${DateUtils.getRandomDateTime("2000-01-01")}<#else>${FtlUtils.getRandomString(((fieldInfo.columnSize>6)?string(6,fieldInfo.columnSize))?number)}</#if></${fieldInfo.lowerCamelCase}>
         </#list>
     </${tableInfo.lowerCamelCase}>
     </#list>

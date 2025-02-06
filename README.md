@@ -10,7 +10,8 @@
 　　TableGo还可以通过服务器接连终端功能使用SSH2连接Linux服务器，实现命令执行、上传下载文件、按指定顺序自动执行各种命令和操作，实现一键更新打包上传自动化部署前后端项目工程到DEV、TEST、SIT、UAT环境，支持自动备份、自动清理备份、自动还原备份等功能，并且支持常规部署和Docker容器部署。<br/>
 　　使用自定义模板功能可以根据数据库表结构信息生成你想要的任何代码，例如：Java、C#、C++、Golang、Rust、Python、Objective-C、Swift、Kotlin、VB、VC、SQL、HTML、JSP、JS、PHP、Vue、React、Word、Excel等等，没有做不到只有想不到……<br/>
 　　可以生成Java、C#、C++、Golang、Rust、Python、Objective-C、Swift、iOS等各种不同平台编程语言的数据模型或结构体，对应的自定义模板示例已提供。<br/><br/>
-　　TableGo官网：[http://www.tablego.cn](http://www.tablego.cn)<br/>
+　　TableGo官网：[http://www.tablego.cn](http://www.tablego.cn)<br/><br/>
+　　**声明：禁止将本软件用于任何非法或犯罪活动，后果自负！**
 
 #### 运行环境
 
