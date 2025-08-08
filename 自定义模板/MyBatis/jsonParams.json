@@ -54,11 +54,13 @@
     }
   },
   "globalFieldType" : {
-    "IS_ENABLE" : "YesNoEnum"
+    "DELETE_FLAG" : "String",
+    "ACTIVITY_STATUS" : "ActivityEnum"
   },
   "tableFieldType" : {
-    "T_USER" : {
-      "USER_TYPE" : "UserTypeEnum"
+    "CUSTOM_TMP_TEST_USER" : {
+      "USER_TYPE" : "UserTypeEnum",
+      "IS_ENABLE" : "YesNoEnum"
     }
   },
   "globalIgnoreValidFields" : [ "CREATED_BY", "CREATED_TIME", "LAST_UPDATED_BY", "LAST_UPDATED_TIME", "IS_DELETED" ],

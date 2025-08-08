@@ -12,7 +12,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.BooleanUtil;
 import com.ruoyi.common.exception.ServiceException;
 </#if>
-<#if FtlUtils.fieldTypeExisted(searchFields, "Date")>
+<#if dateFieldInfo?has_content && dateFieldInfo.isDateTimeType>
 import cn.hutool.core.date.DateUtil;
 </#if>
 <#if tableInfo.pkIsStringType && !checkValueExistedFields?has_content>
@@ -58,7 +58,7 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements I${tableInfo.uppe
 
     @Override
     public List<${tableInfo.upperCamelCase}> select${tableInfo.upperCamelCase}List(${tableInfo.upperCamelCase} ${tableInfo.lowerCamelCase}) {
-    <#if dateFieldInfo?has_content>
+    <#if dateFieldInfo?has_content && dateFieldInfo.isDateTimeType>
         if (${tableInfo.lowerCamelCase}.get${dateFieldInfo.upperCamelCase}End() != null) {
             ${tableInfo.lowerCamelCase}.set${dateFieldInfo.upperCamelCase}End(DateUtil.endOfDay(${tableInfo.lowerCamelCase}.get${dateFieldInfo.upperCamelCase}End()));
         }
@@ -73,14 +73,11 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements I${tableInfo.uppe
 
     @Override
     public List<${tableInfo.upperCamelCase}> select${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList) {
+        idList = Optional.ofNullable(idList).orElse(Collections.emptyList()).stream().filter(<#if tableInfo.pkIsStringType>StrUtil::isNotBlank<#else>Objects::nonNull</#if>).distinct().collect(Collectors.toList());
         if (CollUtil.isEmpty(idList)) {
             return Collections.emptyList();
         }
-        <#if tableInfo.pkIsStringType>
-        return ${tableInfo.lowerCamelCase}Mapper.select${tableInfo.upperCamelCase}ByIds(idList.stream().filter(StrUtil::isNotBlank).distinct().collect(Collectors.toList()));
-        <#else>
-        return ${tableInfo.lowerCamelCase}Mapper.select${tableInfo.upperCamelCase}ByIds(idList.stream().filter(Objects::nonNull).distinct().collect(Collectors.toList()));
-        </#if>
+        return ${tableInfo.lowerCamelCase}Mapper.select${tableInfo.upperCamelCase}ByIds(idList);
     }
 
     @Override

@@ -67,7 +67,7 @@
     "templateName" : "${tableLowerCamelCase}Menu[sql].ftl",
     "ftlRelativeDir" : "${templatePath}",
     "relativePath" : "/sql/menu"
-  }],
+  } ],
   "globalDataType" : {
     "CHAR" : {
       "operator" : "=",
@@ -77,7 +77,7 @@
   },
   "globalFieldType" : {
     "DEL_FLAG" : "String",
-    "IS_ENABLE" : "YesNoEnum"
+    "ACTIVITY_STATUS" : "ActivityEnum"
   },
   "tableFieldType" : {
     "SYS_USER_ONLINE" : {

@@ -109,6 +109,12 @@
     "relativePath" : "${srcPath}",
     "buildSingleFile" : "true"
   }, {
+    "templateNames" : "MyBatisSqlLoggerInterceptor[java].ftl",
+    "ftlRelativeDir" : "${srcPath}/common/interceptor",
+    "packagePath" : "${basePackagePath}.common.interceptor",
+    "relativePath" : "${srcPath}",
+    "buildSingleFile" : "true"
+  }, {
     "templateNames" : "application[yml].ftl, application-dev[yml].ftl, application-test[yml].ftl, application-prod[yml].ftl, logback-spring[xml].ftl, smart-doc[json].ftl, ehcache[xml].ftl",
     "ftlRelativeDir" : "${resourcesPath}",
     "relativePath" : "${resourcesPath}",
@@ -169,7 +175,8 @@
   }, {
     "name" : "Swagger组件",
     "enable" : "true",
-    "codeEnableKey" : "enableSwagger"
+    "codeEnableKey" : "enableSwagger",
+    "templateNames" : "SwaggerConfig[java].ftl"
   }, {
     "name" : "Smart-Doc组件",
     "enable" : "false",
@@ -210,7 +217,7 @@
   } ],
   "projectConfig" : {
     "dbDriverClassName" : "com.mysql.cj.jdbc.Driver",
-    "dbUrl" : "jdbc:mysql://127.0.0.1:3306/demo?serverTimezone=GMT%2B8&characterEncoding=utf8&useUnicode=true&useSSL=false&nullNamePatternMatchesAll=true&allowPublicKeyRetrieval=true",
+    "dbUrl" : "jdbc:mysql://127.0.0.1:3306/demo?serverTimezone=GMT%2B8&characterEncoding=utf8&useUnicode=true&useSSL=false&nullNamePatternMatchesAll=true&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true",
     "dbUsername" : "root",
     "dbPassword" : "root",
     "redisHost" : "127.0.0.1",
@@ -222,18 +229,18 @@
     "java" : "1.8",
     "springBootStarterParent" : "2.7.18",
     "mysqlConnectorJava" : "8.4.0",
-    "mybatisPlusBootStarter" : "3.5.10",
-    "mybatisPlusJsqlparser" : "3.5.10",
+    "mybatisPlusBootStarter" : "3.5.12",
+    "mybatisPlusJsqlparser" : "3.5.12",
     "swaggerSpringBootStarter" : "1.9.1.RELEASE",
     "knife4j" : "4.5.0",
     "snakeyaml" : "2.3",
-    "lombok" : "1.18.36",
-    "hutoolAll" : "5.8.35",
+    "lombok" : "1.18.38",
+    "hutoolAll" : "5.8.38",
     "redisson" : "3.40.2",
-    "easyexcel" : "4.0.3",
+    "easyexcel" : "1.2.0",
     "mavenCompilerPlugin" : "3.13.0",
     "mavenSourcePlugin" : "3.3.1",
-    "smartDocMavenPlugin" : "2.7.7",
+    "smartDocMavenPlugin" : "3.1.1",
     "aliyunSdkOss" : "3.18.1"
   }
 }

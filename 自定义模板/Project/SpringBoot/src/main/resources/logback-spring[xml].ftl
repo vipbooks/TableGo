@@ -6,7 +6,7 @@
 <configuration debug="false" scan="true" scanPeriod="1200 seconds">
     <property name="LOG_HOME" value="/logs/${jsonParam.appName}"/>
     <property name="FILE_NAME" value="${jsonParam.appName}"/>
-    <property name="PATTERN_LAYOUT" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level ${"$"}{PID:-} --- [%thread] %c:%L : %msg%n"/>
+    <property name="PATTERN_LAYOUT" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level ${"$"}{PID:-} --- [%thread] %logger{36}:%L : %msg%n"/>
 
     <!-- 输出到控制台 -->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">

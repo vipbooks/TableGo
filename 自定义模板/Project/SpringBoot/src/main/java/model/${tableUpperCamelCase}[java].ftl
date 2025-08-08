@@ -50,7 +50,7 @@ import java.io.Serializable;
 </#if>
 
 /**
- * ${FtlUtils.emptyToDefault(tableInfo.remark, "${tableInfo.remark}(${tableInfo.tableName})", tableInfo.tableName)}
+ * ${FtlUtils.emptyToDefault(tableInfo.remark, "${tableInfo.simpleRemark}(${tableInfo.tableName})", tableInfo.tableName)}
  *
  * @author ${paramConfig.author}
  * @since  ${dateTime}

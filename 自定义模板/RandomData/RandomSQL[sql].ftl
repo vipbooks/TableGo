@@ -1,4 +1,4 @@
-<#-- 生成多个表的随机SQL -->
+<#-- 生成多个表的随机SQL，可用于生成CRUD的随机数据SQL做数据库测试 -->
 <#assign buildCount = 5 />
 <#assign randomTableList = FtlUtils.getRandomList(tableInfoList, buildCount) />
 <#if randomTableList?has_content>

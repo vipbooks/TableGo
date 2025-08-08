@@ -6,7 +6,7 @@
   "modulePath" : "/ruoyi-business",
   "webPath" : "/ruoyi-admin",
   "description" : "业务模块",
-  "ruoyiVersion" : "4.7.8",
+  "ruoyiVersion" : "4.8.1",
   "templatePath" : "/template",
   "srcPath" : "/src/main/java",
   "resourcesPath" : "/src/main/resources",
@@ -18,7 +18,7 @@
     "zipFile" : "${currentFtlDir}/RuoYi.zip",
     "unzipPath" : "D:\\",
     "enable" : "true"
-  }],
+  } ],
   "ftlParamList" : [ {
     "templateName" : "${tableUpperCamelCase}Controller[java].ftl",
     "ftlRelativeDir" : "${templatePath}/admin",
@@ -85,7 +85,7 @@
     "templateName" : "${tableLowerCamelCase}Menu[sql].ftl",
     "ftlRelativeDir" : "${templatePath}",
     "relativePath" : "/sql/menu"
-  }],
+  } ],
   "globalDataType" : {
     "CHAR" : {
       "operator" : "=",
@@ -95,7 +95,7 @@
   },
   "globalFieldType" : {
     "DEL_FLAG" : "String",
-    "IS_ENABLE" : "YesNoEnum"
+    "ACTIVITY_STATUS" : "ActivityEnum"
   },
   "tableFieldType" : {
     "SYS_USER_ONLINE" : {

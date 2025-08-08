@@ -5,7 +5,7 @@ package ${jsonParam.packagePath}
 <#if FtlUtils.fieldTypeExisted(importAndExportFields, "Date")>
 import java.util.Date;
 import cn.hutool.core.date.DatePattern;
-import com.alibaba.excel.annotation.format.DateTimeFormat;
+import cn.idev.excel.annotation.format.DateTimeFormat;
 </#if>
 <#if FtlUtils.fieldTypeExisted(importAndExportFields, "BigDecimal")>
 import java.math.BigDecimal;
@@ -14,11 +14,11 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 </#if>
 import java.io.Serializable;
-import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
-import com.alibaba.excel.annotation.ExcelProperty;
-import com.alibaba.excel.annotation.write.style.ColumnWidth;
-import com.alibaba.excel.annotation.write.style.ContentRowHeight;
-import com.alibaba.excel.annotation.write.style.HeadRowHeight;
+import cn.idev.excel.annotation.ExcelIgnoreUnannotated;
+import cn.idev.excel.annotation.ExcelProperty;
+import cn.idev.excel.annotation.write.style.ColumnWidth;
+import cn.idev.excel.annotation.write.style.ContentRowHeight;
+import cn.idev.excel.annotation.write.style.HeadRowHeight;
 
 <#if importAndExportFields?has_content>
 import lombok.AllArgsConstructor;

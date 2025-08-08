@@ -9,20 +9,34 @@
     "dev" : {
       "profile" : "dev",
       "port" : "8080",
-      "backup" : false
+      "updateAndPackage" : true,
+      "uploadShell" : true,
+      "backup" : false,
+      "deploy" : true,
+      "cleanProject" : true
     },
     "test" : {
       "profile" : "test",
       "port" : "8081",
-      "backup" : false
+      "updateAndPackage" : true,
+      "uploadShell" : true,
+      "backup" : false,
+      "deploy" : true,
+      "cleanProject" : true
     },
     "prod" : {
       "profile" : "prod",
       "port" : "8082",
-      "backup" : true
+      "updateAndPackage" : true,
+      "uploadShell" : true,
+      "backup" : true,
+      "deploy" : true,
+      "cleanProject" : true
     }
   },
   "batchConfig" : [ {
+    "enable" : "${updateAndPackage}",
+    "remark" : "更新SVN代码并打包",
     "mutexLock" : "package",
     "runtimeExec" : [ {
       "command" : "${scriptPath}\\svn-update-project.bat ${projectPath}",
@@ -32,7 +46,8 @@
       "enable" : true
     } ]
   }, {
-    "enable" : true,
+    "enable" : "${uploadShell}",
+    "remark" : "上传脚本文件，并替换脚本的换行符并给脚本授权",
     "fileUploads" : [ {
       "fromPath" : [ "${scriptPath}\\AppService.sh", "${scriptPath}\\ClearBakFile.sh" ],
       "toPath" : "${serverProjectPath}",
@@ -49,6 +64,7 @@
     } ]
   }, {
     "enable" : "${backup}",
+    "remark" : "备份 tablego-admin 工程",
     "commands" : [ {
       "command" : "cd ${serverProjectPath}"
     }, {
@@ -64,6 +80,8 @@
       "enable" : true
     } ]
   }, {
+    "enable" : "${deploy}",
+    "remark" : "部署 tablego-admin 工程",
     "fileUploads" : [ {
       "fromPath" : [ "${projectPath}\\tablego-admin\\target\\tablego-admin.jar" ],
       "toPath" : "${serverProjectPath}",
@@ -76,7 +94,9 @@
       "containsStrSigquit" : "Started AdminApplication"
     } ]
   }, {
-    "mutexLock" : "clean",
+    "enable" : "${cleanProject}",
+    "remark" : "清理项目",
+    "mutexLock" : "cleanProject",
     "runtimeExec" : [ {
       "command" : "${scriptPath}\\maven-lifecycle.bat clean ${projectPath}\\tablego-admin",
       "enable" : true

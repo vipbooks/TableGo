@@ -23,7 +23,7 @@
     "relativePath" : "${resourcesPath}/mapper/${moduleName}",
     "projectSubDir" : "${modulePath}",
     "needFilterField" : "false"
-  }],
+  } ],
   "globalDataType" : {
     "CHAR" : {
       "operator" : "=",
@@ -33,7 +33,7 @@
   },
   "globalFieldType" : {
     "DEL_FLAG" : "String",
-    "IS_ENABLE" : "YesNoEnum"
+    "ACTIVITY_STATUS" : "ActivityEnum"
   },
   "tableFieldType" : {
     "SYS_USER_ONLINE" : {

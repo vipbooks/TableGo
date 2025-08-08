@@ -176,8 +176,8 @@
 <#if jsonParam.enableEasyExcel>
 
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>easyexcel</artifactId>
+            <groupId>cn.idev.excel</groupId>
+            <artifactId>fastexcel</artifactId>
             <version>${"$"}{easyexcel.version}</version>
         </dependency>
 </#if>
@@ -223,9 +223,12 @@
             </plugin>
 <#if jsonParam.enableSmartDoc>
 
-            <!-- https://gitee.com/smart-doc-team/smart-doc -->
+            <!--
+                https://gitee.com/smart-doc-team/smart-doc
+                https://smart-doc-group.github.io/zh
+            -->
             <plugin>
-                <groupId>com.github.shalousun</groupId>
+                <groupId>com.ly.smart-doc</groupId>
                 <artifactId>smart-doc-maven-plugin</artifactId>
                 <version>${"$"}{smart-doc-maven-plugin.version}</version>
                 <configuration>
@@ -243,12 +246,21 @@
                     <includes>
                         <!-- 格式为：groupId:artifactId 参考如下，也可以支持正则式如：com.alibaba:.* -->
                         <include>com.alibaba:fastjson</include>
+                        <!-- 使用了MyBatis-Plus的Page分页需要include所使用的源码包 -->
+                        <include>com.baomidou:mybatis-plus-extension</include>
+                        <!-- 使用了MyBatis-Plus的IPage分页需要include mybatis-plus-core-->
+                        <include>com.baomidou:mybatis-plus-core</include>
                     </includes>
                 </configuration>
                 <executions>
                     <execution>
                         <!-- 如果不需要在执行编译时启动smart-doc，则将phase注释掉 -->
                         <phase>compile</phase>
+                        <goals>
+                            <!-- smart-doc提供了html、openapi、markdown等goal，可按需配置 -->
+                            <goal>html</goal>
+                            <goal>openapi</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

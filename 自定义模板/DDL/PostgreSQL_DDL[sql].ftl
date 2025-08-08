@@ -6,6 +6,7 @@ ${"/* Created on:     ${dateTime}"?right_pad(64)}*/
 
 <#if tableInfoList?has_content>
     <#list tableInfoList as tableInfo>
+-- ${tableInfo.remark}
 DROP TABLE IF EXISTS ${tableInfo.tableName};
 
     </#list>

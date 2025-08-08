@@ -10,7 +10,8 @@
 　　TableGo还可以通过服务器接连终端功能使用SSH2连接Linux服务器，实现命令执行、上传下载文件、按指定顺序自动执行各种命令和操作，实现一键更新打包上传自动化部署前后端项目工程到DEV、TEST、SIT、UAT环境，支持自动备份、自动清理备份、自动还原备份等功能，并且支持常规部署和Docker容器部署。<br/>
 　　使用自定义模板功能可以根据数据库表结构信息生成你想要的任何代码，例如：Java、C#、C++、Golang、Rust、Python、Objective-C、Swift、Kotlin、VB、VC、SQL、HTML、JSP、JS、PHP、Vue、React、Word、Excel等等，没有做不到只有想不到……<br/>
 　　可以生成Java、C#、C++、Golang、Rust、Python、Objective-C、Swift、iOS等各种不同平台编程语言的数据模型或结构体，对应的自定义模板示例已提供。<br/><br/>
-　　TableGo官网：[http://www.tablego.cn](http://www.tablego.cn)<br/><br/>
+　　TableGo官网：[http://www.tablego.cn](http://www.tablego.cn)<br/>
+　　发行版下载：[https://github.com/vipbooks/TableGo/releases](https://github.com/vipbooks/TableGo/releases)<br/><br/>
 　　**声明：禁止将本软件用于任何非法或犯罪活动，后果自负！**
 
 #### 运行环境
@@ -45,7 +46,7 @@ MySQL关键字做表名导致生成代码或文档报错的解决方法，以ord
 #### 关于升级新版本TableGo的问题
 　　一般情况下用新版本直接覆盖老版本是没有问题的，但有时候配置信息改动比较大就会有问题，所以在更新新版本的时候最好先把老版本拷贝到另一个地方临时备份一下，然后再把新版本拷贝进来，dbConfig.xml和paramConfig.xml两个配置文件可以复用，把老的database.ini和paramConfig.ini配置文件删除，再打开新版本的TableGo自动生成database.ini和paramConfig.ini这两个配置文件，因为有的版本配置信息改动比较大，用老版本的配置会有问题。如果老版本有配置如果拷到新版本中来，这时可以同时打开新老版本，在界面上把老版本的配置信息拷贝到新版本的界面上来，完成后再点右上角的关闭按钮正常关闭就会自动保存了界面上的配置信息了。
 
-　　``项目的发展离不开您的支持，希望您能给项目点一个Star，促进项目更好的发展(^_^)∠※``
+　　``项目的发展离不开您的支持，希望您能在开源平台给TableGo项目点一个Star，促进项目更好的发展(^_^)∠※``
 
 #### TableGo功能一览
 
@@ -54,3 +55,5 @@ MySQL关键字做表名导致生成代码或文档报错的解决方法，以ord
 #### 计算机软件著作权
 
 ![](http://cdn.tablego.cn/images/copyright.jpg)
+
+**TableGo受国家计算机软件著作权保护（登记号：2020SR0316086），禁止对该软件进行篡改、盗版及非法倒卖等，违者将自行承担相应的法律责任。并且对因用户使用该软件而产生的任何直接或间接损失不承担责任。**

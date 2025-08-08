@@ -5,7 +5,7 @@ package ${jsonParam.packagePath}
 <#if FtlUtils.fieldTypeExisted(importAndExportFields, "Date")>
 import java.util.Date;
 import cn.hutool.core.date.DatePattern;
-import com.alibaba.excel.annotation.format.DateTimeFormat;
+import cn.idev.excel.annotation.format.DateTimeFormat;
 </#if>
 <#if FtlUtils.fieldTypeExisted(importAndExportFields, "BigDecimal")>
 import java.math.BigDecimal;
@@ -13,11 +13,8 @@ import java.math.BigDecimal;
 <#if FtlUtils.fieldTypeExisted(importAndExportFields, "BigInteger")>
 import java.math.BigInteger;
 </#if>
-import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
-import com.alibaba.excel.annotation.ExcelProperty;
-import com.alibaba.excel.annotation.write.style.ColumnWidth;
-import com.alibaba.excel.annotation.write.style.ContentRowHeight;
-import com.alibaba.excel.annotation.write.style.HeadRowHeight;
+import cn.idev.excel.annotation.ExcelIgnoreUnannotated;
+import cn.idev.excel.annotation.ExcelProperty;
 
 <#if importAndExportFields?has_content>
 import lombok.AllArgsConstructor;
@@ -44,9 +41,6 @@ import ${jsonParam.basePackagePath}.common.model.BaseExcel;
 </#if>
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@ColumnWidth(20)
-@HeadRowHeight(20)
-@ContentRowHeight(18)
 @ExcelIgnoreUnannotated
 public class ${tableInfo.upperCamelCase}Import extends BaseExcel {
     /** 版本号 */

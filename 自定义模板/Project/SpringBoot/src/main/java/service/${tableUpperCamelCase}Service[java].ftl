@@ -15,7 +15,7 @@
 <#assign importAndExportFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.importAndExportFields) />
 package ${jsonParam.packagePath}
 
-<#if FtlUtils.fieldTypeExisted(searchFields, "Date")>
+<#if dateFieldInfo?has_content && dateFieldInfo.isDateTimeType>
 import cn.hutool.core.date.DateUtil;
 </#if>
 <#if checkValueExistedFieldInfos?has_content || tableInfo.pkLowerCamelName?has_content>
@@ -32,14 +32,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.Collections;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+    <#if !tableInfo.pkIsStringType>
+import java.util.Objects;
+    </#if>
 </#if>
 <#if isUseCacheTable && (jsonParam.enableEhCache || jsonParam.enableRedis)>
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-</#if>
-<#if !tableInfo.pkIsStringType>
-import java.util.Objects;
 </#if>
 <#if jsonParam.enableEasyExcel && importAndExportFields?has_content>
 import cn.hutool.core.bean.BeanUtil;
@@ -168,11 +168,12 @@ public class ${tableInfo.upperCamelCase}Service extends ServiceImpl<${tableInfo.
     @Cacheable
     </#if>
     public List<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList) {
+        idList = Optional.ofNullable(idList).orElse(Collections.emptyList()).stream().filter(<#if tableInfo.pkIsStringType>StrUtil::isNotBlank<#else>Objects::nonNull</#if>).distinct().collect(Collectors.toList());
         if (CollUtil.isEmpty(idList)) {
             return Collections.emptyList();
         }
         LambdaQueryWrapper<${tableInfo.upperCamelCase}> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.in(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, idList.stream().filter(<#if tableInfo.pkIsStringType>StrUtil::isNotBlank<#else>Objects::nonNull</#if>).distinct().collect(Collectors.toList()));
+        queryWrapper.in(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, idList);
         return this.list(queryWrapper);
     }
 
@@ -187,7 +188,7 @@ public class ${tableInfo.upperCamelCase}Service extends ServiceImpl<${tableInfo.
     </#if>
     public Map<${tableInfo.pkJavaType}, ${tableInfo.upperCamelCase}> map${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList) {
         List<${tableInfo.upperCamelCase}> list = find${tableInfo.upperCamelCase}ByIds(idList);
-        return Optional.ofNullable(list).orElse(CollUtil.toList()).stream().collect(Collectors.toMap(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, ${tableInfo.upperCamelCase} -> ${tableInfo.upperCamelCase}));
+        return Optional.ofNullable(list).orElse(Collections.emptyList()).stream().collect(Collectors.toMap(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, ${tableInfo.upperCamelCase} -> ${tableInfo.upperCamelCase}));
     }
 </#if>
 <#if checkValueExistedFieldInfos?has_content>

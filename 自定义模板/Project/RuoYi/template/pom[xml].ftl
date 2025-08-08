@@ -29,7 +29,7 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.28</version>
+            <version>5.8.38</version>
         </dependency>
     </dependencies>
 </project>

@@ -11,6 +11,12 @@
       "tablegoAdminPort" : "6611",
       "tablegoBasicPort" : "6622",
       "tablegoIamPort" : "6633",
+      "uploadShell" : true,
+      "updateAndPackage" : true,
+      "deployAdmin" : true,
+      "deployBasic" : true,
+      "deployIam" : true,
+      "cleanProject" : true,
       "backup" : false
     },
     "test" : {
@@ -18,6 +24,12 @@
       "tablegoAdminPort" : "6611",
       "tablegoBasicPort" : "6622",
       "tablegoIamPort" : "6633",
+      "uploadShell" : false,
+      "updateAndPackage" : true,
+      "deployAdmin" : true,
+      "deployBasic" : true,
+      "deployIam" : false,
+      "cleanProject" : true,
       "backup" : false
     },
     "prod" : {
@@ -25,12 +37,18 @@
       "tablegoAdminPort" : "6611",
       "tablegoBasicPort" : "6622",
       "tablegoIamPort" : "6633",
+      "uploadShell" : false,
+      "updateAndPackage" : true,
+      "deployAdmin" : true,
+      "deployBasic" : false,
+      "deployIam" : false,
+      "cleanProject" : true,
       "backup" : true
     }
   },
   "stepBatchConfig" : {
     "step1" : {
-      "enable" : true,
+      "enable" : "${uploadShell}",
       "remark" : "上传脚本文件",
       "batchConfig" : [ {
         "fileUploads" : [ {
@@ -39,6 +57,8 @@
           "enable" : true
         } ]
       }, {
+        "enable" : true,
+        "remark" : "替换脚本的换行符并给脚本授权",
         "commands" : [ {
           "command" : "cd ${serverProjectPath}"
         }, {
@@ -51,8 +71,9 @@
       } ]
     },
     "step2" : {
-      "enable" : true,
+      "enable" : "${updateAndPackage}",
       "remark" : "更新Git代码并打包",
+      "mutexLock" : "package",
       "batchConfig" : [ {
         "runtimeExec" : [ {
           "command" : "${scriptPath}\\git-update-project.bat ${projectPath}",
@@ -64,7 +85,7 @@
       } ]
     },
     "step3" : {
-      "enable" : true,
+      "enable" : "${deployAdmin}",
       "remark" : "部署 tablego-admin 工程",
       "batchConfig" : [ {
         "fileUploads" : [ {
@@ -74,6 +95,7 @@
         } ]
       }, {
         "enable" : "${backup}",
+        "remark" : "备份 tablego-admin 工程",
         "commands" : [ {
           "command" : "cd ${serverProjectPath}"
         }, {
@@ -110,7 +132,7 @@
       } ]
     },
     "step4" : {
-      "enable" : true,
+      "enable" : "${deployBasic}",
       "remark" : "部署 tablego-basic 工程",
       "batchConfig" : [ {
         "fileUploads" : [ {
@@ -120,6 +142,7 @@
         } ]
       }, {
         "enable" : "${backup}",
+        "remark" : "备份 tablego-basic 工程",
         "commands" : [ {
           "command" : "cd ${serverProjectPath}"
         }, {
@@ -156,7 +179,7 @@
       } ]
     },
     "step5" : {
-      "enable" : true,
+      "enable" : "${deployIam}",
       "remark" : "部署 tablego-iam 工程",
       "batchConfig" : [ {
         "fileUploads" : [ {
@@ -166,6 +189,7 @@
         } ]
       }, {
         "enable" : "${backup}",
+        "remark" : "备份 tablego-iam 工程",
         "commands" : [ {
           "command" : "cd ${serverProjectPath}"
         }, {
@@ -202,8 +226,9 @@
       } ]
     },
     "step6" : {
-      "enable" : true,
+      "enable" : "${cleanProject}",
       "remark" : "清理项目",
+      "mutexLock" : "cleanProject",
       "batchConfig" : [ {
         "runtimeExec" : [ {
           "command" : "${scriptPath}\\maven-lifecycle.bat clean ${projectPath}"

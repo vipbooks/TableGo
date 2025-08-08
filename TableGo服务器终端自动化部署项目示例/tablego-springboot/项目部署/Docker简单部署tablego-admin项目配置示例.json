@@ -9,20 +9,35 @@
     "dev" : {
       "profile" : "dev",
       "port" : "8080",
-      "backup" : false
+      "updateAndPackage" : true,
+      "uploadShell" : true,
+      "backup" : false,
+      "deploy" : true,
+      "cleanProject" : true
     },
     "test" : {
       "profile" : "test",
       "port" : "8081",
-      "backup" : false
+      "updateAndPackage" : true,
+      "uploadShell" : true,
+      "backup" : false,
+      "deploy" : true,
+      "cleanProject" : true
     },
     "prod" : {
       "profile" : "prod",
       "port" : "8082",
-      "backup" : true
+      "updateAndPackage" : true,
+      "uploadShell" : true,
+      "backup" : true,
+      "deploy" : true,
+      "cleanProject" : true
     }
   },
   "batchConfig" : [ {
+    "enable" : "${updateAndPackage}",
+    "remark" : "更新Git代码并打包",
+    "mutexLock" : "package",
     "runtimeExec" : [ {
       "command" : "${scriptPath}\\git-update-project.bat ${projectPath}",
       "enable" : false
@@ -31,6 +46,8 @@
       "enable" : true
     } ]
   }, {
+    "enable" : "${uploadShell}",
+    "remark" : "上传工程包和脚本文件",
     "fileUploads" : [ {
       "fromPath" : [ "${projectPath}\\tablego-admin\\target\\tablego-admin.jar", "${projectPath}\\tablego-admin\\Dockerfile" ],
       "toPath" : "${serverProjectPath}/tablego-admin",
@@ -41,7 +58,8 @@
       "enable" : true
     } ]
   }, {
-    "enable" : true,
+    "enable" : "${uploadShell}",
+    "remark" : "替换脚本的换行符并给脚本授权",
     "commands" : [ {
       "command" : "cd ${serverProjectPath}"
     }, {
@@ -53,6 +71,7 @@
     } ]
   }, {
     "enable" : "${backup}",
+    "remark" : "备份 tablego-admin 工程",
     "commands" : [ {
       "command" : "cd ${serverProjectPath}"
     }, {
@@ -65,6 +84,8 @@
       "enable" : true
     } ]
   }, {
+    "enable" : "${deploy}",
+    "remark" : "部署 tablego-admin 工程",
     "commands" : [ {
       "command" : "cd ${serverProjectPath}/tablego-admin"
     }, {
@@ -88,11 +109,20 @@
       "containsStr" : "Total reclaimed space"
     } ]
   }, {
+    "enable" : "${cleanProject}",
+    "remark" : "清理项目",
+    "mutexLock" : "cleanProject",
     "runtimeExec" : [ {
       "command" : "${scriptPath}\\maven-lifecycle.bat clean ${projectPath}\\tablego-admin",
       "enable" : true
-    } ],
+    } ]
+  }, {
+    "enable" : true,
+    "remark" : "清理Docker虚悬镜像",
     "commands" : [ {
+      "command" : "docker image prune -f",
+      "containsStr" : "Total reclaimed space"
+    }, {
       "command" : "docker ps"
     } ]
   } ]

@@ -11,24 +11,33 @@
       "profile" : "dev",
       "tablegoAdminPort" : "6611",
       "tablegoBasicPort" : "6622",
-      "tablegoIamPort" : "6633"
+      "tablegoIamPort" : "6633",
+      "revertAdmin" : true,
+      "revertBasic" : false,
+      "revertIam" : false
     },
     "test" : {
       "profile" : "test",
       "tablegoAdminPort" : "6611",
       "tablegoBasicPort" : "6622",
-      "tablegoIamPort" : "6633"
+      "tablegoIamPort" : "6633",
+      "revertAdmin" : true,
+      "revertBasic" : false,
+      "revertIam" : false
     },
     "prod" : {
       "profile" : "prod",
       "tablegoAdminPort" : "6611",
       "tablegoBasicPort" : "6622",
-      "tablegoIamPort" : "6633"
+      "tablegoIamPort" : "6633",
+      "revertAdmin" : true,
+      "revertBasic" : false,
+      "revertIam" : false
     }
   },
   "stepBatchConfig" : {
     "step1" : {
-      "enable" : true,
+      "enable" : "${revertAdmin}",
       "remark" : "还原 tablego-admin 项目",
       "batchConfig" : [ {
         "commands" : [ {
@@ -51,7 +60,7 @@
     }
   },
   "step2" : {
-    "enable" : true,
+    "enable" : "${revertBasic}",
     "remark" : "还原 tablego-basic 项目",
     "batchConfig" : [ {
       "commands" : [ {
@@ -73,7 +82,7 @@
     } ]
   },
   "step3" : {
-    "enable" : true,
+    "enable" : "${revertIam}",
     "remark" : "还原 tablego-iam 项目",
     "batchConfig" : [ {
       "commands" : [ {

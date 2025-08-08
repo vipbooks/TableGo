@@ -6,7 +6,7 @@
 
 ### ${tableInfo_index + 1}、<#if StringUtils.isNotBlank(tableInfo.remark)>${tableInfo.remark}（${tableInfo.tableName}）<#else>${tableInfo.tableName}</#if>
 
-| 序号 | 字段名 | 数据类型 | 主键 | 非空 | 默认值 | 描述 |
+| 序号 | 字段名 | 数据类型 | 主键 | 非空 | 默认值 | 注释 |
 | :---: |  ---  |   ---   | :---:|:---:| :---: |  --- |
     <#if tableInfo.fieldInfos?has_content>
         <#list tableInfo.fieldInfos as fieldInfo>

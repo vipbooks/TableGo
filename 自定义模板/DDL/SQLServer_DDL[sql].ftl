@@ -6,6 +6,7 @@ ${"/* Created on:     ${dateTime}"?right_pad(64)}*/
 
 <#if tableInfoList?has_content>
     <#list tableInfoList as tableInfo>
+-- ${tableInfo.remark}
 IF EXISTS (SELECT 1 FROM SYSOBJECTS WHERE ID = OBJECT_ID('${tableInfo.tableName}') AND TYPE = 'U') DROP TABLE ${tableInfo.tableName}
 GO
 

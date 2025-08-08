@@ -11,7 +11,7 @@
 <#assign isNoSqlTable = FtlUtils.tableExisted(tableInfo, jsonParam.noSqlTables) />
 package ${jsonParam.packagePath}
 
-<#if FtlUtils.fieldTypeExisted(searchFields, "Date")>
+<#if dateFieldInfo?has_content && dateFieldInfo.isDateTimeType>
 import cn.hutool.core.date.DateUtil;
 </#if>
 <#if checkValueExistedFields?has_content || tableInfo.pkLowerCamelName?has_content>
@@ -28,9 +28,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.Collections;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-</#if>
-<#if !tableInfo.pkIsStringType>
+    <#if !tableInfo.pkIsStringType>
 import java.util.Objects;
+    </#if>
 </#if>
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -111,18 +111,19 @@ public class ${tableInfo.upperCamelCase}ServiceImpl extends ServiceImpl<${tableI
 
     @Override
     public List<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList) {
+        idList = Optional.ofNullable(idList).orElse(Collections.emptyList()).stream().filter(<#if tableInfo.pkIsStringType>StrUtil::isNotBlank<#else>Objects::nonNull</#if>).distinct().collect(Collectors.toList());
         if (CollUtil.isEmpty(idList)) {
             return Collections.emptyList();
         }
         LambdaQueryWrapper<${tableInfo.upperCamelCase}> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.in(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, idList.stream().filter(<#if tableInfo.pkIsStringType>StrUtil::isNotBlank<#else>Objects::nonNull</#if>).distinct().collect(Collectors.toList()));
+        queryWrapper.in(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, idList);
         return this.list(queryWrapper);
     }
 
     @Override
     public Map<${tableInfo.pkJavaType}, ${tableInfo.upperCamelCase}> map${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList) {
         List<${tableInfo.upperCamelCase}> list = find${tableInfo.upperCamelCase}ByIds(idList);
-        return Optional.ofNullable(list).orElse(CollUtil.toList()).stream().collect(Collectors.toMap(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, ${tableInfo.upperCamelCase} -> ${tableInfo.upperCamelCase}));
+        return Optional.ofNullable(list).orElse(Collections.emptyList()).stream().collect(Collectors.toMap(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, ${tableInfo.upperCamelCase} -> ${tableInfo.upperCamelCase}));
     }
 </#if>
 <#if checkValueExistedFields?has_content>

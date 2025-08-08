@@ -11,7 +11,7 @@ package ${jsonParam.packagePath}
 import cn.hutool.core.util.BooleanUtil;
 import ${jsonParam.basePackagePath}.common.util.Assert;
 </#if>
-<#if FtlUtils.fieldTypeExisted(searchFields, "Date")>
+<#if dateFieldInfo?has_content && dateFieldInfo.isDateTimeType>
 import cn.hutool.core.date.DateUtil;
 </#if>
 <#if tableInfo.pkLowerCamelName?has_content>
@@ -19,6 +19,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.Collections;
+    <#if !tableInfo.pkIsStringType>
+import java.util.Objects;
+    </#if>
 </#if>
 import java.util.List;
 import cn.hutool.core.util.StrUtil;
@@ -55,13 +58,12 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements ${tableInfo.upper
 
     @Override
     public PageInfo<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}Page(${tableInfo.upperCamelCase}Condition condition) {
-        Page<${tableInfo.upperCamelCase}> page = condition.buildPage();
-    <#if dateFieldInfo?has_content>
-
+    <#if dateFieldInfo?has_content && dateFieldInfo.isDateTimeType>
         if (condition.get${dateFieldInfo.upperCamelCase}End() != null) {
             condition.set${dateFieldInfo.upperCamelCase}End(DateUtil.endOfDay(condition.get${dateFieldInfo.upperCamelCase}End()));
         }
     </#if>
+        Page<${tableInfo.upperCamelCase}> page = condition.buildPage();
         PageHelper.startPage(page.getPageNum(), page.getPageSize());
         List<${tableInfo.upperCamelCase}> list = ${tableInfo.lowerCamelCase}Mapper.find${tableInfo.upperCamelCase}List(condition);
         PageInfo<${tableInfo.upperCamelCase}> pageInfo = new PageInfo<>(list);
@@ -94,16 +96,17 @@ public class ${tableInfo.upperCamelCase}ServiceImpl implements ${tableInfo.upper
 
     @Override
     public List<${tableInfo.upperCamelCase}> find${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList) {
+        idList = Optional.ofNullable(idList).orElse(Collections.emptyList()).stream().filter(<#if tableInfo.pkIsStringType>StrUtil::isNotBlank<#else>Objects::nonNull</#if>).distinct().collect(Collectors.toList());
         if (CollUtil.isEmpty(idList)) {
             return Collections.emptyList();
         }
-        return ${tableInfo.lowerCamelCase}Mapper.find${tableInfo.upperCamelCase}ByIds(idList.stream().filter(StrUtil::isNotBlank).distinct().collect(Collectors.toList()));
+        return ${tableInfo.lowerCamelCase}Mapper.find${tableInfo.upperCamelCase}ByIds(idList);
     }
 
     @Override
     public Map<${tableInfo.pkJavaType}, ${tableInfo.upperCamelCase}> map${tableInfo.upperCamelCase}ByIds(List<${tableInfo.pkJavaType}> idList) {
         List<${tableInfo.upperCamelCase}> list = find${tableInfo.upperCamelCase}ByIds(idList);
-        return Optional.ofNullable(list).orElse(CollUtil.toList()).stream().collect(Collectors.toMap(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, ${tableInfo.upperCamelCase} -> ${tableInfo.upperCamelCase}));
+        return Optional.ofNullable(list).orElse(Collections.emptyList()).stream().collect(Collectors.toMap(${tableInfo.upperCamelCase}::get${tableInfo.pkUpperCamelName}, ${tableInfo.upperCamelCase} -> ${tableInfo.upperCamelCase}));
     }
 </#if>
 <#if checkValueExistedFields?has_content>

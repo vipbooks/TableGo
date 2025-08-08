@@ -5,14 +5,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import com.alibaba.excel.annotation.ExcelProperty;
-import com.alibaba.excel.context.AnalysisContext;
-import com.alibaba.excel.exception.ExcelDataConvertException;
-import com.alibaba.excel.metadata.CellExtra;
-import com.alibaba.excel.metadata.data.ReadCellData;
-import com.alibaba.excel.read.listener.ReadListener;
-import com.alibaba.excel.read.metadata.holder.ReadRowHolder;
-import com.alibaba.excel.util.ListUtils;
+import cn.idev.excel.annotation.ExcelProperty;
+import cn.idev.excel.context.AnalysisContext;
+import cn.idev.excel.exception.ExcelDataConvertException;
+import cn.idev.excel.metadata.CellExtra;
+import cn.idev.excel.metadata.data.ReadCellData;
+import cn.idev.excel.read.listener.ReadListener;
+import cn.idev.excel.read.metadata.holder.ReadRowHolder;
+import cn.idev.excel.util.ListUtils;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
@@ -25,7 +25,7 @@ import ${jsonParam.basePackagePath}.common.model.BaseExcel;
 /**
  * EasyExcel导入分批读取监听器，默认按1000条一批处理，支持读取合并单元格的数据
  *
- * @see com.alibaba.excel.read.listener.PageReadListener
+ * @see cn.idev.excel.read.listener.PageReadListener
  * @author ${paramConfig.author}
  * @since  ${dateTime}
  */

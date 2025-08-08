@@ -8,7 +8,7 @@
     临时参数01：用户名,姓名,移动电话,身份证,电子邮箱,出生日期
 4、生成表字段比较的MD文件
 -->
-## ${FtlUtils.emptyToDefault(tableInfo.remark, "${tableInfo.remark}(${tableInfo.tableName})", tableInfo.tableName)} 表字段比较
+## ${FtlUtils.emptyToDefault(tableInfo.remark, "${tableInfo.remark}(${tableInfo.tableName})", tableInfo.tableName)}表字段比较
 
 | 序号 | 表字段备注 | 表字段名 | 比较字段名 | 是否匹配 |
 | :---: |   ---   |   ---   |   ---   | :---: |
