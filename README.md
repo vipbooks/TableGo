@@ -2,7 +2,7 @@
 
 #### 介绍
 
-![](http://cdn.tablego.cn/images/tablego.png)
+![tablego][tablego]
 
 　　TableGo是基于数据库的自动化生成工具，低代码编程技术的实现，全能代码生成器，自动生成项目框架、生成JavaBean、生成前后端代码、生成数据库文档、生成API文档、自动化部署项目、能查出数据库数据生成各种代码和文档等，更重要的是可以根据每个项目的不同开发框架编写自定义模板与项目框架适配生成各模块增删查改的前后端代码，让开发人员的开发效率提高60%以上，还可以通过模板定义开发规范统一开发风格和标准，提高代码的规范性和可维护性。<br/>
 　　只要设计好数据库并且添加好备注，就能通过自定义模板生成任意编程语言的任何程序代码，并且能够生成各种代码备注。实现只要把数据数据库设计好，整个项目就完成了很大一部分代码的编写，极大的节省了项目的开发成本。支持MySQL、Oracle、SQL Server、PostgreSQL、MariaDB、DB2 六种数据库，支持Window、Linux、Mac OS等多种操作系统。<br/>
@@ -50,10 +50,14 @@ MySQL关键字做表名导致生成代码或文档报错的解决方法，以ord
 
 #### TableGo功能一览
 
-![](http://cdn.tablego.cn/images/function_list.png)
+![function_list][function_list]
 
 #### 计算机软件著作权
 
-![](http://cdn.tablego.cn/images/copyright.jpg)
+![copyright][copyright]
 
 **TableGo受国家计算机软件著作权保护（登记号：2020SR0316086），禁止对该软件进行篡改、盗版及非法倒卖等，违者将自行承担相应的法律责任。并且对因用户使用该软件而产生的任何直接或间接损失不承担责任。**
+
+[tablego]: images/tablego.png
+[function_list]: images/function_list.png
+[copyright]: images/copyright.jpg
