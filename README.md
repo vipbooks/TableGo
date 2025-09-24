@@ -48,6 +48,8 @@ MySQL关键字做表名导致生成代码或文档报错的解决方法，以ord
 
 　　``项目的发展离不开您的支持，希望您能在开源平台给TableGo项目点一个Star，促进项目更好的发展(^_^)∠※``
 
+　　TableGo技术交流群：[![加入QQ群](images/chat-QQ_Group-46BC99.svg)](https://qm.qq.com/q/rlmot6lLb4)
+
 #### TableGo功能一览
 
 ![function_list][function_list]
@@ -61,3 +63,4 @@ MySQL关键字做表名导致生成代码或文档报错的解决方法，以ord
 [tablego]: images/tablego.png
 [function_list]: images/function_list.png
 [copyright]: images/copyright.jpg
+[qq_group]: images/chat-QQ_Group-46BC99.svg
