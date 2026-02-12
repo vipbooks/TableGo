@@ -1,4 +1,4 @@
-<#-- 自定义模板导出数据生成Excel -->
+<#-- 用于生成导出表数据的Excel自定义模板 -->
 <?xml version="1.0" encoding="UTF-8"?>
 <?mso-application progid="Excel.Sheet"?>
 
@@ -342,6 +342,11 @@
     </Styles>
     <!-- 初始化数据库表信息 -->
     <#list tableInfoList as tableInfo>
+        <#assign tableDataList = null />
+        <#if tableDataMap?has_content && tableDataMap[tableInfo.originalTableName]??>
+            <#assign tableDataList = tableDataMap[tableInfo.originalTableName] />
+        </#if>
+        <#if tableDataList?has_content>
     <Worksheet ss:Name="${FtlUtils.emptyToDefault(tableInfo.simpleRemark, tableInfo.tableName)}">
         <Table ss:ExpandedColumnCount="7" ss:ExpandedRowCount="4" x:FullColumns="1" x:FullRows="1" ss:DefaultColumnWidth="54" ss:DefaultRowHeight="13.5">
             <Row ss:Height="22.5">
@@ -360,8 +365,8 @@
                 </#list>
             </Row>
             <!-- 初始化表字段数据信息 -->
-            <#if tableInfo.sqlQueryDataList?has_content>
-                <#list tableInfo.sqlQueryDataList as data>
+            <#if tableDataList?has_content>
+                <#list tableDataList as data>
             <Row ss:Height="17.25">
                 <Cell ss:StyleID="s55">
                     <Data ss:Type="Number">${data_index + 1}</Data>
@@ -376,5 +381,6 @@
             </#if>
         </Table>
     </Worksheet>
+        </#if>
     </#list>
 </Workbook>

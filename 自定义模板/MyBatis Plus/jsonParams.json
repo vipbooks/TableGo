@@ -67,6 +67,14 @@
   "tableIgnoreValidFields" : {
     "CUSTOM_TMP_TEST_USER" : [ "USER_TYPE" ]
   },
+  "advanceSearch" : [ {
+    "tableNames" : "T_PROVINCE, T_CITY, T_AREA",
+    "fieldNames" : "PARENT_CODE, TENANT_CODE"
+  }, {
+    "tableNames" : "CUSTOM_TMP_TEST_USER, T_SYS_PARAM, T_DEPARTMENT",
+    "fieldNames" : "ID",
+    "searchType" : "batch"
+  } ],
   "searchFields" : {
     "T_DEPARTMENT" : [ "DEPT_NAME", "DEPT_CODE", "PARENT_ID" ],
     "T_SYS_PARAM" : [ "PARAM_NAME", "PARAM_CODE", "PARAM_TYPE" ],
@@ -74,8 +82,7 @@
   },
   "batchSearchFields" : {
     "T_DICTIONARY" : [ "DICT_TYPE_CODE" ],
-    "T_SYS_PARAM" : [ "PARAM_CODE" ],
-    "CUSTOM_TMP_TEST_USER" : [ "ID" ]
+    "T_SYS_PARAM" : [ "PARAM_CODE" ]
   },
   "checkValueExistedFields" : {
     "T_DEPARTMENT" : [ "DEPT_CODE" ],

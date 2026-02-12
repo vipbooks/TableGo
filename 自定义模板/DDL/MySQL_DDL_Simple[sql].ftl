@@ -1,4 +1,4 @@
-<#-- 用于按字段生成文件功能生成MySQL的简单DDL文件 -->
+<#-- 用于按字段生成文件功能生成MySQL的简单DDL的自定义模板 -->
 /*==============================================================*/
 ${"/*  DBMS name:     MySQL"?right_pad(64)}*/
 ${"/* Created on:     ${dateTime}"?right_pad(64)}*/
@@ -7,7 +7,7 @@ ${"/* Created on:     ${dateTime}"?right_pad(64)}*/
 <#if tableInfoList?has_content>
     <#list tableInfoList as tableInfo>
 -- ${tableInfo.remark}
-DROP TABLE IF EXISTS ${tableInfo.tableName};
+DROP TABLE IF EXISTS `${tableInfo.tableName}`;
 
     </#list>
 </#if>

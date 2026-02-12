@@ -1,4 +1,4 @@
-<#-- 自定义模板导出数据生成Excel -->
+<#-- 用于生成导出表结构的Excel自定义模板 -->
 <?xml version="1.0" encoding="UTF-8"?>
 <?mso-application progid="Excel.Sheet"?>
 
@@ -344,8 +344,13 @@
     <#list tableInfoList as tableInfo>
     <Worksheet ss:Name="${FtlUtils.emptyToDefault(tableInfo.simpleRemark, tableInfo.tableName)}">
         <Table ss:ExpandedColumnCount="7" ss:ExpandedRowCount="4" x:FullColumns="1" x:FullRows="1" ss:DefaultColumnWidth="54" ss:DefaultRowHeight="13.5">
+            <Column ss:Index="1" ss:StyleID="s50" ss:AutoFitWidth="0" ss:Width="51.75"/>
+            <Column ss:Index="2" ss:StyleID="Default" ss:AutoFitWidth="0" ss:Width="135.75" ss:Span="1"/>
+            <Column ss:Index="4" ss:StyleID="s50" ss:AutoFitWidth="0" ss:Width="39.75" ss:Span="1"/>
+            <Column ss:Index="6" ss:StyleID="s50" ss:AutoFitWidth="0" ss:Width="135.75"/>
+            <Column ss:StyleID="s51" ss:AutoFitWidth="0" ss:Width="363.75"/>
             <Row ss:Height="22.5">
-                <Cell ss:StyleID="s58" ss:MergeAcross="${tableInfo.fieldInfos?size}">
+                <Cell ss:StyleID="s58" ss:MergeAcross="6">
                     <Data ss:Type="String">${FtlUtils.emptyToDefault(tableInfo.remark, "${tableInfo.simpleRemark}（${tableInfo.tableName}）", tableInfo.tableName)}</Data>
                 </Cell>
             </Row>
@@ -353,27 +358,51 @@
                 <Cell ss:StyleID="s53">
                     <Data ss:Type="String">序号</Data>
                 </Cell>
-                <#list tableInfo.fieldInfos as fieldInfo>
                 <Cell ss:StyleID="s53">
-                    <Data ss:Type="String">${FtlUtils.emptyToDefault(fieldInfo.simpleRemark, fieldInfo.originalColName)}</Data>
+                    <Data ss:Type="String">字段名</Data>
                 </Cell>
-                </#list>
+                <Cell ss:StyleID="s53">
+                    <Data ss:Type="String">数据类型</Data>
+                </Cell>
+                <Cell ss:StyleID="s53">
+                    <Data ss:Type="String">主键</Data>
+                </Cell>
+                <Cell ss:StyleID="s53">
+                    <Data ss:Type="String">非空</Data>
+                </Cell>
+                <Cell ss:StyleID="s53">
+                    <Data ss:Type="String">默认值</Data>
+                </Cell>
+                <Cell ss:StyleID="s54">
+                    <Data ss:Type="String">注释</Data>
+                </Cell>
             </Row>
-            <!-- 初始化表字段数据信息 -->
-            <#if tableInfo.sqlQueryDataList?has_content>
-                <#list tableInfo.sqlQueryDataList as data>
+            <!-- 初始化表结构字段信息 -->
+            <#list tableInfo.fieldInfos as fieldInfo>
             <Row ss:Height="17.25">
                 <Cell ss:StyleID="s55">
-                    <Data ss:Type="Number">${data_index + 1}</Data>
+                    <Data ss:Type="Number">${fieldInfo_index + 1}</Data>
                 </Cell>
-                    <#list tableInfo.fieldInfos as fieldInfo>
                 <Cell ss:StyleID="s56">
-                    <Data ss:Type="String">${data[fieldInfo.originalColName]}</Data>
+                    <Data ss:Type="String">${fieldInfo.colName}</Data>
                 </Cell>
-                    </#list>
+                <Cell ss:StyleID="s56">
+                    <Data ss:Type="String">${fieldInfo.dataTypeStr}</Data>
+                </Cell>
+                <Cell ss:StyleID="s55">
+                    <Data ss:Type="String"><#if fieldInfo.primaryKey>是<#else>否</#if></Data>
+                </Cell>
+                <Cell ss:StyleID="s55">
+                    <Data ss:Type="String"><#if fieldInfo.primaryKey>是<#elseif fieldInfo.nullable == "false">是<#else>否</#if></Data>
+                </Cell>
+                <Cell ss:StyleID="s55">
+                    <Data ss:Type="String">${fieldInfo.defaultValue}</Data>
+                </Cell>
+                <Cell ss:StyleID="s57">
+                    <Data ss:Type="String">${fieldInfo.remark}</Data>
+                </Cell>
             </Row>
-                </#list>
-            </#if>
+            </#list>
         </Table>
     </Worksheet>
     </#list>

@@ -1,4 +1,4 @@
-<#-- 自定义模板导出数据生成Excel -->
+<#-- 自定义模板生成数据库设计文档Excel -->
 <?xml version="1.0" encoding="UTF-8"?>
 <?mso-application progid="Excel.Sheet"?>
 
@@ -339,42 +339,109 @@
             <Font ss:FontName="微软雅黑" x:CharSet="134" ss:Size="16" ss:Color="#000000" ss:Bold="1"/>
             <Interior ss:Color="#C9C9C9" ss:Pattern="Solid"/>
         </Style>
+        <Style ss:ID="s60">
+            <Borders/>
+            <Font ss:FontName="微软雅黑" x:CharSet="134" ss:Size="12" ss:Color="#000000"/>
+        </Style>
+        <Style ss:ID="s61">
+            <Alignment ss:Horizontal="Center" ss:Vertical="Center" ss:WrapText="1"/>
+            <Borders>
+                <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+                <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+                <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+                <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+            </Borders>
+            <Font ss:FontName="微软雅黑" x:CharSet="134" ss:Size="12" ss:Color="#000000"/>
+        </Style>
     </Styles>
     <!-- 初始化数据库表信息 -->
-    <#list tableInfoList as tableInfo>
-    <Worksheet ss:Name="${FtlUtils.emptyToDefault(tableInfo.simpleRemark, tableInfo.tableName)}">
-        <Table ss:ExpandedColumnCount="7" ss:ExpandedRowCount="4" x:FullColumns="1" x:FullRows="1" ss:DefaultColumnWidth="54" ss:DefaultRowHeight="13.5">
-            <Row ss:Height="22.5">
-                <Cell ss:StyleID="s58" ss:MergeAcross="${tableInfo.fieldInfos?size}">
-                    <Data ss:Type="String">${FtlUtils.emptyToDefault(tableInfo.remark, "${tableInfo.simpleRemark}（${tableInfo.tableName}）", tableInfo.tableName)}</Data>
-                </Cell>
-            </Row>
+    <Worksheet ss:Name="${docTitle}">
+        <Table ss:ExpandedColumnCount="8" ss:ExpandedRowCount="4" x:FullColumns="1" x:FullRows="1" ss:DefaultColumnWidth="54" ss:DefaultRowHeight="13.5">
+            <Column ss:Index="1" ss:StyleID="s50" ss:AutoFitWidth="0" ss:Width="51.75"/>
+            <Column ss:Index="2" ss:StyleID="s50" ss:AutoFitWidth="0" ss:Width="100"/>
+            <Column ss:StyleID="Default" ss:AutoFitWidth="0" ss:Width="135.75" ss:Span="1"/>
+            <Column ss:Index="5" ss:StyleID="s50" ss:AutoFitWidth="0" ss:Width="39.75" ss:Span="1"/>
+            <Column ss:Index="7" ss:StyleID="s50" ss:AutoFitWidth="0" ss:Width="135.75"/>
+            <Column ss:StyleID="s51" ss:AutoFitWidth="0" ss:Width="363.75"/>
+        <#list tableInfoList as tableInfo>
             <Row ss:Height="21">
                 <Cell ss:StyleID="s53">
                     <Data ss:Type="String">序号</Data>
                 </Cell>
-                <#list tableInfo.fieldInfos as fieldInfo>
                 <Cell ss:StyleID="s53">
-                    <Data ss:Type="String">${FtlUtils.emptyToDefault(fieldInfo.simpleRemark, fieldInfo.originalColName)}</Data>
+                    <Data ss:Type="String">表名</Data>
                 </Cell>
-                </#list>
+                <Cell ss:StyleID="s53">
+                    <Data ss:Type="String">字段名</Data>
+                </Cell>
+                <Cell ss:StyleID="s53">
+                    <Data ss:Type="String">数据类型</Data>
+                </Cell>
+                <Cell ss:StyleID="s53">
+                    <Data ss:Type="String">主键</Data>
+                </Cell>
+                <Cell ss:StyleID="s53">
+                    <Data ss:Type="String">非空</Data>
+                </Cell>
+                <Cell ss:StyleID="s53">
+                    <Data ss:Type="String">默认值</Data>
+                </Cell>
+                <Cell ss:StyleID="s54">
+                    <Data ss:Type="String">注释</Data>
+                </Cell>
             </Row>
-            <!-- 初始化表字段数据信息 -->
-            <#if tableInfo.sqlQueryDataList?has_content>
-                <#list tableInfo.sqlQueryDataList as data>
+            <!-- 初始化表结构字段信息 -->
+            <#list tableInfo.fieldInfos as fieldInfo>
             <Row ss:Height="17.25">
                 <Cell ss:StyleID="s55">
-                    <Data ss:Type="Number">${data_index + 1}</Data>
+                    <Data ss:Type="Number">${fieldInfo_index + 1}</Data>
                 </Cell>
-                    <#list tableInfo.fieldInfos as fieldInfo>
+                <#if fieldInfo_index == 0>
+                <Cell ss:StyleID="s61" ss:MergeDown="${tableInfo.fieldInfos?size - 1}">
+                    <Data ss:Type="String">${tableInfo.tableName}<#if StringUtils.isNotBlank(tableInfo.remark)>&#10;${tableInfo.simpleRemark}</#if></Data>
+                </Cell>
+                </#if>
+                <Cell <#if fieldInfo_index != 0>ss:Index="3" </#if>ss:StyleID="s56">
+                    <Data ss:Type="String">${fieldInfo.colName}</Data>
+                </Cell>
                 <Cell ss:StyleID="s56">
-                    <Data ss:Type="String">${data[fieldInfo.originalColName]}</Data>
+                    <Data ss:Type="String">${fieldInfo.dataTypeStr}</Data>
                 </Cell>
-                    </#list>
+                <Cell ss:StyleID="s55">
+                    <Data ss:Type="String"><#if fieldInfo.primaryKey>是<#else>否</#if></Data>
+                </Cell>
+                <Cell ss:StyleID="s55">
+                    <Data ss:Type="String"><#if fieldInfo.primaryKey>是<#elseif fieldInfo.nullable == "false">是<#else>否</#if></Data>
+                </Cell>
+                <Cell ss:StyleID="s55">
+                    <Data ss:Type="String">${fieldInfo.defaultValue}</Data>
+                </Cell>
+                <Cell ss:StyleID="s57">
+                    <Data ss:Type="String">${fieldInfo.remark}</Data>
+                </Cell>
             </Row>
-                </#list>
-            </#if>
-        </Table>
+            </#list>
+            <Row>
+                <Cell ss:StyleID="s60"/>
+                <Cell ss:StyleID="s60"/>
+                <Cell ss:StyleID="s60"/>
+                <Cell ss:StyleID="s60"/>
+                <Cell ss:StyleID="s60"/>
+                <Cell ss:StyleID="s60"/>
+                <Cell ss:StyleID="s60"/>
+                <Cell ss:StyleID="s60"/>
+            </Row>
+            <Row>
+                <Cell ss:StyleID="s60"/>
+                <Cell ss:StyleID="s60"/>
+                <Cell ss:StyleID="s60"/>
+                <Cell ss:StyleID="s60"/>
+                <Cell ss:StyleID="s60"/>
+                <Cell ss:StyleID="s60"/>
+                <Cell ss:StyleID="s60"/>
+                <Cell ss:StyleID="s60"/>
+            </Row>
+         </#list>
+       </Table>
     </Worksheet>
-    </#list>
 </Workbook>

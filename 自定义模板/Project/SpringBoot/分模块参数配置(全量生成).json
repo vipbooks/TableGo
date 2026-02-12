@@ -135,6 +135,14 @@
   }, {
     "toPath" : "${resourcesPath}/templates"
   } ],
+  "advanceSearch" : [ {
+    "tableNames" : "t_province, t_city, t_area",
+    "fieldNames" : "parent_code, tenant_code"
+  }, {
+    "tableNames" : "t_user, t_sys_param, t_department",
+    "fieldNames" : "id",
+    "searchType" : "batch"
+  } ],
   "searchFields" : {
     "t_user" : [ "username", "full_name", "mobile_phone", "email", "birthday" ],
     "t_sys_param" : [ "param_name", "param_code", "param_type" ],
@@ -142,11 +150,10 @@
     "t_dict_type" : [ "type_name", "type_code", "dict_value" ],
     "t_dictionary" : [ "dict_name", "dict_code", "dict_type_code" ],
     "t_province" : [ "province_name", "province_code" ],
-    "t_city" : [ "city_name", "city_code", "parent_code" ],
-    "t_area" : [ "area_name", "area_code", "parent_code" ]
+    "t_city" : [ "city_name", "city_code" ],
+    "t_area" : [ "area_name", "area_code" ]
   },
   "batchSearchFields" : {
-    "t_user" : [ "id" ],
     "t_department" : [ "dept_code" ],
     "t_dictionary" : [ "dict_type_code" ],
     "t_province" : [ "province_code" ],
@@ -234,13 +241,13 @@
     "java" : "1.8",
     "springBootStarterParent" : "2.7.18",
     "mysqlConnectorJava" : "8.4.0",
-    "mybatisPlusBootStarter" : "3.5.12",
-    "mybatisPlusJsqlparser" : "3.5.12",
+    "mybatisPlusBootStarter" : "3.5.15",
+    "mybatisPlusJsqlparser" : "3.5.15",
     "swaggerSpringBootStarter" : "1.9.1.RELEASE",
     "knife4j" : "4.5.0",
     "snakeyaml" : "2.3",
     "lombok" : "1.18.38",
-    "hutoolAll" : "5.8.38",
+    "hutoolAll" : "5.8.42",
     "redisson" : "3.40.2",
     "easyexcel" : "1.2.0",
     "mavenCompilerPlugin" : "3.13.0",

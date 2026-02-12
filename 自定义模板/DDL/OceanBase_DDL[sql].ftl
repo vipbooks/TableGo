@@ -1,6 +1,6 @@
-<#-- 用于生成DB2的DDL的自定义模板 -->
+<#-- 用于生成OceanBase的DDL的自定义模板 -->
 /*==============================================================*/
-${"/*  DBMS name:     DB2"?right_pad(64)}*/
+${"/*  DBMS name:     OceanBase - Oracle"?right_pad(64)}*/
 ${"/*    Catalog:     ${catalog}"?right_pad(64)}*/
 ${"/*     Schema:     ${schema}"?right_pad(64)}*/
 ${"/* Created on:     ${dateTime}"?right_pad(64)}*/
@@ -9,7 +9,7 @@ ${"/* Created on:     ${dateTime}"?right_pad(64)}*/
 <#if tableInfoList?has_content>
     <#list tableInfoList as tableInfo>
 -- ${tableInfo.remark}
-DROP TABLE ${tableInfo.tableName};
+DROP TABLE ${tableInfo.tableName} CASCADE CONSTRAINTS;
 
     </#list>
 </#if>
@@ -38,7 +38,7 @@ CREATE TABLE ${tableInfo.tableName}
             </#if>
             <#assign newNumberPrecision = FtlUtils.getNewNumberPrecision(fieldInfo, columnSize, fieldInfo.decimalDigits) />
             <#assign newDataTypeStr = FtlUtils.getNewDataTypeStr(fieldInfo, columnSize, fieldInfo.decimalDigits) />
-${"    ${fieldInfo.colName}"?right_pad(30)} <#if StringUtils.equalsIgnoreCase(fieldInfo.typeName, "varchar2")>VARCHAR(${columnSize})<#elseif StringUtils.equalsIgnoreCase(fieldInfo.typeName, "number")><#if fieldInfo.numberPrecision??>DECIMAL(${newNumberPrecision})<#else>DECIMAL</#if><#elseif StringUtils.equalsIgnoreCase(fieldInfo.typeName, "double")><#if fieldInfo.numberPrecision??>DECIMAL(${newNumberPrecision})<#else>DECIMAL</#if><#elseif StringUtils.containsIgnoreCase(fieldInfo.typeName, "tinyint")>DECIMAL(3,0)<#elseif StringUtils.containsIgnoreCase(fieldInfo.typeName, "smallint")>SMALLINT<#elseif StringUtils.containsIgnoreCase(fieldInfo.typeName, "mediumint")>DECIMAL(7,0)<#elseif StringUtils.containsIgnoreCase(fieldInfo.typeName, "bigint")>BIGINT<#elseif StringUtils.equalsIgnoreCase(fieldInfo.typeName, "int2")>SMALLINT<#elseif StringUtils.equalsIgnoreCase(fieldInfo.typeName, "int4")>INT<#elseif StringUtils.equalsIgnoreCase(fieldInfo.typeName, "int8")>BIGINT<#elseif StringUtils.equalsIgnoreCase(fieldInfo.typeName, "timestamp")>TIMESTAMP<#elseif fieldInfo.isDateTimeType>DATE<#elseif fieldInfo.isDateType>DATE<#else>${newDataTypeStr}</#if><#if fieldInfo.isNotNull> NOT NULL</#if><#if fieldInfo.defaultValue?has_content && !StringUtils.containsAnyIgnoreCase(fieldInfo.defaultValue, "::", "(", ")", "to_date", "to_char", "varchar", "character", "without", "pg_")> DEFAULT <#if fieldInfo.isStringType && !fieldInfo.defaultValue?contains("'")>'${fieldInfo.defaultValue}'<#else>${fieldInfo.defaultValue}</#if></#if><#if fieldInfo_has_next || pkIndexList?has_content || uniqueIndexList?has_content || uniqueCompositeIndexList?has_content>,</#if>
+${"    ${fieldInfo.colName}"?right_pad(30)} <#if StringUtils.equalsIgnoreCase(fieldInfo.typeName, "varchar")>VARCHAR2(${columnSize})<#elseif StringUtils.equalsIgnoreCase(fieldInfo.typeName, "decimal")><#if fieldInfo.numberPrecision??>NUMBER(${newNumberPrecision})<#else>NUMBER</#if><#elseif StringUtils.equalsIgnoreCase(fieldInfo.typeName, "numeric")><#if fieldInfo.numberPrecision??>NUMBER(${newNumberPrecision})<#else>NUMBER</#if><#elseif StringUtils.equalsIgnoreCase(fieldInfo.typeName, "double")><#if fieldInfo.numberPrecision??>NUMBER(${newNumberPrecision})<#else>NUMBER</#if><#elseif StringUtils.equalsIgnoreCase(fieldInfo.typeName, "int")>NUMBER(10,0)<#elseif StringUtils.equalsIgnoreCase(fieldInfo.typeName, "int unsigned")>NUMBER(20,0)<#elseif StringUtils.containsIgnoreCase(fieldInfo.typeName, "tinyint")>NUMBER(3,0)<#elseif StringUtils.containsIgnoreCase(fieldInfo.typeName, "smallint")>NUMBER(5,0)<#elseif StringUtils.containsIgnoreCase(fieldInfo.typeName, "mediumint")>NUMBER(7,0)<#elseif StringUtils.containsIgnoreCase(fieldInfo.typeName, "bigint")>NUMBER(20,0)<#elseif StringUtils.equalsIgnoreCase(fieldInfo.typeName, "int2")>NUMBER(5,0)<#elseif StringUtils.equalsIgnoreCase(fieldInfo.typeName, "int4")>NUMBER(10,0)<#elseif StringUtils.equalsIgnoreCase(fieldInfo.typeName, "int8")>NUMBER(20,0)<#elseif StringUtils.equalsIgnoreCase(fieldInfo.typeName, "timestamp")>TIMESTAMP<#elseif fieldInfo.isDateTimeType>DATE<#elseif fieldInfo.isDateType>DATE<#else>${newDataTypeStr}</#if><#if fieldInfo.defaultValue?has_content && !StringUtils.containsAnyIgnoreCase(fieldInfo.defaultValue, "::", "(", ")", "to_date", "to_char", "varchar", "character", "without", "pg_")> DEFAULT <#if fieldInfo.isStringType && !fieldInfo.defaultValue?contains("'")>'${fieldInfo.defaultValue}'<#else><#if StringUtils.equalsIgnoreCase(fieldInfo.defaultValue, "CURRENT_TIMESTAMP")>SYSDATE<#else>${fieldInfo.defaultValue}</#if></#if></#if><#if fieldInfo.isNotNull> NOT NULL</#if><#if fieldInfo_has_next || pkIndexList?has_content || uniqueIndexList?has_content || uniqueCompositeIndexList?has_content>,</#if>
         </#list>
         <#if pkIndexList?has_content>
     CONSTRAINT PK_${tableInfo.upperNoAffixTableName} PRIMARY KEY (<#list pkIndexList as index>${index.fieldInfo.colName}<#if index_has_next>, </#if></#list>)<#if uniqueIndexList?has_content || uniqueCompositeIndexList?has_content>,</#if>

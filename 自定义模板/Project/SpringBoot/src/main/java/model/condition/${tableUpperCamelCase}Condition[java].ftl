@@ -1,7 +1,7 @@
-<#-- 初始化表的查询字段 -->
-<#assign searchFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.searchFields) />
+<#-- 初始化表的简单查询字段 -->
+<#assign searchFields = FtlUtils.getAdvanceSearchFieldSimpleList(tableInfo, jsonParam.searchFields, jsonParam.advanceSearch) />
 <#-- 初始化表的批量查询字段 -->
-<#assign batchSearchFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.batchSearchFields) />
+<#assign batchSearchFields = FtlUtils.getAdvanceSearchFieldBatchList(tableInfo, jsonParam.batchSearchFields, jsonParam.advanceSearch) />
 package ${jsonParam.packagePath}
 
 <#if FtlUtils.fieldTypeExisted(searchFields, "Date")>

@@ -1,6 +1,6 @@
 <#-- 用于生成Service接口实现的自定义模板 -->
-<#-- 初始化表的查询字段 -->
-<#assign searchFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.searchFields) />
+<#-- 初始化表的简单查询字段 -->
+<#assign searchFields = FtlUtils.getAdvanceSearchFieldSimpleList(tableInfo, jsonParam.searchFields, jsonParam.advanceSearch) />
 <#-- 初始化查询字段中的日期字段 -->
 <#assign dateFieldInfo = FtlUtils.getFieldInfoByType(searchFields, "Date") />
 <#-- 初始化需要生成检查字段值是否已存在的接口的字段 -->

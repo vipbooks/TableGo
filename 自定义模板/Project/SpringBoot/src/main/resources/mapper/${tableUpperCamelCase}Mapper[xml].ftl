@@ -1,9 +1,9 @@
 <#-- 初始化表别名 -->
 <#assign tableAlias = FtlUtils.emptyToDefault(tableInfo.tableAlias, "${tableInfo.tableAlias}.", StringUtils.EMPTY) />
-<#-- 初始化表的查询字段 -->
-<#assign searchFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.searchFields) />
+<#-- 初始化表的简单查询字段 -->
+<#assign searchFields = FtlUtils.getAdvanceSearchFieldSimpleList(tableInfo, jsonParam.searchFields, jsonParam.advanceSearch) />
 <#-- 初始化表的批量查询字段 -->
-<#assign batchSearchFields = FtlUtils.getJsonFieldInfoList(tableInfo, jsonParam.batchSearchFields) />
+<#assign batchSearchFields = FtlUtils.getAdvanceSearchFieldBatchList(tableInfo, jsonParam.batchSearchFields, jsonParam.advanceSearch) />
 <#-- 初始化是否不生成SQL查询的接口 -->
 <#assign isNoSqlTable = FtlUtils.tableExisted(tableInfo, jsonParam.noSqlTables) />
 <?xml version="1.0" encoding="UTF-8"?>

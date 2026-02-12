@@ -7,46 +7,51 @@
   "commonFields" : "created_by, created_time, last_updated_by, last_updated_time, is_deleted",
   "remarkMatchDict" : "类型, 类别, 分类, 状态, 是否",
   "remarkMatchMulti" : "备注, 说明, 描述",
+  "moduleName" : "sysmgt",
+  "moduleList" : [ {
+    "moduleName" : "user",
+    "tableNames" : "t_user, t_department"
+  } ],
   "ftlParamList" : [ {
     "templateName" : "${tableUpperCamelCase}[java].ftl",
     "ftlRelativeDir" : "${srcPath}/model",
-    "packagePath" : "${basePackagePath}.model",
+    "packagePath" : "${basePackagePath}.model.${moduleName}",
     "relativePath" : "${srcPath}",
     "excludeFields" : "${commonFields}"
   }, {
     "templateName" : "${tableUpperCamelCase}Condition[java].ftl",
     "ftlRelativeDir" : "${srcPath}/model/condition",
-    "packagePath" : "${basePackagePath}.model.condition",
+    "packagePath" : "${basePackagePath}.model.${moduleName}.condition",
     "relativePath" : "${srcPath}"
   }, {
     "templateNames" : "${tableUpperCamelCase}Import[java].ftl, ${tableUpperCamelCase}Export[java].ftl",
     "ftlRelativeDir" : "${srcPath}/model/excel",
-    "packagePath" : "${basePackagePath}.model.excel",
+    "packagePath" : "${basePackagePath}.model.${moduleName}.excel",
     "relativePath" : "${srcPath}"
   }, {
     "templateName" : "${tableUpperCamelCase}Service[java].ftl",
     "ftlRelativeDir" : "${srcPath}/service",
-    "packagePath" : "${basePackagePath}.service",
+    "packagePath" : "${basePackagePath}.service.${moduleName}",
     "relativePath" : "${srcPath}"
   }, {
     "templateName" : "${tableUpperCamelCase}Controller[java].ftl",
     "ftlRelativeDir" : "${srcPath}/controller",
-    "packagePath" : "${basePackagePath}.controller",
+    "packagePath" : "${basePackagePath}.controller.${moduleName}",
     "relativePath" : "${srcPath}"
   }, {
     "templateName" : "${tableUpperCamelCase}Mapper[java].ftl",
     "ftlRelativeDir" : "${srcPath}/mapper",
-    "packagePath" : "${basePackagePath}.mapper",
+    "packagePath" : "${basePackagePath}.mapper.${moduleName}",
     "relativePath" : "${srcPath}"
   }, {
     "templateName" : "${tableUpperCamelCase}Mapper[xml].ftl",
     "ftlRelativeDir" : "${resourcesPath}/mapper",
-    "relativePath" : "${resourcesPath}/mapper",
+    "relativePath" : "${resourcesPath}/mapper/${moduleName}",
     "needFilterField" : "false"
   }, {
     "templateName" : "${tableUpperCamelCase}ServiceTest[java].ftl",
     "ftlRelativeDir" : "${testPath}",
-    "packagePath" : "${basePackagePath}",
+    "packagePath" : "${basePackagePath}.${moduleName}",
     "relativePath" : "${testPath}"
   } ],
   "advanceSearch" : [ {
@@ -91,6 +96,10 @@
   "noSqlTables" : [ "t_sys_param", "t_department" ],
   "useCacheTables" : [ "t_sys_param", "t_department", "t_dict_type", "t_dictionary" ],
   "componentList" : [ {
+    "name" : "单元测试组件",
+    "enable" : "true",
+    "templateNames" : "${tableUpperCamelCase}ServiceTest[java].ftl"
+  }, {
     "name" : "Swagger组件",
     "enable" : "true",
     "codeEnableKey" : "enableSwagger"
